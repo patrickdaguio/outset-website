@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Outset</title>
+</head>
+<body>
+    <div class="weather-app">
+        <div class="temperature">
+            <div class="icon-div"><img class="temperature-icon" src="images/weather/sunny.png"></div>
+            <h1 class="temperature-degree"></h1>
+            <img class="degree-icon" src="images/weather/degrees.png">
+        </div>
+        <p class="location"></p>
+        <input type="text" autocomplete="off" class="search-box" placeholder="SEARCH">
+        <div class="extra-info">
+            <img src="images/weather/humidity.png"><span class="humidity">0%</span> 
+            <img src="images/weather/wind.png"><span class="wind">0 mph</span>
+        </div>
+    </div>
+    <main>
+        <div class="time-app">
+            <time class="time">00:00</time>
+            <h1 class="greeting">Good afternoon, Patrick</h1>
+            <p class="quote">"I can do all things through Christ who strengthens me"</p>
+            <p class="quote-origin">- Phil 4:13</p>
+            <div class="bottom">
+                <div class="button">
+                    <button class="inspired-btn">Be inspired</button>
+                </div>
+                <div class="socials">
+                    <a href="http://www.facebook.com" target="_blank"><img src="images/links/facebook.png"></a>
+                    <a href="http://instagram.com" target="_blank"><img src="images/links/instagram.png"></a>
+                    <a href="http://twitch.tv" target="_blank"><img src="images/links/twitch.png"></a>
+                    <a href="http://youtube.com" target="_blank"><img src="images/links/youtube.png"></a>
+                </div>
+            </div>
+        </div>
+        <div class="todo-app">
+            <div class="date-box">
+                <h1 class="today-date"></h1>
+                <div class="select">
+                    <select name="todos" class="filter-todo">
+                        <option value="all">All</option>
+                        <option value="completed">Completed</option>
+                        <option value="uncompleted">Uncompleted</option>
+                    </select>
+                </div>
+            </div>
+            <div class="todo-container">
+                <div class="todo-list" id="todolist"></div>
+            </div>
+            <div class="underline"></div>
+            <div class="add-task">  
+                <form>
+                    <input type="text" class="add-input" placeholder="Add a task">
+                    <button class="add-btn" type="submit"><img src="images/todo/plus.png"></button>
+                </form>
+            </div>
+        </div>
+    </main>
+    
+      
+    <script>
+        function activatePlacesSearch() {
+            const input = document.querySelector('.search-box');
+            const autocomplete = new google.maps.places.Autocomplete(input);
+        }
+    </script>
+
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChVBdHVXnahF1AFaUSmt3whsU3YtUch5c&libraries=places&callback=activatePlacesSearch"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js" integrity="sha512-zYXldzJsDrNKV+odAwFYiDXV2Cy37cwizT+NkuiPGsa9X1dOz04eHvUWVuxaJ299GvcJT31ug2zO4itXBjFx4w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="main.js"></script>
+</body>
+</html>

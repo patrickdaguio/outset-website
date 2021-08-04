@@ -1,0 +1,499 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap");
+
+@mixin flex($display, $align, $margin-bottom) {
+  display: $display;
+  align-items: $align;
+  margin-bottom: $margin-bottom;
+}
+
+@mixin textStyle($font-size, $font-weight, $text-shadow, $margin-bottom) {
+  font-size: $font-size;
+  font-weight: $font-weight;
+  text-shadow: $text-shadow;
+  margin-bottom: $margin-bottom;
+}
+
+@mixin removeOriginal($outline, $border, $cursor) {
+  outline: $outline;
+  border: $border;
+  cursor: $cursor;
+}
+
+@mixin mQ($arg) {
+  @media screen and (max-width: $arg) {
+    @content;
+  }
+}
+
+$transition: all 0.3s ease;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  background-image: url("images/backgrounds/sunset.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+@mixin flex($display, $align, $margin-bottom) {
+  display: $display;
+  align-items: $align;
+  margin-bottom: $margin-bottom;
+}
+
+.header {
+  @include flex(flex, center, 0em);
+  justify-content: space-between;
+}
+
+.socials {
+  padding: 2em 8em;
+  margin: 1.5em 2.5em 0em 0em;
+  a {
+    margin-right: 1.8em;
+    @include mQ(1050px) {
+      margin-right: 1em;
+    }
+  }
+  @include mQ(1300px) {
+    img {
+      width: 34px;
+    }
+  }
+  @include mQ(1100px) {
+    img {
+      width: 30px;
+    }
+  }
+  @include mQ(1050px) {
+    margin: 1.5em 1em 0em 0em;
+  }
+}
+
+.weather-app {
+  @include flex(flex, flex-end, 0em);
+  flex-direction: column;
+  color: white;
+  padding: 2em 4em;
+  letter-spacing: 0.05em;
+  .temperature {
+    @include flex(flex, flex-end, 0.4em);
+    .icon-div {
+      .temperature-icon {
+        @include mQ(1000px) {
+          width: 26px;
+        }
+      }
+    }
+    .temperature-degree {
+      @include textStyle(2.5em, 700, 2px 2px 4px rgba(0, 0, 0, 0.3), -0.1em);
+      margin-left: 0.2em;
+      @include mQ(1450px) {
+        font-size: 2.2em;
+      }
+      @include mQ(1000px) {
+        font-size: 1.9em;
+      }
+    }
+    .degree-icon {
+      align-self: flex-start;
+    }
+  }
+  .location {
+    @include textStyle(1.5em, 700, 4px 4px 3px rgba(0, 0, 0, 0.4), 0.4em);
+    @include mQ(1450px) {
+      font-size: 1.3em;
+    }
+    @include mQ(1000px) {
+      font-size: 1.2em;
+    }
+  }
+  .search-box {
+    @include removeOriginal(none, none, auto);
+    @include textStyle(0.85em, 700, none, 0.8em);
+    box-shadow: 5px 5px 6px 1px rgba(0, 0, 0, 0.4);
+    padding: 0.5em 0em 0.5em 1em;
+    border-radius: 0.35em;
+    &::placeholder {
+      color: #151515;
+    }
+    @include mQ(1450px) {
+      font-size: 0.75em;
+    }
+    @include mQ(1000px) {
+      font-size: 0.65em;
+    }
+  }
+  .extra-info {
+    @include textStyle(1.5em, normal, 2px 4px 4px rgba(8, 5, 5, 0.3), 0em);
+    display: flex;
+    p {
+      margin-top: 0.4em;
+    }
+    img {
+      margin-right: 0.7em;
+      @include mQ(1000px) {
+        width: 26px;
+      }
+    }
+    .humidity {
+      margin: 0.1em 0.7em 0em 0em;
+    }
+    .wind {
+      margin-top: 0.1em;
+    }
+    @include mQ(1450px) {
+      font-size: 1.3em;
+    }
+    @include mQ(1000px) {
+      font-size: 1.1em;
+    }
+  }
+}
+
+main {
+  display: flex;
+  margin-top: 1em;
+  padding: 0em 4em;
+  padding-bottom: 2em;
+  @include mQ(1300px) {
+    align-items: center;
+  }
+  @include mQ(900px) {
+    flex-direction: column;
+  }
+  .time-app {
+    color: white;
+    letter-spacing: 0.05em;
+    padding: 0em 2em;
+    margin-left: 2em;
+    flex: 1;
+    @include mQ(1300px) {
+      margin-left: 0em;
+    }
+    .time {
+      @include textStyle(8.5em, 700, none, 0em);
+      @include mQ(1550px) {
+        @include textStyle(7.5em, 700, none, 0em);
+      }
+      @include mQ(1300px) {
+        @include textStyle(7em, 700, none, 0em);
+      }
+      @include mQ(1100px) {
+        @include textStyle(5.7em, 700, none, 0em);
+      }
+      @include mQ(1000px) {
+        @include textStyle(5em, 700, none, 0em);
+      }
+    }
+    .greeting {
+      @include textStyle(4.8em, 700, none, 0em);
+      @include mQ(1550px) {
+        @include textStyle(4em, 700, none, 0em);
+      }
+      @include mQ(1300px) {
+        @include textStyle(3.5em, 700, none, 0em);
+      }
+      @include mQ(1100px) {
+        @include textStyle(2.8em, 700, none, 0em);
+      }
+      @include mQ(1000px) {
+        @include textStyle(2.4em, 700, none, 0em);
+      }
+    }
+    .quote,
+    .quote-origin {
+      @include textStyle(2.1em, 700, none, 0em);
+      @include mQ(1550px) {
+        @include textStyle(1.8em, 700, none, 0em);
+      }
+      @include mQ(1300px) {
+        @include textStyle(1.5em, 700, none, 0em);
+      }
+      @include mQ(1100px) {
+        @include textStyle(1.3em, 700, none, 0em);
+      }
+      @include mQ(1000px) {
+        @include textStyle(1.1em, 700, none, 0em);
+      }
+    }
+    .quote {
+      margin: 1em 0em;
+      font-style: italic;
+    }
+    .bottom {
+      @include flex(flex, center, 0em);
+      .button {
+        flex: 1;
+        .inspired-btn {
+          @include textStyle(1.8em, 700, none, 0em);
+          @include removeOriginal(none, none, pointer);
+          margin: 1em 2em 0em 0em;
+          background-color: rgba(15, 14, 14, 0.8);
+          color: white;
+          padding: 0.4em 1.4em;
+          text-transform: uppercase;
+          box-shadow: 2px 4px 10px 0px rgba(0, 0, 0, 0.7);
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.6);
+            color: rgba(0, 0, 0, 0.8);
+          }
+          @include mQ(1550px) {
+            @include textStyle(1.6em, 700, none, 0em);
+          }
+          @include mQ(1250px) {
+            @include textStyle(1.4em, 700, none, 0em);
+          }
+          @include mQ(1100px) {
+            @include textStyle(1.3em, 700, none, 0em);
+          }
+          @include mQ(1000px) {
+            @include textStyle(1.1em, 700, none, 0em);
+          }
+        }
+      }
+    }
+  }
+
+  .todo-app {
+    background-color: rgba(196, 196, 196, 0.4);
+    min-height: 60vh;
+    width: 30vw;
+    border-radius: 25px;
+    box-shadow: 8px 6px 10px 0px rgba(0, 0, 0, 0.5);
+    transition: $transition;
+    .date-box {
+      @include flex(flex, center, 1em);
+      height: 7vh;
+      background-color: rgba(80, 69, 69, 0.8);
+      border-top-left-radius: 25px;
+      border-top-right-radius: 25px;
+      color: white;
+      .today-date {
+        margin-left: 1em;
+        font-size: 1.7em;
+        flex: 1;
+        transition: $transition;
+        @include mQ(1750px) {
+          font-size: 1.4em;
+        }
+        @include mQ(1550px) {
+          font-size: 1.2em;
+        }
+        @include mQ(1150px) {
+          font-size: 1em;
+          margin-left: 1.3em;
+        }
+      }
+      .select {
+        margin: 0em 2em 0em 0.5em;
+        position: relative;
+        overflow: hidden;
+        border-radius: 0.25em;
+        box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.35);
+        select {
+          @include removeOriginal(none, none, pointer);
+          @include textStyle(1em, bold, none, none);
+          transition: $transition;
+          appearance: none;
+          height: 1.6em;
+          width: 9.5em;
+          padding-left: 0.7em;
+          @include mQ(1750px) {
+            width: 9em;
+          }
+          @include mQ(1550px) {
+            width: 10em;
+            height: 1.9em;
+            @include textStyle(0.8em, bold, none, none);
+          }
+          @include mQ(1150px) {
+            @include textStyle(0.7em, bold, none, none);
+          }
+        }
+        &:after {
+          content: "\25BC";
+          background: #c4c4c4;
+          position: absolute;
+          padding: 0.25rem 0.4rem;
+          pointer-events: none;
+          top: 0;
+          right: 0;
+          transition: 0.3s ease all;
+          @include mQ(1550px) {
+            top: -2px;
+          }
+          @include mQ(1150px) {
+            top: -1.5px;
+            padding: 0.15rem 0.3rem;
+          }
+        }
+        &:hover::after {
+          background: white;
+          color: black;
+        }
+      }
+    }
+    .todo-container {
+      min-height: 48vh;
+    }
+    .underline {
+      max-width: 86%;
+      background-color: white;
+      height: 2px;
+      margin: auto;
+      border-radius: 30%;
+    }
+    .add-task {
+      @include flex(flex, center, 0em);
+      padding: 1em 2em 1.15em 2em;
+      position: relative;
+      justify-content: center;
+      @include mQ(1350px) {
+        padding: 0.7em 1.3em 0.85em 1.3em;
+      }
+      form {
+        width: 100%;
+        .add-input {
+          @include removeOriginal(none, none, auto);
+          border-radius: 10px;
+          width: 100%;
+          font-size: 1.5em;
+          padding: 0.25em 0em 0.25em 0.5em;
+          box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.5);
+          &::placeholder {
+            color: rgba(6, 6, 5, 0.9);
+          }
+          @include mQ(1550px) {
+            font-size: 1.3em;
+          }
+          @include mQ(1250px) {
+            font-size: 1.1em;
+          }
+        }
+        .add-btn {
+          @include removeOriginal(none, none, pointer);
+          background-color: rgb(87, 82, 85);
+          border-radius: 10px;
+          position: absolute;
+          right: 38px;
+          top: 19.5px;
+          padding: 0.5em 0.6em 0.25em 0.6em;
+          transition: all 0.3s ease;
+          &:hover {
+            background-color: #33bf99;
+          }
+          @include mQ(1350px) {
+            right: 26px;
+          }
+          @include mQ(1250px) {
+            padding: 0.45em 0.5em 0.15em 0.5em;
+            top: 15px;
+          }
+          img {
+            @include mQ(1550px) {
+              width: 80%;
+            }
+            @include mQ(1250px) {
+              width: 60%;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Added elements
+
+.todo-list {
+  padding: 0em 2em 0em 2em;
+  @include mQ(1350px) {
+    padding: 0em 1.3em 0em 1.3em;
+  }
+  .todo {
+    background-color: white;
+    margin: auto;
+    height: 40px;
+    padding: 0em 1em 0em 1em;
+    border-radius: 10px;
+    cursor: move;
+    @include flex(flex, center, 1em);
+    box-shadow: 4px 4px 4px 1px rgba(0, 0, 0, 0.5);
+    @include mQ(1150px) {
+      height: 34px;
+    }
+    .todo-item {
+      list-style: none;
+      color: rgba(6, 6, 5, 0.9);
+      font-size: 1.4em;
+      width: 100%;
+      @include mQ(1550px) {
+        font-size: 1.1em;
+      }
+      @include mQ(1250px) {
+        font-size: 0.9em;
+      }
+    }
+    .complete-btn,
+    .trash-btn {
+      @include removeOriginal(none, none, pointer);
+      margin: 0.3em 0em 0em 1.5em;
+      background-color: white;
+      img {
+        pointer-events: none;
+        width: 100%;
+      }
+    }
+  }
+}
+
+.completed {
+  transition: all 0.5s ease;
+  text-decoration: line-through;
+  opacity: 0.5;
+  animation: strike 0.5s linear;
+}
+
+.fall {
+  transform: translateY(8rem) rotateZ(0deg);
+  opacity: 0;
+}
+
+@keyframes strike {
+  from {
+    text-decoration-color: transparent;
+  }
+  to {
+    text-decoration-color: auto;
+  }
+}
+
+// Media Queries
+
+@media screen and (max-height: 750px) {
+  .weather-app {
+    padding: 1em 4em;
+  }
+  .todo-list {
+    .todo {
+      height: 28px;
+      .complete-btn,
+      .trash-btn {
+        margin: 0.3em 0em 0em 1.5em;
+        img {
+          width: 80%;
+        }
+      }
+    }
+  }
+}
