@@ -1,2 +1,5 @@
 .vscode
 *.log
+node_modules/
+config.js
+.cache

@@ -36,7 +36,7 @@ $transition: all 0.3s ease;
 
 body {
   font-family: "Roboto", sans-serif;
-  background-image: url("images/backgrounds/sunset.jpg");
+  background-image: url("/src/images/backgrounds/sunset.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: bottom center;
@@ -53,29 +53,17 @@ body {
 .header {
   @include flex(flex, center, 0em);
   justify-content: space-between;
+  padding: 2em 4em;
 }
 
 .socials {
-  padding: 2em 8em;
-  margin: 1.5em 2.5em 0em 0em;
+  display: flex;
   a {
-    margin-right: 1.8em;
-    @include mQ(1050px) {
-      margin-right: 1em;
-    }
+    margin-right: 1.5em;
   }
-  @include mQ(1300px) {
-    img {
-      width: 34px;
-    }
-  }
-  @include mQ(1100px) {
-    img {
-      width: 30px;
-    }
-  }
-  @include mQ(1050px) {
-    margin: 1.5em 1em 0em 0em;
+  p {
+    font-size: 2.25em;
+    color: white;
   }
 }
 
@@ -83,7 +71,6 @@ body {
   @include flex(flex, flex-end, 0em);
   flex-direction: column;
   color: white;
-  padding: 2em 4em;
   letter-spacing: 0.05em;
   .temperature {
     @include flex(flex, flex-end, 0.4em);
@@ -162,9 +149,8 @@ body {
 
 main {
   display: flex;
-  margin-top: 1em;
-  padding: 0em 4em;
-  padding-bottom: 2em;
+  padding: 2em 4em;
+  justify-content: space-between;
   @include mQ(1300px) {
     align-items: center;
   }
@@ -174,9 +160,6 @@ main {
   .time-app {
     color: white;
     letter-spacing: 0.05em;
-    padding: 0em 2em;
-    margin-left: 2em;
-    flex: 1;
     @include mQ(1300px) {
       margin-left: 0em;
     }
@@ -226,9 +209,16 @@ main {
         @include textStyle(1.1em, 700, none, 0em);
       }
     }
+    .quotes {
+      max-width: 1000px;
+    }
     .quote {
       margin: 1em 0em;
       font-style: italic;
+      min-height: 100px;
+    }
+    .quote-origin {
+      text-align: right;
     }
     .bottom {
       @include flex(flex, center, 0em);
@@ -267,8 +257,9 @@ main {
   .todo-app {
     background-color: rgba(196, 196, 196, 0.4);
     min-height: 60vh;
-    width: 30vw;
     border-radius: 25px;
+    min-width: 30vw;
+    margin-left: 2em;
     box-shadow: 8px 6px 10px 0px rgba(0, 0, 0, 0.5);
     transition: $transition;
     .date-box {

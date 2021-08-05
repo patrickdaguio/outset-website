@@ -1,8 +1,10 @@
+import config from './config'
+
 // Weather App
 
 // API 
 const api = {
-    key: "4e64f52c084e3654951dbc0177bdf7ae",
+    key: config.MY_KEY,
     base: "https://api.openweathermap.org/data/2.5/"
 }
 
@@ -58,21 +60,21 @@ function displayResults(weather) {
     humidity.textContent = `${weather.main.humidity}%`;
     wind.textContent = `${weather.wind.speed.toFixed(1)}mph`;
     if (weather.weather[0].main === "Thunderstorm") {
-        temperatureIcon.src="images/weather/storming.png";
+        temperatureIcon.src=`${require("../images/weather/storming.png")}`;
     } else if (weather.weather[0].main === "Clear") {
-        temperatureIcon.src="images/weather/sunny.png";
+        temperatureIcon.src=`${require("../images/weather/sunny.png")}`;
     } else if (weather.weather[0].main === "Snow") {
-        temperatureIcon.src="images/weather/snowing.png";
+        temperatureIcon.src=`${require("../images/weather/snowing.png")}`;
     } else if (weather.weather[0].main === "Rain") {
-        temperatureIcon.src="images/weather/raining.png";
+        temperatureIcon.src=`${require("../images/weather/raining.png")}`;
     } else if (weather.weather[0].description === "few clouds" || weather.weather[0].description === "scattered clouds") {
-        temperatureIcon.src="images/weather/cloudy sun.png";
+        temperatureIcon.src=`${require("../images/weather/cloudy sun.png")}`;
     } else if (weather.weather[0].main === "Drizzle") {
-        temperatureIcon.src="images/weather/cloudy rain.png";
+        temperatureIcon.src=`${require("../images/weather/cloudy rain.png")}`;
     } else if (weather.weather[0].description === "broken clouds" || weather.weather[0].description === "overcast clouds") {
-        temperatureIcon.src="images/weather/cloudy.png";
+        temperatureIcon.src=`${require("../images/weather/cloudy.png")}`;
     } else if (weather.wind.speed > 30) {
-        temperatureIcon.src="images/weather/windy.png";
+        temperatureIcon.src=`${require("../images/weather/windy.png")}`;
     }
     searchBox.value = '';
 }
@@ -104,36 +106,36 @@ function greetings() {
 
     if (hours >= 14 && hours < 18) {
         greeting.textContent = 'Good afternoon, Patrick';
-        document.body.style.backgroundImage = "url('images/backgrounds/afternoon.jpg')";
+        document.body.style.backgroundImage = `url('${require("../images/backgrounds/afternoon.jpg")}')`;
     } else if (hours >= 18 && hours < 20) {
         greeting.textContent = 'Sunset time, Patrick';
-        document.body.style.backgroundImage = "url('images/backgrounds/sunset.jpg')";
+        document.body.style.backgroundImage = `url('${require("../images/backgrounds/sunset.jpg")}')`;
         document.body.style.backgroundPosition = "center";
     } else if (hours >= 20 && hours < 21) {
         greeting.textContent = 'Dinner time, Patrick';
-        document.body.style.backgroundImage = "url('images/backgrounds/dinner.jpg')";
+        document.body.style.backgroundImage = `url('${require("../images/backgrounds/dinner.jpg")}')`;
     } else if (hours >= 21 && hours !== 0) {
         greeting.textContent = 'Good evening, Patrick';
-        document.body.style.backgroundImage = "url('images/backgrounds/night.jpg')";
+        document.body.style.backgroundImage = `url('${require("../images/backgrounds/night.jpg")}')`;
     } else if (hours >= 0 && hours < 5) {
         greeting.textContent = 'Go to bed, Patrick';
-        document.body.style.backgroundImage = "url('images/backgrounds/bed.jpg')";
+        document.body.style.backgroundImage = `url('${require("../images/backgrounds/bed.jpg")}')`;
         document.body.style.backgroundPosition = "center";
     } else if (hours >= 5 && hours < 7) {
         greeting.textContent = 'Sunrise time, Patrick';
-        document.body.style.backgroundImage = "url('images/backgrounds/sunrise.jpg')";
+        document.body.style.backgroundImage = `url('${require("../images/backgrounds/sunrise.jpg")}')`;
     } else if (hours >= 7 && hours < 10) {
         greeting.textContent = 'Good morning, Patrick';
-        document.body.style.backgroundImage = "url('images/backgrounds/morning.jpg')";
+        document.body.style.backgroundImage = `url('${require("../images/backgrounds/morning.jpg")}')`;
         document.body.style.backgroundPosition = "center";
         timeApp.style.color = "rgba(15,14,14, 0.8)";
     } else if (hours >= 10 && hours < 12) {
         greeting.textContent = 'Time to be productive, Patrick';
-        document.body.style.backgroundImage = "url('images/backgrounds/study.jpg')";
+        document.body.style.backgroundImage = `url('${require("../images/backgrounds/study.jpg")}')`;
         document.body.style.backgroundPosition = "center";
     } else if (hours >= 12 && hours < 14) {
         greeting.textContent = 'Lunch Time, Patrick';
-        document.body.style.backgroundImage = "url('images/backgrounds/lunch1.jpg')";
+        document.body.style.backgroundImage = `url('${require("../images/backgrounds/lunch1.jpg")}')`;
         document.body.style.backgroundPosition = "center";
     }
 }
@@ -198,12 +200,12 @@ function addTodo(event) {
     saveLocalTodos(addInput.value);
     // Check Mark Button
     const completedButton = document.createElement('button');
-    completedButton.innerHTML = '<img src="images/todo/uncheck1.png">';
+    completedButton.innerHTML = `<img src='${require("../images/todo/uncheck1.png")}'>`;
     completedButton.classList.add('complete-btn');
     todoDiv.appendChild(completedButton);
     // Delete Mark Button
     const trashButton = document.createElement('button');
-    trashButton.innerHTML = '<img src="images/todo/trash1.png">';
+    trashButton.innerHTML = `<img src='${require("../images/todo/trash1.png")}'>`;
     trashButton.classList.add('trash-btn');
     todoDiv.appendChild(trashButton);
 
@@ -240,13 +242,13 @@ function deleteCheck(e) {
         todo.classList.toggle('completed');
     }
     if (item.firstElementChild.src.match('uncheck1')) {
-        item.firstElementChild.src = 'images/todo/checked1.png';
+        item.firstElementChild.src = require("../images/todo/checked1.png");
     }
     else if (item.firstElementChild.src.match('checked')) {
-        item.firstElementChild.src = 'images/todo/uncheck1.png';
+        item.firstElementChild.src = require("../images/todo/uncheck1.png");
         todo.style.transition = "all 0.5s ease";
     } else {
-        item.firstElementChild.src = 'images/todo/trash1.png';
+        item.firstElementChild.src = require("../images/todo/trash1.png");
         todo.style.transition = "all 0.5s ease";
     }
 
@@ -314,18 +316,18 @@ function getTodos() {
     todoDiv.appendChild(newTodo);
     // Check Mark Button
     const completedButton = document.createElement('button');
-    completedButton.innerHTML = '<img src="images/todo/uncheck1.png">';
+    completedButton.innerHTML = `<img src='${require("../images/todo/uncheck1.png")}'>`;
     completedButton.classList.add('complete-btn');
     todoDiv.appendChild(completedButton);
     // Delete Mark Button
     const trashButton = document.createElement('button');
-    trashButton.innerHTML = '<img src="images/todo/trash1.png">';
+    trashButton.innerHTML = `<img src='${require("../images/todo/trash1.png")}'>`;
     trashButton.classList.add('trash-btn');
     todoDiv.appendChild(trashButton);
 
     if (todo.status === 'complete') {
         newTodo.parentElement.classList.add('completed')
-        completedButton.innerHTML = '<img src="images/todo/checked1.png">';
+        completedButton.innerHTML = `<img src='${require("../images/todo/checked1.png")}'>`;
     }
 
     todoList.appendChild(todoDiv);

@@ -1,0 +1,27 @@
+{
+  "name": "outset-website",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patrickdaguio/outset-website.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/patrickdaguio/outset-website/issues"
+  },
+  "homepage": "https://github.com/patrickdaguio/outset-website#readme",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.5",
+    "sass": "^1.37.5"
+  },
+  "dependencies": {
+    "config": "^3.3.6"
+  }
+}
