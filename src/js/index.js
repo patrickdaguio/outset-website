@@ -4,7 +4,8 @@ import config from './config'
 
 // API 
 const api = {
-    key: config.MY_KEY,
+    keyOne: config.MY_KEY_1,
+    keyTwo: config.MY_KEY_2,
     base: "https://api.openweathermap.org/data/2.5/"
 }
 
@@ -28,7 +29,7 @@ window.addEventListener("load", () => {
             lon = position.coords.longitude;
             lat = position.coords.latitude;
 
-            fetch(`${api.base}weather?lat=${lat}&lon=${lon}&units=metric&APPID=${api.key}`)
+            fetch(`${api.base}weather?lat=${lat}&lon=${lon}&units=metric&APPID=${api.keyOne}`)
             .then(weather => {
                 return weather.json();
             }).then(displayResults);
@@ -48,7 +49,7 @@ function setQuery(e) {
 }
 
 function getResults(query) {
-    fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
+    fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.keyOne}`)
         .then(weather => {
             return weather.json();
         }).then(displayResults);
@@ -102,7 +103,7 @@ function greetings() {
 
     time.textContent = currentTime;
 
-    setTimeout("greetings()", 0);
+    setTimeout(greetings, 1000);
 
     if (hours >= 14 && hours < 18) {
         greeting.textContent = 'Good afternoon, Patrick';
@@ -161,6 +162,16 @@ function generateQuote() {
     });
 }
 
+function generateBackground() {
+    fetch(`https://api.unsplash.com/collections/214812/photos/?client_id=${api.keyTwo}`)
+    .then(response => {
+        return response.json()
+    })
+    .then(data => {
+        console.log(data.length)
+    })
+}
+
 // Todo List App
 
 function dateToday(x) {
@@ -174,7 +185,6 @@ function dateToday(x) {
 
 // HTML Tags
 
-const todoContainer = document.querySelector('.todo-container');
 const todoList = document.querySelector('.todo-list');
 const addInput = document.querySelector('.add-input');
 const addBtn = document.querySelector('.add-btn');
@@ -185,6 +195,14 @@ document.addEventListener('DOMContentLoaded', getTodos);
 addBtn.addEventListener('click', addTodo);
 todoList.addEventListener('click', deleteCheck);
 filterOption.addEventListener('click', filterTodo);
+
+// Global - LocalStorage variable
+let todos; 
+if (localStorage.getItem('todos') === null) {
+    todos = [];
+} else {
+    todos = JSON.parse(localStorage.getItem('todos'));
+}
 
 function addTodo(event) {
     event.preventDefault();
@@ -211,31 +229,12 @@ function addTodo(event) {
 
     todoList.appendChild(todoDiv);
     addInput.value = '';
-    
 }
 
 function deleteCheck(e) {
     const item = e.target;
     const todo = item.parentElement;
-    // Delete Todo
-    if (item.classList[0] === 'trash-btn') {
-        // Animation
-        todo.classList.add('fall');
-        removeLocalTodos(todo);
-        todo.addEventListener('transitionend', function() {
-            todo.remove();
-        });
-    }
-
-    
-    let todos; 
-    if (localStorage.getItem('todos') === null) {
-        todos = [];
-    } else {
-        todos = JSON.parse(localStorage.getItem('todos'));
-    }
-
-    let liIndex = Array.prototype.indexOf.call(todoList.childNodes, todo)
+    const nodes = Array.prototype.slice.call(todoList.children);
 
     // Check Mark
     if (item.classList[0] === 'complete-btn') {
@@ -253,12 +252,23 @@ function deleteCheck(e) {
     }
 
     if(todo.classList.contains('completed')) {
-        todos[liIndex].status = 'complete'
+        todos[nodes.indexOf(todo)].status = 'complete'
     } else {
-        todos[liIndex].status = 'incomplete'
+        todos[nodes.indexOf(todo)].status = 'incomplete'
     }
+
     localStorage.setItem('todos', JSON.stringify(todos));
 
+
+    // Delete Todo
+    if (item.classList[0] === 'trash-btn') {
+        // Animation
+        todo.classList.add('fall');
+        removeLocalTodos(nodes.indexOf(todo));
+        todo.addEventListener('transitionend', function() {
+            todo.remove();
+        });
+    }
 }
 
 function filterTodo(e) {
@@ -287,24 +297,11 @@ function filterTodo(e) {
 }
 
 function saveLocalTodos(todo) {
-    // Check content
-    let todos; 
-    if (localStorage.getItem('todos') === null) {
-        todos = [];
-    } else {
-        todos = JSON.parse(localStorage.getItem('todos'));
-    }
     todos.push({item: todo, status: 'incomplete'});
     localStorage.setItem('todos', JSON.stringify(todos));
 }
 
 function getTodos() {
-    let todos; 
-    if (localStorage.getItem('todos') === null) {
-        todos = [];
-    } else {
-        todos = JSON.parse(localStorage.getItem('todos'));
-    }
     todos.forEach(function(todo) {
         // Todo DIV
     const todoDiv = document.createElement('div');
@@ -336,14 +333,7 @@ function getTodos() {
 
 
 function removeLocalTodos(todo) {
-    let todos; 
-    if (localStorage.getItem('todos') === null) {
-        todos = [];
-    } else {
-        todos = JSON.parse(localStorage.getItem('todos'));
-    }
-    const todoIndex = todo.children[0].textContent;
-    todos.splice(todos.indexOf(todoIndex), 1);
+    todos.splice(todo, 1)
     localStorage.setItem('todos', JSON.stringify(todos));
 }
 
@@ -364,5 +354,23 @@ const x = window.matchMedia("(max-width: 1350px)");
 x.addEventListener('change', changeDate);
 
 new Sortable(todolist, {
-    animation: 150
+    animation: 150,
+    onUpdate: function(e) {
+        function array_move(arr, old_index, new_index) {
+            arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+            return arr; 
+        };
+
+        array_move(todos, e.oldIndex, e.newIndex)
+
+        localStorage.setItem('todos', JSON.stringify(todos));
+
+    }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const todoItems = document.querySelectorAll('.todo-item')
+    todoItems.forEach(items => {
+        items.setAttribute("contenteditable", "true");
+    })
+}) 

@@ -125,7 +125,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 var config = {
-  MY_KEY: '4e64f52c084e3654951dbc0177bdf7ae'
+  MY_KEY_1: '4e64f52c084e3654951dbc0177bdf7ae',
+  MY_KEY_2: 'ZEGSTnyNsYLB0Y4mz8ZKMJjhGu3qkKsJmpXk3LAgsJQ'
 };
 var _default = config;
 exports.default = _default;
@@ -179,7 +180,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // Weather App
 // API 
 var api = {
-  key: _config.default.MY_KEY,
+  keyOne: _config.default.MY_KEY_1,
+  keyTwo: _config.default.MY_KEY_2,
   base: "https://api.openweathermap.org/data/2.5/"
 }; // HTML TAgs
 
@@ -198,7 +200,7 @@ window.addEventListener("load", function () {
     navigator.geolocation.getCurrentPosition(function (position) {
       lon = position.coords.longitude;
       lat = position.coords.latitude;
-      fetch("".concat(api.base, "weather?lat=").concat(lat, "&lon=").concat(lon, "&units=metric&APPID=").concat(api.key)).then(function (weather) {
+      fetch("".concat(api.base, "weather?lat=").concat(lat, "&lon=").concat(lon, "&units=metric&APPID=").concat(api.keyOne)).then(function (weather) {
         return weather.json();
       }).then(displayResults);
     });
@@ -217,7 +219,7 @@ function setQuery(e) {
 }
 
 function getResults(query) {
-  fetch("".concat(api.base, "weather?q=").concat(query, "&units=metric&APPID=").concat(api.key)).then(function (weather) {
+  fetch("".concat(api.base, "weather?q=").concat(query, "&units=metric&APPID=").concat(api.keyOne)).then(function (weather) {
     return weather.json();
   }).then(displayResults);
 }
@@ -266,7 +268,7 @@ function greetings() {
   var minutes = addZero(date.getMinutes());
   var currentTime = "".concat(hours, ":").concat(minutes);
   time.textContent = currentTime;
-  setTimeout("greetings()", 0);
+  setTimeout(greetings, 1000);
 
   if (hours >= 14 && hours < 18) {
     greeting.textContent = 'Good afternoon, Patrick';
@@ -323,6 +325,14 @@ function generateQuote() {
       quoteOrigin.textContent = "- ".concat(data[index].author);
     }
   });
+}
+
+function generateBackground() {
+  fetch("https://api.unsplash.com/collections/214812/photos/?client_id=".concat(api.keyTwo)).then(function (response) {
+    return response.json();
+  }).then(function (data) {
+    console.log(data.length);
+  });
 } // Todo List App
 
 
@@ -334,7 +344,6 @@ function dateToday(x) {
 } // HTML Tags
 
 
-var todoContainer = document.querySelector('.todo-container');
 var todoList = document.querySelector('.todo-list');
 var addInput = document.querySelector('.add-input');
 var addBtn = document.querySelector('.add-btn');
@@ -342,7 +351,15 @@ var filterOption = document.querySelector('.filter-todo');
 document.addEventListener('DOMContentLoaded', getTodos);
 addBtn.addEventListener('click', addTodo);
 todoList.addEventListener('click', deleteCheck);
-filterOption.addEventListener('click', filterTodo);
+filterOption.addEventListener('click', filterTodo); // Global - LocalStorage variable
+
+var todos;
+
+if (localStorage.getItem('todos') === null) {
+  todos = [];
+} else {
+  todos = JSON.parse(localStorage.getItem('todos'));
+}
 
 function addTodo(event) {
   event.preventDefault(); // Todo DIV
@@ -372,26 +389,8 @@ function addTodo(event) {
 
 function deleteCheck(e) {
   var item = e.target;
-  var todo = item.parentElement; // Delete Todo
-
-  if (item.classList[0] === 'trash-btn') {
-    // Animation
-    todo.classList.add('fall');
-    removeLocalTodos(todo);
-    todo.addEventListener('transitionend', function () {
-      todo.remove();
-    });
-  }
-
-  var todos;
-
-  if (localStorage.getItem('todos') === null) {
-    todos = [];
-  } else {
-    todos = JSON.parse(localStorage.getItem('todos'));
-  }
-
-  var liIndex = Array.prototype.indexOf.call(todoList.childNodes, todo); // Check Mark
+  var todo = item.parentElement;
+  var nodes = Array.prototype.slice.call(todoList.children); // Check Mark
 
   if (item.classList[0] === 'complete-btn') {
     todo.classList.toggle('completed');
@@ -408,12 +407,21 @@ function deleteCheck(e) {
   }
 
   if (todo.classList.contains('completed')) {
-    todos[liIndex].status = 'complete';
+    todos[nodes.indexOf(todo)].status = 'complete';
   } else {
-    todos[liIndex].status = 'incomplete';
+    todos[nodes.indexOf(todo)].status = 'incomplete';
   }
 
-  localStorage.setItem('todos', JSON.stringify(todos));
+  localStorage.setItem('todos', JSON.stringify(todos)); // Delete Todo
+
+  if (item.classList[0] === 'trash-btn') {
+    // Animation
+    todo.classList.add('fall');
+    removeLocalTodos(nodes.indexOf(todo));
+    todo.addEventListener('transitionend', function () {
+      todo.remove();
+    });
+  }
 }
 
 function filterTodo(e) {
@@ -446,15 +454,6 @@ function filterTodo(e) {
 }
 
 function saveLocalTodos(todo) {
-  // Check content
-  var todos;
-
-  if (localStorage.getItem('todos') === null) {
-    todos = [];
-  } else {
-    todos = JSON.parse(localStorage.getItem('todos'));
-  }
-
   todos.push({
     item: todo,
     status: 'incomplete'
@@ -463,14 +462,6 @@ function saveLocalTodos(todo) {
 }
 
 function getTodos() {
-  var todos;
-
-  if (localStorage.getItem('todos') === null) {
-    todos = [];
-  } else {
-    todos = JSON.parse(localStorage.getItem('todos'));
-  }
-
   todos.forEach(function (todo) {
     // Todo DIV
     var todoDiv = document.createElement('div');
@@ -501,16 +492,7 @@ function getTodos() {
 }
 
 function removeLocalTodos(todo) {
-  var todos;
-
-  if (localStorage.getItem('todos') === null) {
-    todos = [];
-  } else {
-    todos = JSON.parse(localStorage.getItem('todos'));
-  }
-
-  var todoIndex = todo.children[0].textContent;
-  todos.splice(todos.indexOf(todoIndex), 1);
+  todos.splice(todo, 1);
   localStorage.setItem('todos', JSON.stringify(todos));
 }
 
@@ -529,7 +511,23 @@ function changeDate() {
 var x = window.matchMedia("(max-width: 1350px)");
 x.addEventListener('change', changeDate);
 new Sortable(todolist, {
-  animation: 150
+  animation: 150,
+  onUpdate: function onUpdate(e) {
+    function array_move(arr, old_index, new_index) {
+      arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+      return arr;
+    }
+
+    ;
+    array_move(todos, e.oldIndex, e.newIndex);
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }
+});
+document.addEventListener('DOMContentLoaded', function () {
+  var todoItems = document.querySelectorAll('.todo-item');
+  todoItems.forEach(function (items) {
+    items.setAttribute("contenteditable", "true");
+  });
 });
 },{"./config":"src/js/config.js","../images/weather/storming.png":"src/images/weather/storming.png","../images/weather/sunny.png":"src/images/weather/sunny.png","../images/weather/snowing.png":"src/images/weather/snowing.png","../images/weather/raining.png":"src/images/weather/raining.png","../images/weather/cloudy sun.png":"src/images/weather/cloudy sun.png","../images/weather/cloudy rain.png":"src/images/weather/cloudy rain.png","../images/weather/cloudy.png":"src/images/weather/cloudy.png","../images/weather/windy.png":"src/images/weather/windy.png","../images/backgrounds/afternoon.jpg":"src/images/backgrounds/afternoon.jpg","../images/backgrounds/sunset.jpg":"src/images/backgrounds/sunset.jpg","../images/backgrounds/dinner.jpg":"src/images/backgrounds/dinner.jpg","../images/backgrounds/night.jpg":"src/images/backgrounds/night.jpg","../images/backgrounds/bed.jpg":"src/images/backgrounds/bed.jpg","../images/backgrounds/sunrise.jpg":"src/images/backgrounds/sunrise.jpg","../images/backgrounds/morning.jpg":"src/images/backgrounds/morning.jpg","../images/backgrounds/study.jpg":"src/images/backgrounds/study.jpg","../images/backgrounds/lunch1.jpg":"src/images/backgrounds/lunch1.jpg","../images/todo/uncheck1.png":"src/images/todo/uncheck1.png","../images/todo/trash1.png":"src/images/todo/trash1.png","../images/todo/checked1.png":"src/images/todo/checked1.png"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -559,7 +557,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49239" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52656" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

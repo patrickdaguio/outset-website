@@ -44,6 +44,14 @@ body {
   overflow-x: hidden;
 }
 
+#myVideo {
+  object-fit: cover;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  z-index: -1;
+}
+
 @mixin flex($display, $align, $margin-bottom) {
   display: $display;
   align-items: $align;
@@ -148,7 +156,9 @@ body {
 }
 
 main {
-  display: flex;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2em;
   padding: 2em 4em;
   justify-content: space-between;
   @include mQ(1300px) {
@@ -160,6 +170,7 @@ main {
   .time-app {
     color: white;
     letter-spacing: 0.05em;
+    max-width: 1000px;
     @include mQ(1300px) {
       margin-left: 0em;
     }
@@ -209,13 +220,11 @@ main {
         @include textStyle(1.1em, 700, none, 0em);
       }
     }
-    .quotes {
-      max-width: 1000px;
-    }
+
     .quote {
       margin: 1em 0em;
       font-style: italic;
-      min-height: 100px;
+      min-height: 120px;
     }
     .quote-origin {
       text-align: right;
@@ -227,10 +236,11 @@ main {
         .inspired-btn {
           @include textStyle(1.8em, 700, none, 0em);
           @include removeOriginal(none, none, pointer);
-          margin: 1em 2em 0em 0em;
           background-color: rgba(15, 14, 14, 0.8);
+          border-radius: 0.35em;
           color: white;
           padding: 0.4em 1.4em;
+          transition: 0.3s ease all;
           text-transform: uppercase;
           box-shadow: 2px 4px 10px 0px rgba(0, 0, 0, 0.7);
           &:hover {
@@ -259,7 +269,6 @@ main {
     min-height: 60vh;
     border-radius: 25px;
     min-width: 30vw;
-    margin-left: 2em;
     box-shadow: 8px 6px 10px 0px rgba(0, 0, 0, 0.5);
     transition: $transition;
     .date-box {
@@ -427,7 +436,12 @@ main {
       list-style: none;
       color: rgba(6, 6, 5, 0.9);
       font-size: 1.4em;
-      width: 100%;
+      display: inline-block;
+      margin-right: auto;
+      cursor: text;
+      &[contenteditable]:focus {
+        outline: 0px solid transparent;
+      }
       @include mQ(1550px) {
         font-size: 1.1em;
       }
@@ -449,7 +463,7 @@ main {
 }
 
 .completed {
-  transition: all 0.5s ease;
+  transition: opacity 0.5s ease;
   text-decoration: line-through;
   opacity: 0.5;
   animation: strike 0.5s linear;
