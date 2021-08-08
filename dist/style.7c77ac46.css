@@ -9,22 +9,22 @@
 
 body {
   font-family: "Roboto", sans-serif;
-  background-image: url("/sunset.32aa7c5a.jpg");
+  background-image: url("/sunset1.2dd3f8a4.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: bottom center;
   min-height: 100vh;
   overflow-x: hidden;
+  transition: all 0.5s ease-in-out;
 }
 
-#myVideo {
+/* #myVideo {
   object-fit: cover;
   position: fixed;
   height: 100%;
   width: 100%;
   z-index: -1;
-}
-
+} */
 .header {
   display: flex;
   align-items: center;
@@ -111,7 +111,7 @@ body {
   border-radius: 0.35em;
 }
 .weather-app .search-box::placeholder {
-  color: #151515;
+  color: #504545;
 }
 @media screen and (max-width: 1450px) {
   .weather-app .search-box {
@@ -158,12 +158,23 @@ body {
   }
 }
 
-main {
+.main-left {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 2em;
-  padding: 2em 4em;
   justify-content: space-between;
+}
+.main-left .time-app {
+  max-width: 1000px;
+  margin: initial;
+  width: 0;
+  transition: width 0.8s ease;
+}
+
+main {
+  display: block;
+  text-align: center;
+  padding: 2em 4em;
 }
 @media screen and (max-width: 1300px) {
   main {
@@ -178,7 +189,9 @@ main {
 main .time-app {
   color: white;
   letter-spacing: 0.05em;
-  max-width: 1000px;
+  white-space: nowrap;
+  width: 100%;
+  transition: width 0.8s ease;
 }
 @media screen and (max-width: 1300px) {
   main .time-app {
@@ -307,20 +320,11 @@ main .time-app .quote-origin {
 main .time-app .quote {
   margin: 1em 0em;
   font-style: italic;
-  min-height: 120px;
 }
 main .time-app .quote-origin {
-  text-align: right;
+  margin-bottom: 1em;
 }
-main .time-app .bottom {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0em;
-}
-main .time-app .bottom .button {
-  flex: 1;
-}
-main .time-app .bottom .button .inspired-btn {
+main .time-app .button .inspired-btn {
   font-size: 1.8em;
   font-weight: 700;
   text-shadow: none;
@@ -336,12 +340,12 @@ main .time-app .bottom .button .inspired-btn {
   text-transform: uppercase;
   box-shadow: 2px 4px 10px 0px rgba(0, 0, 0, 0.7);
 }
-main .time-app .bottom .button .inspired-btn:hover {
+main .time-app .button .inspired-btn:hover {
   background-color: rgba(255, 255, 255, 0.6);
   color: rgba(0, 0, 0, 0.8);
 }
 @media screen and (max-width: 1550px) {
-  main .time-app .bottom .button .inspired-btn {
+  main .time-app .button .inspired-btn {
     font-size: 1.6em;
     font-weight: 700;
     text-shadow: none;
@@ -349,7 +353,7 @@ main .time-app .bottom .button .inspired-btn:hover {
   }
 }
 @media screen and (max-width: 1250px) {
-  main .time-app .bottom .button .inspired-btn {
+  main .time-app .button .inspired-btn {
     font-size: 1.4em;
     font-weight: 700;
     text-shadow: none;
@@ -357,7 +361,7 @@ main .time-app .bottom .button .inspired-btn:hover {
   }
 }
 @media screen and (max-width: 1100px) {
-  main .time-app .bottom .button .inspired-btn {
+  main .time-app .button .inspired-btn {
     font-size: 1.3em;
     font-weight: 700;
     text-shadow: none;
@@ -365,7 +369,7 @@ main .time-app .bottom .button .inspired-btn:hover {
   }
 }
 @media screen and (max-width: 1000px) {
-  main .time-app .bottom .button .inspired-btn {
+  main .time-app .button .inspired-btn {
     font-size: 1.1em;
     font-weight: 700;
     text-shadow: none;
@@ -379,6 +383,30 @@ main .todo-app {
   min-width: 30vw;
   box-shadow: 8px 6px 10px 0px rgba(0, 0, 0, 0.5);
   transition: all 0.3s ease;
+  position: fixed;
+  z-index: 1;
+  top: 25%;
+  right: -600px;
+}
+main .todo-app .todo-open {
+  position: fixed;
+  transform: rotate(270deg);
+  background-color: white;
+  color: #504545;
+  padding: 0.3em 1em;
+  font-size: 1.5em;
+  border-top-left-radius: 0.5em;
+  border-top-right-radius: 0.5em;
+  font-weight: 700;
+  top: 50%;
+  right: -35px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  user-select: none;
+}
+main .todo-app .todo-open:hover {
+  background-color: rgba(80, 69, 69, 0.8);
+  color: white;
 }
 main .todo-app .date-box {
   display: flex;
@@ -429,6 +457,7 @@ main .todo-app .date-box .select select {
   margin-bottom: none;
   transition: all 0.3s ease;
   appearance: none;
+  color: #504545;
   height: 1.6em;
   width: 9.5em;
   padding-left: 0.7em;
@@ -567,6 +596,49 @@ main .todo-app .add-task form .add-btn:hover {
   }
 }
 
+footer {
+  position: fixed;
+  bottom: 25px;
+  left: 50%;
+  transform: translate(-50%, 50%);
+}
+footer .background-info {
+  color: white;
+}
+footer .background-info .background-location {
+  transform: translateZ(0) translateY(10px);
+  text-align: center;
+  transition: 0.3s ease-in-out;
+}
+footer .background-info .background-details {
+  margin-top: 0.3em;
+  justify-content: center;
+  font-size: 0.9em;
+  display: flex;
+  transform: translateZ(0) translateY(-8px);
+  opacity: 0;
+  transition: 0.3s ease-in-out;
+}
+footer .background-info .background-details a,
+footer .background-info .background-details .background-photo {
+  outline: none;
+  text-decoration: none;
+}
+footer .background-info .background-details p {
+  cursor: pointer;
+  margin-right: 0.5em;
+  transition: 0.3s;
+  color: #cac1c6;
+}
+footer .background-info .background-details p:hover {
+  color: white;
+}
+
+.background-show {
+  transform: translateZ(0) translateY(-8px) !important;
+  opacity: 1 !important;
+}
+
 .todo-list {
   padding: 0em 2em 0em 2em;
 }
@@ -578,7 +650,7 @@ main .todo-app .add-task form .add-btn:hover {
 .todo-list .todo {
   background-color: white;
   margin: auto;
-  height: 40px;
+  min-height: 40px;
   padding: 0em 1em 0em 1em;
   border-radius: 10px;
   cursor: move;
@@ -663,6 +735,10 @@ main .todo-app .add-task form .add-btn:hover {
 .todo-list .todo .trash-btn img {
     width: 80%;
   }
+}
+.todo-close {
+  right: 0px !important;
+  margin-right: 4em !important;
 }
 
 /*# sourceMappingURL=/style.7c77ac46.css.map */

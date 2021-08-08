@@ -104,40 +104,25 @@ function greetings() {
     time.textContent = currentTime;
 
     setTimeout(greetings, 1000);
-
+    
     if (hours >= 14 && hours < 18) {
         greeting.textContent = 'Good afternoon, Patrick';
-        document.body.style.backgroundImage = `url('${require("../images/backgrounds/afternoon.jpg")}')`;
     } else if (hours >= 18 && hours < 20) {
         greeting.textContent = 'Sunset time, Patrick';
-        document.body.style.backgroundImage = `url('${require("../images/backgrounds/sunset.jpg")}')`;
-        document.body.style.backgroundPosition = "center";
     } else if (hours >= 20 && hours < 21) {
         greeting.textContent = 'Dinner time, Patrick';
-        document.body.style.backgroundImage = `url('${require("../images/backgrounds/dinner.jpg")}')`;
     } else if (hours >= 21 && hours !== 0) {
         greeting.textContent = 'Good evening, Patrick';
-        document.body.style.backgroundImage = `url('${require("../images/backgrounds/night.jpg")}')`;
     } else if (hours >= 0 && hours < 5) {
         greeting.textContent = 'Go to bed, Patrick';
-        document.body.style.backgroundImage = `url('${require("../images/backgrounds/bed.jpg")}')`;
-        document.body.style.backgroundPosition = "center";
     } else if (hours >= 5 && hours < 7) {
         greeting.textContent = 'Sunrise time, Patrick';
-        document.body.style.backgroundImage = `url('${require("../images/backgrounds/sunrise.jpg")}')`;
     } else if (hours >= 7 && hours < 10) {
         greeting.textContent = 'Good morning, Patrick';
-        document.body.style.backgroundImage = `url('${require("../images/backgrounds/morning.jpg")}')`;
-        document.body.style.backgroundPosition = "center";
-        timeApp.style.color = "rgba(15,14,14, 0.8)";
     } else if (hours >= 10 && hours < 12) {
         greeting.textContent = 'Time to be productive, Patrick';
-        document.body.style.backgroundImage = `url('${require("../images/backgrounds/study.jpg")}')`;
-        document.body.style.backgroundPosition = "center";
     } else if (hours >= 12 && hours < 14) {
         greeting.textContent = 'Lunch Time, Patrick';
-        document.body.style.backgroundImage = `url('${require("../images/backgrounds/lunch1.jpg")}')`;
-        document.body.style.backgroundPosition = "center";
     }
 }
 
@@ -162,14 +147,47 @@ function generateQuote() {
     });
 }
 
-function generateBackground() {
-    fetch(`https://api.unsplash.com/collections/214812/photos/?client_id=${api.keyTwo}`)
+// Footer
+
+const backgroundLocation = document.querySelector('.background-location')
+const changeBackground = document.querySelector('.fa-redo')
+const heartBackground = document.querySelector('.background-photo')
+const backgroundDetails = document.querySelector('.background-details')
+const backgroundInfo = document.querySelector('.background-info')
+const backgroundUser = document.querySelector('.background-user')
+const backgroundUserLink = document.querySelector('.background-user-link')
+
+changeBackground.addEventListener('click', generateBackground)
+backgroundInfo.addEventListener('mouseenter', showBackgroundDetails)
+backgroundInfo.addEventListener('mouseleave', showBackgroundDetails)
+
+
+
+function generateBackground(e) {
+    fetch(`https://api.unsplash.com/collections/GsNw3bdVLPM/photos/?client_id=${api.keyTwo}&per_page=30`)
     .then(response => {
         return response.json()
     })
     .then(data => {
-        console.log(data.length)
+        let bgIndex =  data[Math.floor(Math.random()*data.length)];
+        document.body.style.backgroundImage = `url(${bgIndex.urls.full})`
+        console.log(bgIndex)
+        return fetch(`https://api.unsplash.com/photos/${bgIndex.id}/?client_id=${api.keyTwo}`)
+    }).then(response => {
+        return response.json()
     })
+    .then(data => {
+        console.log(data)
+        data.location.title === null ? backgroundLocation.textContent = 'Unknown' : backgroundLocation.textContent = data.location.title
+        backgroundUser.textContent = data.user.name
+        backgroundUserLink.href = data.user.links.html
+        heartBackground.href = data.links.html
+    })
+}
+
+function showBackgroundDetails() {
+    backgroundDetails.classList.toggle('background-show')
+    backgroundLocation.classList.toggle('background-show')
 }
 
 // Todo List App
@@ -189,12 +207,21 @@ const todoList = document.querySelector('.todo-list');
 const addInput = document.querySelector('.add-input');
 const addBtn = document.querySelector('.add-btn');
 const filterOption = document.querySelector('.filter-todo');
+const todoOpen = document.querySelector('.todo-open');
+const todoApp = document.querySelector('.todo-app')
+const main = document.querySelector('main')
 
 
 document.addEventListener('DOMContentLoaded', getTodos);
 addBtn.addEventListener('click', addTodo);
 todoList.addEventListener('click', deleteCheck);
 filterOption.addEventListener('click', filterTodo);
+todoOpen.addEventListener('click', openTodoList)
+
+function openTodoList() {
+    todoApp.classList.toggle('todo-close')
+    main.classList.toggle('main-left')
+}
 
 // Global - LocalStorage variable
 let todos; 

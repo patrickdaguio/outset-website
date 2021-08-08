@@ -36,21 +36,22 @@ $transition: all 0.3s ease;
 
 body {
   font-family: "Roboto", sans-serif;
-  background-image: url("/src/images/backgrounds/sunset.jpg");
+  background-image: url("/src/images/backgrounds/sunset1.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: bottom center;
   min-height: 100vh;
   overflow-x: hidden;
+  transition: all 0.5s ease-in-out;
 }
 
-#myVideo {
+/* #myVideo {
   object-fit: cover;
   position: fixed;
   height: 100%;
   width: 100%;
   z-index: -1;
-}
+} */
 
 @mixin flex($display, $align, $margin-bottom) {
   display: $display;
@@ -119,7 +120,7 @@ body {
     padding: 0.5em 0em 0.5em 1em;
     border-radius: 0.35em;
     &::placeholder {
-      color: #151515;
+      color: rgba(80, 69, 69, 1);
     }
     @include mQ(1450px) {
       font-size: 0.75em;
@@ -155,12 +156,24 @@ body {
   }
 }
 
-main {
+.main-left {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 2em;
-  padding: 2em 4em;
   justify-content: space-between;
+  .time-app {
+    max-width: 1000px;
+    margin: initial;
+    width: 0;
+    transition: width 0.8s ease;
+  }
+}
+
+main {
+  display: block;
+  text-align: center;
+  padding: 2em 4em;
+
   @include mQ(1300px) {
     align-items: center;
   }
@@ -170,7 +183,9 @@ main {
   .time-app {
     color: white;
     letter-spacing: 0.05em;
-    max-width: 1000px;
+    white-space: nowrap;
+    width: 100%;
+    transition: width 0.8s ease;
     @include mQ(1300px) {
       margin-left: 0em;
     }
@@ -224,41 +239,36 @@ main {
     .quote {
       margin: 1em 0em;
       font-style: italic;
-      min-height: 120px;
     }
     .quote-origin {
-      text-align: right;
+      margin-bottom: 1em;
     }
-    .bottom {
-      @include flex(flex, center, 0em);
-      .button {
-        flex: 1;
-        .inspired-btn {
-          @include textStyle(1.8em, 700, none, 0em);
-          @include removeOriginal(none, none, pointer);
-          background-color: rgba(15, 14, 14, 0.8);
-          border-radius: 0.35em;
-          color: white;
-          padding: 0.4em 1.4em;
-          transition: 0.3s ease all;
-          text-transform: uppercase;
-          box-shadow: 2px 4px 10px 0px rgba(0, 0, 0, 0.7);
-          &:hover {
-            background-color: rgba(255, 255, 255, 0.6);
-            color: rgba(0, 0, 0, 0.8);
-          }
-          @include mQ(1550px) {
-            @include textStyle(1.6em, 700, none, 0em);
-          }
-          @include mQ(1250px) {
-            @include textStyle(1.4em, 700, none, 0em);
-          }
-          @include mQ(1100px) {
-            @include textStyle(1.3em, 700, none, 0em);
-          }
-          @include mQ(1000px) {
-            @include textStyle(1.1em, 700, none, 0em);
-          }
+    .button {
+      .inspired-btn {
+        @include textStyle(1.8em, 700, none, 0em);
+        @include removeOriginal(none, none, pointer);
+        background-color: rgba(15, 14, 14, 0.8);
+        border-radius: 0.35em;
+        color: white;
+        padding: 0.4em 1.4em;
+        transition: 0.3s ease all;
+        text-transform: uppercase;
+        box-shadow: 2px 4px 10px 0px rgba(0, 0, 0, 0.7);
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.6);
+          color: rgba(0, 0, 0, 0.8);
+        }
+        @include mQ(1550px) {
+          @include textStyle(1.6em, 700, none, 0em);
+        }
+        @include mQ(1250px) {
+          @include textStyle(1.4em, 700, none, 0em);
+        }
+        @include mQ(1100px) {
+          @include textStyle(1.3em, 700, none, 0em);
+        }
+        @include mQ(1000px) {
+          @include textStyle(1.1em, 700, none, 0em);
         }
       }
     }
@@ -271,6 +281,30 @@ main {
     min-width: 30vw;
     box-shadow: 8px 6px 10px 0px rgba(0, 0, 0, 0.5);
     transition: $transition;
+    position: fixed;
+    z-index: 1;
+    top: 25%;
+    right: -600px;
+    .todo-open {
+      position: fixed;
+      transform: rotate(270deg);
+      background-color: white;
+      color: rgba(80, 69, 69, 1);
+      padding: 0.3em 1em;
+      font-size: 1.5em;
+      border-top-left-radius: 0.5em;
+      border-top-right-radius: 0.5em;
+      font-weight: 700;
+      top: 50%;
+      right: -35px;
+      transition: $transition;
+      cursor: pointer;
+      user-select: none;
+      &:hover {
+        background-color: rgba(80, 69, 69, 0.8);
+        color: white;
+      }
+    }
     .date-box {
       @include flex(flex, center, 1em);
       height: 7vh;
@@ -305,6 +339,7 @@ main {
           @include textStyle(1em, bold, none, none);
           transition: $transition;
           appearance: none;
+          color: rgba(80, 69, 69, 1);
           height: 1.6em;
           width: 9.5em;
           padding-left: 0.7em;
@@ -413,6 +448,49 @@ main {
   }
 }
 
+footer {
+  position: fixed;
+  bottom: 25px;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  .background-info {
+    color: white;
+    .background-location {
+      transform: translateZ(0) translateY(10px);
+      text-align: center;
+      transition: 0.3s ease-in-out;
+    }
+    .background-details {
+      margin-top: 0.3em;
+      justify-content: center;
+      font-size: 0.9em;
+      display: flex;
+      transform: translateZ(0) translateY(-8px);
+      opacity: 0;
+      transition: 0.3s ease-in-out;
+      a,
+      .background-photo {
+        outline: none;
+        text-decoration: none;
+      }
+      p {
+        cursor: pointer;
+        margin-right: 0.5em;
+        transition: 0.3s;
+        color: rgb(202, 193, 198);
+        &:hover {
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+.background-show {
+  transform: translateZ(0) translateY(-8px) !important;
+  opacity: 1 !important;
+}
+
 // Added elements
 
 .todo-list {
@@ -423,7 +501,7 @@ main {
   .todo {
     background-color: white;
     margin: auto;
-    height: 40px;
+    min-height: 40px;
     padding: 0em 1em 0em 1em;
     border-radius: 10px;
     cursor: move;
@@ -501,4 +579,9 @@ main {
       }
     }
   }
+}
+
+.todo-close {
+  right: 0px !important;
+  margin-right: 4em !important;
 }

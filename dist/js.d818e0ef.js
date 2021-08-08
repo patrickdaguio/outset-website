@@ -146,24 +146,6 @@ module.exports = "/cloudy rain.2d59ad33.png";
 module.exports = "/cloudy.f668b013.png";
 },{}],"src/images/weather/windy.png":[function(require,module,exports) {
 module.exports = "/windy.e8f5e152.png";
-},{}],"src/images/backgrounds/afternoon.jpg":[function(require,module,exports) {
-module.exports = "/afternoon.5fdad7e2.jpg";
-},{}],"src/images/backgrounds/sunset.jpg":[function(require,module,exports) {
-module.exports = "/sunset.32aa7c5a.jpg";
-},{}],"src/images/backgrounds/dinner.jpg":[function(require,module,exports) {
-module.exports = "/dinner.42bbacbb.jpg";
-},{}],"src/images/backgrounds/night.jpg":[function(require,module,exports) {
-module.exports = "/night.9c8f9d0c.jpg";
-},{}],"src/images/backgrounds/bed.jpg":[function(require,module,exports) {
-module.exports = "/bed.2f47398f.jpg";
-},{}],"src/images/backgrounds/sunrise.jpg":[function(require,module,exports) {
-module.exports = "/sunrise.4f5cc2bc.jpg";
-},{}],"src/images/backgrounds/morning.jpg":[function(require,module,exports) {
-module.exports = "/morning.ccecbbcb.jpg";
-},{}],"src/images/backgrounds/study.jpg":[function(require,module,exports) {
-module.exports = "/study.e228897f.jpg";
-},{}],"src/images/backgrounds/lunch1.jpg":[function(require,module,exports) {
-module.exports = "/lunch1.ba002841.jpg";
 },{}],"src/images/todo/uncheck1.png":[function(require,module,exports) {
 module.exports = "/uncheck1.c79750a4.png";
 },{}],"src/images/todo/trash1.png":[function(require,module,exports) {
@@ -272,37 +254,22 @@ function greetings() {
 
   if (hours >= 14 && hours < 18) {
     greeting.textContent = 'Good afternoon, Patrick';
-    document.body.style.backgroundImage = "url('".concat(require("../images/backgrounds/afternoon.jpg"), "')");
   } else if (hours >= 18 && hours < 20) {
     greeting.textContent = 'Sunset time, Patrick';
-    document.body.style.backgroundImage = "url('".concat(require("../images/backgrounds/sunset.jpg"), "')");
-    document.body.style.backgroundPosition = "center";
   } else if (hours >= 20 && hours < 21) {
     greeting.textContent = 'Dinner time, Patrick';
-    document.body.style.backgroundImage = "url('".concat(require("../images/backgrounds/dinner.jpg"), "')");
   } else if (hours >= 21 && hours !== 0) {
     greeting.textContent = 'Good evening, Patrick';
-    document.body.style.backgroundImage = "url('".concat(require("../images/backgrounds/night.jpg"), "')");
   } else if (hours >= 0 && hours < 5) {
     greeting.textContent = 'Go to bed, Patrick';
-    document.body.style.backgroundImage = "url('".concat(require("../images/backgrounds/bed.jpg"), "')");
-    document.body.style.backgroundPosition = "center";
   } else if (hours >= 5 && hours < 7) {
     greeting.textContent = 'Sunrise time, Patrick';
-    document.body.style.backgroundImage = "url('".concat(require("../images/backgrounds/sunrise.jpg"), "')");
   } else if (hours >= 7 && hours < 10) {
     greeting.textContent = 'Good morning, Patrick';
-    document.body.style.backgroundImage = "url('".concat(require("../images/backgrounds/morning.jpg"), "')");
-    document.body.style.backgroundPosition = "center";
-    timeApp.style.color = "rgba(15,14,14, 0.8)";
   } else if (hours >= 10 && hours < 12) {
     greeting.textContent = 'Time to be productive, Patrick';
-    document.body.style.backgroundImage = "url('".concat(require("../images/backgrounds/study.jpg"), "')");
-    document.body.style.backgroundPosition = "center";
   } else if (hours >= 12 && hours < 14) {
     greeting.textContent = 'Lunch Time, Patrick';
-    document.body.style.backgroundImage = "url('".concat(require("../images/backgrounds/lunch1.jpg"), "')");
-    document.body.style.backgroundPosition = "center";
   }
 }
 
@@ -325,14 +292,42 @@ function generateQuote() {
       quoteOrigin.textContent = "- ".concat(data[index].author);
     }
   });
-}
+} // Footer
 
-function generateBackground() {
-  fetch("https://api.unsplash.com/collections/214812/photos/?client_id=".concat(api.keyTwo)).then(function (response) {
+
+var backgroundLocation = document.querySelector('.background-location');
+var changeBackground = document.querySelector('.fa-redo');
+var heartBackground = document.querySelector('.background-photo');
+var backgroundDetails = document.querySelector('.background-details');
+var backgroundInfo = document.querySelector('.background-info');
+var backgroundUser = document.querySelector('.background-user');
+var backgroundUserLink = document.querySelector('.background-user-link');
+changeBackground.addEventListener('click', generateBackground);
+backgroundInfo.addEventListener('mouseenter', showBackgroundDetails);
+backgroundInfo.addEventListener('mouseleave', showBackgroundDetails);
+
+function generateBackground(e) {
+  fetch("https://api.unsplash.com/collections/GsNw3bdVLPM/photos/?client_id=".concat(api.keyTwo, "&per_page=30")).then(function (response) {
     return response.json();
   }).then(function (data) {
-    console.log(data.length);
+    var bgIndex = data[Math.floor(Math.random() * data.length)];
+    document.body.style.backgroundImage = "url(".concat(bgIndex.urls.full, ")");
+    console.log(bgIndex);
+    return fetch("https://api.unsplash.com/photos/".concat(bgIndex.id, "/?client_id=").concat(api.keyTwo));
+  }).then(function (response) {
+    return response.json();
+  }).then(function (data) {
+    console.log(data);
+    data.location.title === null ? backgroundLocation.textContent = 'Unknown' : backgroundLocation.textContent = data.location.title;
+    backgroundUser.textContent = data.user.name;
+    backgroundUserLink.href = data.user.links.html;
+    heartBackground.href = data.links.html;
   });
+}
+
+function showBackgroundDetails() {
+  backgroundDetails.classList.toggle('background-show');
+  backgroundLocation.classList.toggle('background-show');
 } // Todo List App
 
 
@@ -348,10 +343,20 @@ var todoList = document.querySelector('.todo-list');
 var addInput = document.querySelector('.add-input');
 var addBtn = document.querySelector('.add-btn');
 var filterOption = document.querySelector('.filter-todo');
+var todoOpen = document.querySelector('.todo-open');
+var todoApp = document.querySelector('.todo-app');
+var main = document.querySelector('main');
 document.addEventListener('DOMContentLoaded', getTodos);
 addBtn.addEventListener('click', addTodo);
 todoList.addEventListener('click', deleteCheck);
-filterOption.addEventListener('click', filterTodo); // Global - LocalStorage variable
+filterOption.addEventListener('click', filterTodo);
+todoOpen.addEventListener('click', openTodoList);
+
+function openTodoList() {
+  todoApp.classList.toggle('todo-close');
+  main.classList.toggle('main-left');
+} // Global - LocalStorage variable
+
 
 var todos;
 
@@ -529,7 +534,7 @@ document.addEventListener('DOMContentLoaded', function () {
     items.setAttribute("contenteditable", "true");
   });
 });
-},{"./config":"src/js/config.js","../images/weather/storming.png":"src/images/weather/storming.png","../images/weather/sunny.png":"src/images/weather/sunny.png","../images/weather/snowing.png":"src/images/weather/snowing.png","../images/weather/raining.png":"src/images/weather/raining.png","../images/weather/cloudy sun.png":"src/images/weather/cloudy sun.png","../images/weather/cloudy rain.png":"src/images/weather/cloudy rain.png","../images/weather/cloudy.png":"src/images/weather/cloudy.png","../images/weather/windy.png":"src/images/weather/windy.png","../images/backgrounds/afternoon.jpg":"src/images/backgrounds/afternoon.jpg","../images/backgrounds/sunset.jpg":"src/images/backgrounds/sunset.jpg","../images/backgrounds/dinner.jpg":"src/images/backgrounds/dinner.jpg","../images/backgrounds/night.jpg":"src/images/backgrounds/night.jpg","../images/backgrounds/bed.jpg":"src/images/backgrounds/bed.jpg","../images/backgrounds/sunrise.jpg":"src/images/backgrounds/sunrise.jpg","../images/backgrounds/morning.jpg":"src/images/backgrounds/morning.jpg","../images/backgrounds/study.jpg":"src/images/backgrounds/study.jpg","../images/backgrounds/lunch1.jpg":"src/images/backgrounds/lunch1.jpg","../images/todo/uncheck1.png":"src/images/todo/uncheck1.png","../images/todo/trash1.png":"src/images/todo/trash1.png","../images/todo/checked1.png":"src/images/todo/checked1.png"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./config":"src/js/config.js","../images/weather/storming.png":"src/images/weather/storming.png","../images/weather/sunny.png":"src/images/weather/sunny.png","../images/weather/snowing.png":"src/images/weather/snowing.png","../images/weather/raining.png":"src/images/weather/raining.png","../images/weather/cloudy sun.png":"src/images/weather/cloudy sun.png","../images/weather/cloudy rain.png":"src/images/weather/cloudy rain.png","../images/weather/cloudy.png":"src/images/weather/cloudy.png","../images/weather/windy.png":"src/images/weather/windy.png","../images/todo/uncheck1.png":"src/images/todo/uncheck1.png","../images/todo/trash1.png":"src/images/todo/trash1.png","../images/todo/checked1.png":"src/images/todo/checked1.png"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -557,7 +562,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52656" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59055" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
