@@ -89,8 +89,6 @@ const time = document.querySelector('.time');
 const greeting = document.querySelector('.greeting');
 const quote = document.querySelector('.quote');
 const quoteOrigin = document.querySelector('.quote-origin');
-const quoteBtn = document.querySelector('.inspired-btn');
-const timeApp = document.querySelector('.time-app');
 const todayDate = document.querySelector('.today-date');
 
 function greetings() {
@@ -105,24 +103,12 @@ function greetings() {
 
     setTimeout(greetings, 1000);
     
-    if (hours >= 14 && hours < 18) {
+    if (hours >= 12 && hours < 18) {
         greeting.textContent = 'Good afternoon, Patrick';
-    } else if (hours >= 18 && hours < 20) {
-        greeting.textContent = 'Sunset time, Patrick';
-    } else if (hours >= 20 && hours < 21) {
-        greeting.textContent = 'Dinner time, Patrick';
-    } else if (hours >= 21 && hours !== 0) {
+    } else if (hours >= 18 && hours !== 4) {
         greeting.textContent = 'Good evening, Patrick';
-    } else if (hours >= 0 && hours < 5) {
-        greeting.textContent = 'Go to bed, Patrick';
-    } else if (hours >= 5 && hours < 7) {
-        greeting.textContent = 'Sunrise time, Patrick';
-    } else if (hours >= 7 && hours < 10) {
+    } else if (hours >= 4 && hours < 12) {
         greeting.textContent = 'Good morning, Patrick';
-    } else if (hours >= 10 && hours < 12) {
-        greeting.textContent = 'Time to be productive, Patrick';
-    } else if (hours >= 12 && hours < 14) {
-        greeting.textContent = 'Lunch Time, Patrick';
     }
 }
 
@@ -130,6 +116,51 @@ function addZero(num) {
     return num < 10 ? `0${num}` : num;
 }
 
+// Intention
+
+const intentionInput = document.querySelector('.intention-input')
+const intentionAnswer = document.querySelector('.intention-answer')
+const intentionCta = document.querySelector('.intention-cta')
+const intentionIcons = document.querySelectorAll('.intention-icons')
+const intentionQuestionContainer = document.querySelector('.intention-question-container')
+const intentionAnswerContainer = document.querySelector('.intention-answer-container')
+
+intentionInput.addEventListener('keypress', changeIntention)
+intentionCta.addEventListener('mouseover', intentionAnswerIcons)
+intentionCta.addEventListener('mouseleave', removeIntentionIcons)
+
+function changeIntention(e) {
+    if (e.keyCode === 13 && e.target.value !== '') {
+        intentionQuestionContainer.style.opacity = '0'
+        setTimeout(() => {
+            intentionQuestionContainer.style.visibility = 'hidden'
+            intentionAnswer.textContent = e.target.value
+            intentionAnswerContainer.style.visibility = 'visible'
+            intentionAnswerContainer.style.opacity = '1'
+        }, 600)
+    }
+}
+
+function intentionAnswerIcons() {
+    intentionIcons.forEach(icon => {
+        icon.style.visibility = 'visible'
+        icon.addEventListener('click', (e) => {
+            intentionAnswerContainer.style.opacity = '0'
+            setTimeout(() => {
+                intentionAnswerContainer.style.visibility = 'hidden'
+                intentionQuestionContainer.style.opacity = '1'
+                intentionQuestionContainer.style.visibility = 'visible'
+            }, 600)
+            if (e.target.classList.contains('fa-times')) {
+                intentionInput.value = ''
+            }
+        })
+    })
+}
+
+function removeIntentionIcons() {
+    intentionIcons.forEach(icon => icon.style.visibility = 'hidden')
+} 
 
 // Footer
 
@@ -167,7 +198,7 @@ function generateQuote() {
     });
 }
 
-function generateBackground(e) {
+function generateBackground() {
     fetch(`https://api.unsplash.com/collections/GsNw3bdVLPM/photos/?client_id=${api.keyTwo}&per_page=30`)
     .then(response => {
         return response.json()

@@ -60,19 +60,24 @@ body {
 }
 
 .header {
-  @include flex(flex, center, 0em);
+  @include flex(flex, initial, 0em);
   justify-content: space-between;
   padding: 2em 3em;
 }
 
 .socials {
-  display: flex;
   a {
     margin-right: 1.5em;
   }
   p {
     font-size: 2.25em;
-    color: white;
+    color: rgb(226, 211, 211);
+
+    cursor: pointer;
+    transition: 0.3s color ease-in-out;
+    &:hover {
+      color: white;
+    }
   }
 }
 
@@ -93,12 +98,6 @@ body {
     .temperature-degree {
       @include textStyle(2.5em, 700, 2px 2px 4px rgba(0, 0, 0, 0.3), -0.1em);
       margin-left: 0.2em;
-      @include mQ(1450px) {
-        font-size: 2.2em;
-      }
-      @include mQ(1000px) {
-        font-size: 1.9em;
-      }
     }
     .degree-icon {
       align-self: flex-start;
@@ -106,12 +105,6 @@ body {
   }
   .location {
     @include textStyle(1.5em, 700, 4px 4px 3px rgba(0, 0, 0, 0.4), 0.4em);
-    @include mQ(1450px) {
-      font-size: 1.3em;
-    }
-    @include mQ(1000px) {
-      font-size: 1.2em;
-    }
   }
   .search-box {
     @include removeOriginal(none, none, auto);
@@ -122,12 +115,6 @@ body {
     &::placeholder {
       color: rgba(80, 69, 69, 1);
     }
-    @include mQ(1450px) {
-      font-size: 0.75em;
-    }
-    @include mQ(1000px) {
-      font-size: 0.65em;
-    }
   }
   .extra-info {
     @include textStyle(1.5em, normal, 2px 4px 4px rgba(8, 5, 5, 0.3), 0em);
@@ -137,21 +124,12 @@ body {
     }
     img {
       margin-right: 0.7em;
-      @include mQ(1000px) {
-        width: 26px;
-      }
     }
     .humidity {
       margin: 0.1em 0.7em 0em 0em;
     }
     .wind {
       margin-top: 0.1em;
-    }
-    @include mQ(1450px) {
-      font-size: 1.3em;
-    }
-    @include mQ(1000px) {
-      font-size: 1.1em;
     }
   }
 }
@@ -162,16 +140,18 @@ body {
   gap: 2em;
   justify-content: space-between;
   .time-app {
-    max-width: 1100px;
-    margin: initial;
     text-align: left;
+  }
+  .intention {
+    margin: initial !important;
+    margin-top: 3.35em !important;
   }
 }
 
 main {
   display: block;
   text-align: center;
-  padding: 2em 3em;
+  padding: 4em 3em 2em 3em;
 
   @include mQ(1300px) {
     align-items: center;
@@ -180,65 +160,83 @@ main {
     flex-direction: column;
   }
   .time-app {
-    max-width: 1250px;
-    margin: auto;
     color: white;
     letter-spacing: 0.05em;
     @include mQ(1300px) {
       margin-left: 0em;
     }
     .time {
-      @include textStyle(8.5em, 500, none, 0em);
-      @include mQ(1550px) {
-        @include textStyle(7.5em, 700, none, 0em);
-      }
-      @include mQ(1300px) {
-        @include textStyle(7em, 700, none, 0em);
-      }
-      @include mQ(1100px) {
-        @include textStyle(5.7em, 700, none, 0em);
-      }
-      @include mQ(1000px) {
-        @include textStyle(5em, 700, none, 0em);
-      }
+      @include textStyle(11em, 400, none, 0em);
     }
     .greeting {
-      @include textStyle(4.8em, 500, none, 0em);
-      @include mQ(1550px) {
-        @include textStyle(4em, 700, none, 0em);
-      }
-      @include mQ(1300px) {
-        @include textStyle(3.5em, 700, none, 0em);
-      }
-      @include mQ(1100px) {
-        @include textStyle(2.8em, 700, none, 0em);
-      }
-      @include mQ(1000px) {
-        @include textStyle(2.4em, 700, none, 0em);
-      }
+      @include textStyle(4.1em, 500, none, 0em);
     }
     .intention {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      .intention-question {
-        margin: 1em;
+      position: relative;
+      width: 600px;
+      margin: auto;
+      margin-top: 3.35em;
+
+      .intention-question,
+      .intention-answer {
         @include textStyle(2.5em, 400, none, 0em);
       }
-      .intention-input {
-        width: 60%;
-        margin: auto;
-        padding-top: 10px;
-        display: block;
-        background: 0;
-        border: 0;
-        border-bottom: 2px solid #fff;
-        color: #fff;
-        font-size: 2.25em;
-        line-height: 1.2;
-        font-weight: 500;
-        outline: none;
-        text-align: center;
+
+      .intention-question-container {
+        transition: 0.6s opacity ease-in-out;
+        .intention-input {
+          width: 100%;
+          padding-top: 10px;
+          display: block;
+          background: 0;
+          border: 0;
+          border-bottom: 2px solid #fff;
+          color: #fff;
+          font-size: 2.25em;
+          line-height: 1.2em;
+          font-weight: 500;
+          outline: none;
+          text-align: center;
+        }
+      }
+
+      .intention-answer-container {
+        display: flex;
+        position: absolute;
+        top: 13px;
+        right: 50%;
+        transform: translate(50%, 0%);
+        width: 100%;
+        flex-direction: column;
+        visibility: hidden;
+        opacity: 0;
+        transition: 0.6s opacity ease-in-out;
+        .intention-today {
+          @include textStyle(1.5em, 700, none, 0em);
+        }
+        .intention-answer {
+          margin-left: 1.65em;
+          margin-right: 0.3em;
+        }
+        .intention-cta {
+          margin-top: 0.35em;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .intention-icons {
+            font-size: 1.25em;
+            margin-left: 0.6em;
+            cursor: pointer;
+            visibility: hidden;
+            color: rgb(226, 211, 211);
+            &:hover {
+              color: white;
+            }
+          }
+        }
       }
     }
   }
@@ -285,7 +283,6 @@ main {
       border-top-right-radius: 25px;
       color: white;
       .today-date {
-        margin-left: 1em;
         font-size: 1.7em;
         flex: 1;
         transition: $transition;
@@ -301,7 +298,7 @@ main {
         }
       }
       .select {
-        margin: 0em 2em 0em 0.5em;
+        margin: 0em 2em;
         position: relative;
         overflow: hidden;
         border-radius: 0.25em;
@@ -321,10 +318,6 @@ main {
           @include mQ(1550px) {
             width: 10em;
             height: 1.9em;
-            @include textStyle(0.8em, bold, none, none);
-          }
-          @include mQ(1150px) {
-            @include textStyle(0.7em, bold, none, none);
           }
         }
         &:after {

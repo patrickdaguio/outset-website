@@ -27,20 +27,22 @@ body {
 } */
 .header {
   display: flex;
-  align-items: center;
+  align-items: initial;
   margin-bottom: 0em;
   justify-content: space-between;
   padding: 2em 3em;
 }
 
-.socials {
-  display: flex;
-}
 .socials a {
   margin-right: 1.5em;
 }
 .socials p {
   font-size: 2.25em;
+  color: #e2d3d3;
+  cursor: pointer;
+  transition: 0.3s color ease-in-out;
+}
+.socials p:hover {
   color: white;
 }
 
@@ -69,16 +71,6 @@ body {
   margin-bottom: -0.1em;
   margin-left: 0.2em;
 }
-@media screen and (max-width: 1450px) {
-  .weather-app .temperature .temperature-degree {
-    font-size: 2.2em;
-  }
-}
-@media screen and (max-width: 1000px) {
-  .weather-app .temperature .temperature-degree {
-    font-size: 1.9em;
-  }
-}
 .weather-app .temperature .degree-icon {
   align-self: flex-start;
 }
@@ -87,16 +79,6 @@ body {
   font-weight: 700;
   text-shadow: 4px 4px 3px rgba(0, 0, 0, 0.4);
   margin-bottom: 0.4em;
-}
-@media screen and (max-width: 1450px) {
-  .weather-app .location {
-    font-size: 1.3em;
-  }
-}
-@media screen and (max-width: 1000px) {
-  .weather-app .location {
-    font-size: 1.2em;
-  }
 }
 .weather-app .search-box {
   outline: none;
@@ -113,16 +95,6 @@ body {
 .weather-app .search-box::placeholder {
   color: #504545;
 }
-@media screen and (max-width: 1450px) {
-  .weather-app .search-box {
-    font-size: 0.75em;
-  }
-}
-@media screen and (max-width: 1000px) {
-  .weather-app .search-box {
-    font-size: 0.65em;
-  }
-}
 .weather-app .extra-info {
   font-size: 1.5em;
   font-weight: normal;
@@ -136,26 +108,11 @@ body {
 .weather-app .extra-info img {
   margin-right: 0.7em;
 }
-@media screen and (max-width: 1000px) {
-  .weather-app .extra-info img {
-    width: 26px;
-  }
-}
 .weather-app .extra-info .humidity {
   margin: 0.1em 0.7em 0em 0em;
 }
 .weather-app .extra-info .wind {
   margin-top: 0.1em;
-}
-@media screen and (max-width: 1450px) {
-  .weather-app .extra-info {
-    font-size: 1.3em;
-  }
-}
-@media screen and (max-width: 1000px) {
-  .weather-app .extra-info {
-    font-size: 1.1em;
-  }
 }
 
 .main-left {
@@ -165,15 +122,17 @@ body {
   justify-content: space-between;
 }
 .main-left .time-app {
-  max-width: 1100px;
-  margin: initial;
   text-align: left;
+}
+.main-left .intention {
+  margin: initial !important;
+  margin-top: 3.35em !important;
 }
 
 main {
   display: block;
   text-align: center;
-  padding: 2em 3em;
+  padding: 4em 3em 2em 3em;
 }
 @media screen and (max-width: 1300px) {
   main {
@@ -186,8 +145,6 @@ main {
   }
 }
 main .time-app {
-  max-width: 1250px;
-  margin: auto;
   color: white;
   letter-spacing: 0.05em;
 }
@@ -197,96 +154,38 @@ main .time-app {
   }
 }
 main .time-app .time {
-  font-size: 8.5em;
-  font-weight: 500;
+  font-size: 11em;
+  font-weight: 400;
   text-shadow: none;
   margin-bottom: 0em;
-}
-@media screen and (max-width: 1550px) {
-  main .time-app .time {
-    font-size: 7.5em;
-    font-weight: 700;
-    text-shadow: none;
-    margin-bottom: 0em;
-  }
-}
-@media screen and (max-width: 1300px) {
-  main .time-app .time {
-    font-size: 7em;
-    font-weight: 700;
-    text-shadow: none;
-    margin-bottom: 0em;
-  }
-}
-@media screen and (max-width: 1100px) {
-  main .time-app .time {
-    font-size: 5.7em;
-    font-weight: 700;
-    text-shadow: none;
-    margin-bottom: 0em;
-  }
-}
-@media screen and (max-width: 1000px) {
-  main .time-app .time {
-    font-size: 5em;
-    font-weight: 700;
-    text-shadow: none;
-    margin-bottom: 0em;
-  }
 }
 main .time-app .greeting {
-  font-size: 4.8em;
+  font-size: 4.1em;
   font-weight: 500;
   text-shadow: none;
   margin-bottom: 0em;
-}
-@media screen and (max-width: 1550px) {
-  main .time-app .greeting {
-    font-size: 4em;
-    font-weight: 700;
-    text-shadow: none;
-    margin-bottom: 0em;
-  }
-}
-@media screen and (max-width: 1300px) {
-  main .time-app .greeting {
-    font-size: 3.5em;
-    font-weight: 700;
-    text-shadow: none;
-    margin-bottom: 0em;
-  }
-}
-@media screen and (max-width: 1100px) {
-  main .time-app .greeting {
-    font-size: 2.8em;
-    font-weight: 700;
-    text-shadow: none;
-    margin-bottom: 0em;
-  }
-}
-@media screen and (max-width: 1000px) {
-  main .time-app .greeting {
-    font-size: 2.4em;
-    font-weight: 700;
-    text-shadow: none;
-    margin-bottom: 0em;
-  }
 }
 main .time-app .intention {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: relative;
+  width: 600px;
+  margin: auto;
+  margin-top: 3.35em;
 }
-main .time-app .intention .intention-question {
-  margin: 1em;
+main .time-app .intention .intention-question,
+main .time-app .intention .intention-answer {
   font-size: 2.5em;
   font-weight: 400;
   text-shadow: none;
   margin-bottom: 0em;
 }
-main .time-app .intention .intention-input {
-  width: 60%;
-  margin: auto;
+main .time-app .intention .intention-question-container {
+  transition: 0.6s opacity ease-in-out;
+}
+main .time-app .intention .intention-question-container .intention-input {
+  width: 100%;
   padding-top: 10px;
   display: block;
   background: 0;
@@ -294,10 +193,48 @@ main .time-app .intention .intention-input {
   border-bottom: 2px solid #fff;
   color: #fff;
   font-size: 2.25em;
-  line-height: 1.2;
+  line-height: 1.2em;
   font-weight: 500;
   outline: none;
   text-align: center;
+}
+main .time-app .intention .intention-answer-container {
+  display: flex;
+  position: absolute;
+  top: 13px;
+  right: 50%;
+  transform: translate(50%, 0%);
+  width: 100%;
+  flex-direction: column;
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.6s opacity ease-in-out;
+}
+main .time-app .intention .intention-answer-container .intention-today {
+  font-size: 1.5em;
+  font-weight: 700;
+  text-shadow: none;
+  margin-bottom: 0em;
+}
+main .time-app .intention .intention-answer-container .intention-answer {
+  margin-left: 1.65em;
+  margin-right: 0.3em;
+}
+main .time-app .intention .intention-answer-container .intention-cta {
+  margin-top: 0.35em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+main .time-app .intention .intention-answer-container .intention-cta .intention-icons {
+  font-size: 1.25em;
+  margin-left: 0.6em;
+  cursor: pointer;
+  visibility: hidden;
+  color: #e2d3d3;
+}
+main .time-app .intention .intention-answer-container .intention-cta .intention-icons:hover {
+  color: white;
 }
 main .todo-open {
   position: fixed;
@@ -310,6 +247,7 @@ main .todo-open {
   border-top-right-radius: 0.5em;
   font-weight: 700;
   top: 50%;
+  z-index: 2;
   right: -35px;
   transition: all 0.3s ease;
   cursor: pointer;
@@ -343,7 +281,6 @@ main .todo-app .date-box {
   color: white;
 }
 main .todo-app .date-box .today-date {
-  margin-left: 1em;
   font-size: 1.7em;
   flex: 1;
   transition: all 0.3s ease;
@@ -365,7 +302,7 @@ main .todo-app .date-box .today-date {
   }
 }
 main .todo-app .date-box .select {
-  margin: 0em 2em 0em 0.5em;
+  margin: 0em 2em;
   position: relative;
   overflow: hidden;
   border-radius: 0.25em;
@@ -395,18 +332,6 @@ main .todo-app .date-box .select select {
   main .todo-app .date-box .select select {
     width: 10em;
     height: 1.9em;
-    font-size: 0.8em;
-    font-weight: bold;
-    text-shadow: none;
-    margin-bottom: none;
-  }
-}
-@media screen and (max-width: 1150px) {
-  main .todo-app .date-box .select select {
-    font-size: 0.7em;
-    font-weight: bold;
-    text-shadow: none;
-    margin-bottom: none;
   }
 }
 main .todo-app .date-box .select:after {

@@ -239,8 +239,6 @@ var time = document.querySelector('.time');
 var greeting = document.querySelector('.greeting');
 var quote = document.querySelector('.quote');
 var quoteOrigin = document.querySelector('.quote-origin');
-var quoteBtn = document.querySelector('.inspired-btn');
-var timeApp = document.querySelector('.time-app');
 var todayDate = document.querySelector('.today-date');
 
 function greetings() {
@@ -252,29 +250,64 @@ function greetings() {
   time.textContent = currentTime;
   setTimeout(greetings, 1000);
 
-  if (hours >= 14 && hours < 18) {
+  if (hours >= 12 && hours < 18) {
     greeting.textContent = 'Good afternoon, Patrick';
-  } else if (hours >= 18 && hours < 20) {
-    greeting.textContent = 'Sunset time, Patrick';
-  } else if (hours >= 20 && hours < 21) {
-    greeting.textContent = 'Dinner time, Patrick';
-  } else if (hours >= 21 && hours !== 0) {
+  } else if (hours >= 18 && hours !== 4) {
     greeting.textContent = 'Good evening, Patrick';
-  } else if (hours >= 0 && hours < 5) {
-    greeting.textContent = 'Go to bed, Patrick';
-  } else if (hours >= 5 && hours < 7) {
-    greeting.textContent = 'Sunrise time, Patrick';
-  } else if (hours >= 7 && hours < 10) {
+  } else if (hours >= 4 && hours < 12) {
     greeting.textContent = 'Good morning, Patrick';
-  } else if (hours >= 10 && hours < 12) {
-    greeting.textContent = 'Time to be productive, Patrick';
-  } else if (hours >= 12 && hours < 14) {
-    greeting.textContent = 'Lunch Time, Patrick';
   }
 }
 
 function addZero(num) {
   return num < 10 ? "0".concat(num) : num;
+} // Intention
+
+
+var intentionInput = document.querySelector('.intention-input');
+var intentionAnswer = document.querySelector('.intention-answer');
+var intentionCta = document.querySelector('.intention-cta');
+var intentionIcons = document.querySelectorAll('.intention-icons');
+var intentionQuestionContainer = document.querySelector('.intention-question-container');
+var intentionAnswerContainer = document.querySelector('.intention-answer-container');
+intentionInput.addEventListener('keypress', changeIntention);
+intentionCta.addEventListener('mouseover', intentionAnswerIcons);
+intentionCta.addEventListener('mouseleave', removeIntentionIcons);
+
+function changeIntention(e) {
+  if (e.keyCode === 13 && e.target.value !== '') {
+    intentionQuestionContainer.style.opacity = '0';
+    setTimeout(function () {
+      intentionQuestionContainer.style.visibility = 'hidden';
+      intentionAnswer.textContent = e.target.value;
+      intentionAnswerContainer.style.visibility = 'visible';
+      intentionAnswerContainer.style.opacity = '1';
+    }, 600);
+  }
+}
+
+function intentionAnswerIcons() {
+  intentionIcons.forEach(function (icon) {
+    icon.style.visibility = 'visible';
+    icon.addEventListener('click', function (e) {
+      intentionAnswerContainer.style.opacity = '0';
+      setTimeout(function () {
+        intentionAnswerContainer.style.visibility = 'hidden';
+        intentionQuestionContainer.style.opacity = '1';
+        intentionQuestionContainer.style.visibility = 'visible';
+      }, 600);
+
+      if (e.target.classList.contains('fa-times')) {
+        intentionInput.value = '';
+      }
+    });
+  });
+}
+
+function removeIntentionIcons() {
+  intentionIcons.forEach(function (icon) {
+    return icon.style.visibility = 'hidden';
+  });
 } // Footer
 
 
@@ -311,7 +344,7 @@ function generateQuote() {
   });
 }
 
-function generateBackground(e) {
+function generateBackground() {
   fetch("https://api.unsplash.com/collections/GsNw3bdVLPM/photos/?client_id=".concat(api.keyTwo, "&per_page=30")).then(function (response) {
     return response.json();
   }).then(function (data) {
@@ -572,7 +605,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53551" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54925" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
