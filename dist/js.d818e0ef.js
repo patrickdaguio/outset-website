@@ -275,9 +275,26 @@ function greetings() {
 
 function addZero(num) {
   return num < 10 ? "0".concat(num) : num;
-}
+} // Footer
 
-quoteBtn.addEventListener('click', generateQuote);
+
+var backgroundLocation = document.querySelector('.background-location');
+var changeBackground = document.querySelector('.changeBackground');
+var heartBackground = document.querySelector('.background-photo');
+var backgroundDetails = document.querySelector('.background-details');
+var backgroundInfo = document.querySelector('.background-info');
+var backgroundUser = document.querySelector('.background-user');
+var backgroundUserLink = document.querySelector('.background-user-link');
+var changeQuote = document.querySelector('.changeQuote');
+var quotesInfo = document.querySelector('.quotes-info');
+var inspirationalQuote = document.querySelector('.quote');
+var quoteDetails = document.querySelector('.quote-details');
+changeBackground.addEventListener('click', generateBackground);
+changeQuote.addEventListener('click', generateQuote);
+backgroundInfo.addEventListener('mouseenter', showBackgroundDetails);
+backgroundInfo.addEventListener('mouseleave', showBackgroundDetails);
+quotesInfo.addEventListener('mouseenter', showQuoteDetails);
+quotesInfo.addEventListener('mouseleave', showQuoteDetails);
 
 function generateQuote() {
   fetch("https://type.fit/api/quotes").then(function (response) {
@@ -287,24 +304,12 @@ function generateQuote() {
     quote.textContent = "".concat(data[index].text);
 
     if (data[index].author === null) {
-      quoteOrigin.textContent = '- Unknown';
+      quoteOrigin.textContent = 'Unknown';
     } else {
-      quoteOrigin.textContent = "- ".concat(data[index].author);
+      quoteOrigin.textContent = "".concat(data[index].author);
     }
   });
-} // Footer
-
-
-var backgroundLocation = document.querySelector('.background-location');
-var changeBackground = document.querySelector('.fa-redo');
-var heartBackground = document.querySelector('.background-photo');
-var backgroundDetails = document.querySelector('.background-details');
-var backgroundInfo = document.querySelector('.background-info');
-var backgroundUser = document.querySelector('.background-user');
-var backgroundUserLink = document.querySelector('.background-user-link');
-changeBackground.addEventListener('click', generateBackground);
-backgroundInfo.addEventListener('mouseenter', showBackgroundDetails);
-backgroundInfo.addEventListener('mouseleave', showBackgroundDetails);
+}
 
 function generateBackground(e) {
   fetch("https://api.unsplash.com/collections/GsNw3bdVLPM/photos/?client_id=".concat(api.keyTwo, "&per_page=30")).then(function (response) {
@@ -328,6 +333,11 @@ function generateBackground(e) {
 function showBackgroundDetails() {
   backgroundDetails.classList.toggle('background-show');
   backgroundLocation.classList.toggle('background-show');
+}
+
+function showQuoteDetails() {
+  inspirationalQuote.classList.toggle('background-show');
+  quoteDetails.classList.toggle('background-show');
 } // Todo List App
 
 
@@ -562,7 +572,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59055" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53551" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

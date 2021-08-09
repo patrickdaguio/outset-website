@@ -130,7 +130,27 @@ function addZero(num) {
     return num < 10 ? `0${num}` : num;
 }
 
-quoteBtn.addEventListener('click', generateQuote);
+
+// Footer
+
+const backgroundLocation = document.querySelector('.background-location')
+const changeBackground = document.querySelector('.changeBackground')
+const heartBackground = document.querySelector('.background-photo')
+const backgroundDetails = document.querySelector('.background-details')
+const backgroundInfo = document.querySelector('.background-info')
+const backgroundUser = document.querySelector('.background-user')
+const backgroundUserLink = document.querySelector('.background-user-link')
+const changeQuote = document.querySelector('.changeQuote')
+const quotesInfo = document.querySelector('.quotes-info')
+const inspirationalQuote = document.querySelector('.quote')
+const quoteDetails = document.querySelector('.quote-details')
+
+changeBackground.addEventListener('click', generateBackground)
+changeQuote.addEventListener('click', generateQuote);
+backgroundInfo.addEventListener('mouseenter', showBackgroundDetails)
+backgroundInfo.addEventListener('mouseleave', showBackgroundDetails)
+quotesInfo.addEventListener('mouseenter', showQuoteDetails)
+quotesInfo.addEventListener('mouseleave', showQuoteDetails)
 
 function generateQuote() {
     fetch("https://type.fit/api/quotes")
@@ -140,28 +160,12 @@ function generateQuote() {
         let index = Math.floor(Math.random() * data.length);
         quote.textContent = `${data[index].text}`;
         if (data[index].author === null) {
-            quoteOrigin.textContent = '- Unknown';
+            quoteOrigin.textContent = 'Unknown';
         } else {
-            quoteOrigin.textContent = `- ${data[index].author}`;
+            quoteOrigin.textContent = `${data[index].author}`;
         }
     });
 }
-
-// Footer
-
-const backgroundLocation = document.querySelector('.background-location')
-const changeBackground = document.querySelector('.fa-redo')
-const heartBackground = document.querySelector('.background-photo')
-const backgroundDetails = document.querySelector('.background-details')
-const backgroundInfo = document.querySelector('.background-info')
-const backgroundUser = document.querySelector('.background-user')
-const backgroundUserLink = document.querySelector('.background-user-link')
-
-changeBackground.addEventListener('click', generateBackground)
-backgroundInfo.addEventListener('mouseenter', showBackgroundDetails)
-backgroundInfo.addEventListener('mouseleave', showBackgroundDetails)
-
-
 
 function generateBackground(e) {
     fetch(`https://api.unsplash.com/collections/GsNw3bdVLPM/photos/?client_id=${api.keyTwo}&per_page=30`)
@@ -188,6 +192,11 @@ function generateBackground(e) {
 function showBackgroundDetails() {
     backgroundDetails.classList.toggle('background-show')
     backgroundLocation.classList.toggle('background-show')
+}
+
+function showQuoteDetails() {
+    inspirationalQuote.classList.toggle('background-show')
+    quoteDetails.classList.toggle('background-show')
 }
 
 // Todo List App

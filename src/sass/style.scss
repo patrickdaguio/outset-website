@@ -62,7 +62,7 @@ body {
 .header {
   @include flex(flex, center, 0em);
   justify-content: space-between;
-  padding: 2em 4em;
+  padding: 2em 3em;
 }
 
 .socials {
@@ -116,7 +116,7 @@ body {
   .search-box {
     @include removeOriginal(none, none, auto);
     @include textStyle(0.85em, 700, none, 0.8em);
-    box-shadow: 5px 5px 6px 1px rgba(0, 0, 0, 0.4);
+    box-shadow: 5px 5px 14px rgba(0, 0, 0, 0.4);
     padding: 0.5em 0em 0.5em 1em;
     border-radius: 0.35em;
     &::placeholder {
@@ -162,17 +162,16 @@ body {
   gap: 2em;
   justify-content: space-between;
   .time-app {
-    max-width: 1000px;
+    max-width: 1100px;
     margin: initial;
-    width: 0;
-    transition: width 0.8s ease;
+    text-align: left;
   }
 }
 
 main {
   display: block;
   text-align: center;
-  padding: 2em 4em;
+  padding: 2em 3em;
 
   @include mQ(1300px) {
     align-items: center;
@@ -181,16 +180,15 @@ main {
     flex-direction: column;
   }
   .time-app {
+    max-width: 1250px;
+    margin: auto;
     color: white;
     letter-spacing: 0.05em;
-    white-space: nowrap;
-    width: 100%;
-    transition: width 0.8s ease;
     @include mQ(1300px) {
       margin-left: 0em;
     }
     .time {
-      @include textStyle(8.5em, 700, none, 0em);
+      @include textStyle(8.5em, 500, none, 0em);
       @include mQ(1550px) {
         @include textStyle(7.5em, 700, none, 0em);
       }
@@ -205,7 +203,7 @@ main {
       }
     }
     .greeting {
-      @include textStyle(4.8em, 700, none, 0em);
+      @include textStyle(4.8em, 500, none, 0em);
       @include mQ(1550px) {
         @include textStyle(4em, 700, none, 0em);
       }
@@ -219,58 +217,51 @@ main {
         @include textStyle(2.4em, 700, none, 0em);
       }
     }
-    .quote,
-    .quote-origin {
-      @include textStyle(2.1em, 700, none, 0em);
-      @include mQ(1550px) {
-        @include textStyle(1.8em, 700, none, 0em);
+    .intention {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      .intention-question {
+        margin: 1em;
+        @include textStyle(2.5em, 400, none, 0em);
       }
-      @include mQ(1300px) {
-        @include textStyle(1.5em, 700, none, 0em);
-      }
-      @include mQ(1100px) {
-        @include textStyle(1.3em, 700, none, 0em);
-      }
-      @include mQ(1000px) {
-        @include textStyle(1.1em, 700, none, 0em);
+      .intention-input {
+        width: 60%;
+        margin: auto;
+        padding-top: 10px;
+        display: block;
+        background: 0;
+        border: 0;
+        border-bottom: 2px solid #fff;
+        color: #fff;
+        font-size: 2.25em;
+        line-height: 1.2;
+        font-weight: 500;
+        outline: none;
+        text-align: center;
       }
     }
+  }
 
-    .quote {
-      margin: 1em 0em;
-      font-style: italic;
-    }
-    .quote-origin {
-      margin-bottom: 1em;
-    }
-    .button {
-      .inspired-btn {
-        @include textStyle(1.8em, 700, none, 0em);
-        @include removeOriginal(none, none, pointer);
-        background-color: rgba(15, 14, 14, 0.8);
-        border-radius: 0.35em;
-        color: white;
-        padding: 0.4em 1.4em;
-        transition: 0.3s ease all;
-        text-transform: uppercase;
-        box-shadow: 2px 4px 10px 0px rgba(0, 0, 0, 0.7);
-        &:hover {
-          background-color: rgba(255, 255, 255, 0.6);
-          color: rgba(0, 0, 0, 0.8);
-        }
-        @include mQ(1550px) {
-          @include textStyle(1.6em, 700, none, 0em);
-        }
-        @include mQ(1250px) {
-          @include textStyle(1.4em, 700, none, 0em);
-        }
-        @include mQ(1100px) {
-          @include textStyle(1.3em, 700, none, 0em);
-        }
-        @include mQ(1000px) {
-          @include textStyle(1.1em, 700, none, 0em);
-        }
-      }
+  .todo-open {
+    position: fixed;
+    transform: rotate(270deg);
+    background-color: white;
+    color: rgba(80, 69, 69, 1);
+    padding: 0.3em 1em;
+    font-size: 1.5em;
+    border-top-left-radius: 0.5em;
+    border-top-right-radius: 0.5em;
+    font-weight: 700;
+    top: 50%;
+    z-index: 2;
+    right: -35px;
+    transition: $transition;
+    cursor: pointer;
+    user-select: none;
+    &:hover {
+      background-color: rgba(80, 69, 69, 0.8);
+      color: white;
     }
   }
 
@@ -285,26 +276,7 @@ main {
     z-index: 1;
     top: 25%;
     right: -600px;
-    .todo-open {
-      position: fixed;
-      transform: rotate(270deg);
-      background-color: white;
-      color: rgba(80, 69, 69, 1);
-      padding: 0.3em 1em;
-      font-size: 1.5em;
-      border-top-left-radius: 0.5em;
-      border-top-right-radius: 0.5em;
-      font-weight: 700;
-      top: 50%;
-      right: -35px;
-      transition: $transition;
-      cursor: pointer;
-      user-select: none;
-      &:hover {
-        background-color: rgba(80, 69, 69, 0.8);
-        color: white;
-      }
-    }
+    opacity: 0;
     .date-box {
       @include flex(flex, center, 1em);
       height: 7vh;
@@ -449,21 +421,24 @@ main {
 }
 
 footer {
+  display: flex;
   position: fixed;
-  bottom: 25px;
-  left: 50%;
-  transform: translate(-50%, 50%);
+  align-items: flex-end;
+  bottom: 0px;
+  width: 100%;
+  height: 80px;
+  padding: 0.5em 3em;
   .background-info {
     color: white;
+    flex: 0 0 220px;
     .background-location {
       transform: translateZ(0) translateY(10px);
-      text-align: center;
       transition: 0.3s ease-in-out;
+      font-size: 0.9em;
     }
     .background-details {
       margin-top: 0.3em;
-      justify-content: center;
-      font-size: 0.9em;
+      font-size: 0.8em;
       display: flex;
       transform: translateZ(0) translateY(-8px);
       opacity: 0;
@@ -475,7 +450,7 @@ footer {
       }
       p {
         cursor: pointer;
-        margin-right: 0.5em;
+        margin-right: 0.6em;
         transition: 0.3s;
         color: rgb(202, 193, 198);
         &:hover {
@@ -483,6 +458,46 @@ footer {
         }
       }
     }
+  }
+  .quotes-info {
+    flex: 1;
+    color: white;
+    margin: 0em 1em;
+    .quote {
+      @include textStyle(1.05em, 400, none, 0em);
+      transform: translateZ(0) translateY(9px);
+      text-align: center;
+      transition: 0.3s ease-in-out;
+    }
+    .quote-details {
+      display: flex;
+      margin-top: 0.2em;
+      opacity: 0;
+      justify-content: center;
+      display: flex;
+      transform: translateZ(0) translateY(-8px);
+      transition: 0.3s ease-in-out;
+      .quote-origin {
+        @include textStyle(0.9em, 400, none, 0em);
+        cursor: auto;
+      }
+      p {
+        cursor: pointer;
+        margin-right: 0.6em;
+        transition: 0.3s;
+        color: rgb(202, 193, 198);
+        i {
+          font-size: 0.8em;
+        }
+        &:hover {
+          color: white;
+        }
+      }
+    }
+  }
+  .footer-space {
+    display: flex;
+    flex: 0 0 220px;
   }
 }
 
@@ -584,4 +599,5 @@ footer {
 .todo-close {
   right: 0px !important;
   margin-right: 4em !important;
+  opacity: 1 !important;
 }

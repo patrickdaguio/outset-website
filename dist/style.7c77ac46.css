@@ -30,7 +30,7 @@ body {
   align-items: center;
   margin-bottom: 0em;
   justify-content: space-between;
-  padding: 2em 4em;
+  padding: 2em 3em;
 }
 
 .socials {
@@ -106,7 +106,7 @@ body {
   font-weight: 700;
   text-shadow: none;
   margin-bottom: 0.8em;
-  box-shadow: 5px 5px 6px 1px rgba(0, 0, 0, 0.4);
+  box-shadow: 5px 5px 14px rgba(0, 0, 0, 0.4);
   padding: 0.5em 0em 0.5em 1em;
   border-radius: 0.35em;
 }
@@ -165,16 +165,15 @@ body {
   justify-content: space-between;
 }
 .main-left .time-app {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: initial;
-  width: 0;
-  transition: width 0.8s ease;
+  text-align: left;
 }
 
 main {
   display: block;
   text-align: center;
-  padding: 2em 4em;
+  padding: 2em 3em;
 }
 @media screen and (max-width: 1300px) {
   main {
@@ -187,11 +186,10 @@ main {
   }
 }
 main .time-app {
+  max-width: 1250px;
+  margin: auto;
   color: white;
   letter-spacing: 0.05em;
-  white-space: nowrap;
-  width: 100%;
-  transition: width 0.8s ease;
 }
 @media screen and (max-width: 1300px) {
   main .time-app {
@@ -200,7 +198,7 @@ main .time-app {
 }
 main .time-app .time {
   font-size: 8.5em;
-  font-weight: 700;
+  font-weight: 500;
   text-shadow: none;
   margin-bottom: 0em;
 }
@@ -238,7 +236,7 @@ main .time-app .time {
 }
 main .time-app .greeting {
   font-size: 4.8em;
-  font-weight: 700;
+  font-weight: 500;
   text-shadow: none;
   margin-bottom: 0em;
 }
@@ -274,121 +272,34 @@ main .time-app .greeting {
     margin-bottom: 0em;
   }
 }
-main .time-app .quote,
-main .time-app .quote-origin {
-  font-size: 2.1em;
-  font-weight: 700;
+main .time-app .intention {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+main .time-app .intention .intention-question {
+  margin: 1em;
+  font-size: 2.5em;
+  font-weight: 400;
   text-shadow: none;
   margin-bottom: 0em;
 }
-@media screen and (max-width: 1550px) {
-  main .time-app .quote,
-main .time-app .quote-origin {
-    font-size: 1.8em;
-    font-weight: 700;
-    text-shadow: none;
-    margin-bottom: 0em;
-  }
-}
-@media screen and (max-width: 1300px) {
-  main .time-app .quote,
-main .time-app .quote-origin {
-    font-size: 1.5em;
-    font-weight: 700;
-    text-shadow: none;
-    margin-bottom: 0em;
-  }
-}
-@media screen and (max-width: 1100px) {
-  main .time-app .quote,
-main .time-app .quote-origin {
-    font-size: 1.3em;
-    font-weight: 700;
-    text-shadow: none;
-    margin-bottom: 0em;
-  }
-}
-@media screen and (max-width: 1000px) {
-  main .time-app .quote,
-main .time-app .quote-origin {
-    font-size: 1.1em;
-    font-weight: 700;
-    text-shadow: none;
-    margin-bottom: 0em;
-  }
-}
-main .time-app .quote {
-  margin: 1em 0em;
-  font-style: italic;
-}
-main .time-app .quote-origin {
-  margin-bottom: 1em;
-}
-main .time-app .button .inspired-btn {
-  font-size: 1.8em;
-  font-weight: 700;
-  text-shadow: none;
-  margin-bottom: 0em;
+main .time-app .intention .intention-input {
+  width: 60%;
+  margin: auto;
+  padding-top: 10px;
+  display: block;
+  background: 0;
+  border: 0;
+  border-bottom: 2px solid #fff;
+  color: #fff;
+  font-size: 2.25em;
+  line-height: 1.2;
+  font-weight: 500;
   outline: none;
-  border: none;
-  cursor: pointer;
-  background-color: rgba(15, 14, 14, 0.8);
-  border-radius: 0.35em;
-  color: white;
-  padding: 0.4em 1.4em;
-  transition: 0.3s ease all;
-  text-transform: uppercase;
-  box-shadow: 2px 4px 10px 0px rgba(0, 0, 0, 0.7);
+  text-align: center;
 }
-main .time-app .button .inspired-btn:hover {
-  background-color: rgba(255, 255, 255, 0.6);
-  color: rgba(0, 0, 0, 0.8);
-}
-@media screen and (max-width: 1550px) {
-  main .time-app .button .inspired-btn {
-    font-size: 1.6em;
-    font-weight: 700;
-    text-shadow: none;
-    margin-bottom: 0em;
-  }
-}
-@media screen and (max-width: 1250px) {
-  main .time-app .button .inspired-btn {
-    font-size: 1.4em;
-    font-weight: 700;
-    text-shadow: none;
-    margin-bottom: 0em;
-  }
-}
-@media screen and (max-width: 1100px) {
-  main .time-app .button .inspired-btn {
-    font-size: 1.3em;
-    font-weight: 700;
-    text-shadow: none;
-    margin-bottom: 0em;
-  }
-}
-@media screen and (max-width: 1000px) {
-  main .time-app .button .inspired-btn {
-    font-size: 1.1em;
-    font-weight: 700;
-    text-shadow: none;
-    margin-bottom: 0em;
-  }
-}
-main .todo-app {
-  background-color: rgba(196, 196, 196, 0.4);
-  min-height: 60vh;
-  border-radius: 25px;
-  min-width: 30vw;
-  box-shadow: 8px 6px 10px 0px rgba(0, 0, 0, 0.5);
-  transition: all 0.3s ease;
-  position: fixed;
-  z-index: 1;
-  top: 25%;
-  right: -600px;
-}
-main .todo-app .todo-open {
+main .todo-open {
   position: fixed;
   transform: rotate(270deg);
   background-color: white;
@@ -404,9 +315,22 @@ main .todo-app .todo-open {
   cursor: pointer;
   user-select: none;
 }
-main .todo-app .todo-open:hover {
+main .todo-open:hover {
   background-color: rgba(80, 69, 69, 0.8);
   color: white;
+}
+main .todo-app {
+  background-color: rgba(196, 196, 196, 0.4);
+  min-height: 60vh;
+  border-radius: 25px;
+  min-width: 30vw;
+  box-shadow: 8px 6px 10px 0px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+  position: fixed;
+  z-index: 1;
+  top: 25%;
+  right: -600px;
+  opacity: 0;
 }
 main .todo-app .date-box {
   display: flex;
@@ -597,23 +521,26 @@ main .todo-app .add-task form .add-btn:hover {
 }
 
 footer {
+  display: flex;
   position: fixed;
-  bottom: 25px;
-  left: 50%;
-  transform: translate(-50%, 50%);
+  align-items: flex-end;
+  bottom: 0px;
+  width: 100%;
+  height: 80px;
+  padding: 0.5em 3em;
 }
 footer .background-info {
   color: white;
+  flex: 0 0 220px;
 }
 footer .background-info .background-location {
   transform: translateZ(0) translateY(10px);
-  text-align: center;
   transition: 0.3s ease-in-out;
+  font-size: 0.9em;
 }
 footer .background-info .background-details {
   margin-top: 0.3em;
-  justify-content: center;
-  font-size: 0.9em;
+  font-size: 0.8em;
   display: flex;
   transform: translateZ(0) translateY(-8px);
   opacity: 0;
@@ -626,12 +553,58 @@ footer .background-info .background-details .background-photo {
 }
 footer .background-info .background-details p {
   cursor: pointer;
-  margin-right: 0.5em;
+  margin-right: 0.6em;
   transition: 0.3s;
   color: #cac1c6;
 }
 footer .background-info .background-details p:hover {
   color: white;
+}
+footer .quotes-info {
+  flex: 1;
+  color: white;
+  margin: 0em 1em;
+}
+footer .quotes-info .quote {
+  font-size: 1.05em;
+  font-weight: 400;
+  text-shadow: none;
+  margin-bottom: 0em;
+  transform: translateZ(0) translateY(9px);
+  text-align: center;
+  transition: 0.3s ease-in-out;
+}
+footer .quotes-info .quote-details {
+  display: flex;
+  margin-top: 0.2em;
+  opacity: 0;
+  justify-content: center;
+  display: flex;
+  transform: translateZ(0) translateY(-8px);
+  transition: 0.3s ease-in-out;
+}
+footer .quotes-info .quote-details .quote-origin {
+  font-size: 0.9em;
+  font-weight: 400;
+  text-shadow: none;
+  margin-bottom: 0em;
+  cursor: auto;
+}
+footer .quotes-info .quote-details p {
+  cursor: pointer;
+  margin-right: 0.6em;
+  transition: 0.3s;
+  color: #cac1c6;
+}
+footer .quotes-info .quote-details p i {
+  font-size: 0.8em;
+}
+footer .quotes-info .quote-details p:hover {
+  color: white;
+}
+footer .footer-space {
+  display: flex;
+  flex: 0 0 220px;
 }
 
 .background-show {
@@ -739,6 +712,7 @@ footer .background-info .background-details p:hover {
 .todo-close {
   right: 0px !important;
   margin-right: 4em !important;
+  opacity: 1 !important;
 }
 
 /*# sourceMappingURL=/style.7c77ac46.css.map */
