@@ -134,6 +134,8 @@ function setIntention() {
     if (localStorage.getItem('intention') === null) intention = []
     else intention = JSON.parse(localStorage.getItem('intention'))
 
+    let dateNow = new Date()
+
     if (intention[1] !== dateNow.toDateString()) {
         intention = [] 
         localStorage.setItem('intention', JSON.stringify(intention))
@@ -216,7 +218,7 @@ const inactivityTime = function () {
         document.querySelector('.intention').style.opacity = '1'
         document.body.style.cursor = "default";
         clearTimeout(time);
-        time = setTimeout(logout, 60000)
+        time = setTimeout(logout, 30000)
     }
 };
 
@@ -240,13 +242,21 @@ const quoteDetails = document.querySelector('.quote-details')
 const shareBtn = document.querySelector('.shareBtn')
 const shareBox = document.querySelector('.share-box')
 
+// Social Icons
+
+const facebookBtn = document.querySelector('.social-facebook')
+const twitterBtn = document.querySelector('.social-twitter')
+const linkedBtn = document.querySelector('.social-linked')
+const whatsappBtn = document.querySelector('.social-whatsapp')
+const quoteBtn = document.querySelector('.social-quote')
+
 changeBackground.addEventListener('click', generateBackground)
 changeQuote.addEventListener('click', generateQuote);
 backgroundInfo.addEventListener('mouseenter', showBackgroundDetails)
 backgroundInfo.addEventListener('mouseleave', showBackgroundDetails)
 quotesInfo.addEventListener('mouseenter', showQuoteDetails)
 quotesInfo.addEventListener('mouseleave', showQuoteDetails)
-shareBtn.addEventListener('click', shareQuote)
+shareBtn.addEventListener('click', openQuoteBox)
 
 function reset_animation(element) {
     element.style.animation = 'none';
@@ -262,9 +272,11 @@ function generateQuote() {
         let index = Math.floor(Math.random() * data.length);
         reset_animation(inspirationalQuote)
         quote.textContent = `${data[index].text}`;
+        shareQuote(`${data[index].text} - ${data[index].author}`)
         if (data[index].author === null) {
             reset_animation(quoteOrigin)
             quoteOrigin.textContent = 'Unknown';
+            shareQuote(`${data[index].text} - Unknown`)
         } else {
             reset_animation(quoteOrigin)
             quoteOrigin.textContent = `${data[index].author}`;
@@ -272,9 +284,32 @@ function generateQuote() {
     });
 }
 
-function shareQuote() {
+function openQuoteBox() {
     shareBox.classList.toggle('share-open')
 }
+
+function shareQuote(quote) {
+    let postUrl = encodeURI(document.location.href)
+    let postTitle = encodeURI(quote)
+
+    // facebookBtn.setAttribute('href', `http://www.facebook.com/sharer/sharer.php?s=100&p[url]=${fburl}&p[title]=${fbtitle}`)
+    facebookBtn.addEventListener('click', () => {
+        FB.api(
+            "/me/feed",
+            "POST",
+            {
+              "message": postTitle
+            },
+            function (response) {
+            }
+          );
+        })
+    twitterBtn.setAttribute('href', ``)
+    linkedBtn.setAttribute('href', ``)
+    whatsappBtn.setAttribute('href', `https://api.whatsapp.com/send?text=${postTitle}`)
+}
+
+
 
 function generateBackground() {
     fetch(`https://api.unsplash.com/collections/GsNw3bdVLPM/photos/?client_id=${api.keyTwo}&per_page=30`)
@@ -284,7 +319,6 @@ function generateBackground() {
     .then(data => {
         let bgIndex =  data[Math.floor(Math.random()*data.length)];
         document.body.style.backgroundImage = `url(${bgIndex.urls.full})`
-        console.log(bgIndex)
         return fetch(`https://api.unsplash.com/photos/${bgIndex.id}/?client_id=${api.keyTwo}`)
     }).then(response => {
         return response.json()
@@ -305,7 +339,10 @@ function showBackgroundDetails() {
 function showQuoteDetails() {
     inspirationalQuote.classList.toggle('background-show')
     quoteDetails.classList.toggle('background-show')
+    shareBox.classList.remove('share-open')
 }
+
+
 
 // Todo List App
 

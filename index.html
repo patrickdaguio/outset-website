@@ -13,108 +13,115 @@
     <title>Outset</title>
 </head>
 <body>
-<!--         <video autoplay muted loop id="myVideo">
-        <source src="/3.mp4" type="video/mp4"></video> -->
-    <div class="header">
-        <div class="socials">
-            <p class="socials-icon"><i class="fas fa-grip-horizontal"></i></p>
-<!--             <a href="http://www.facebook.com" target="_blank"><p class="socials-icon"><i class="fab fa-facebook-square"></i></p></a>
-            <a href="http://instagram.com" target="_blank"><p class="socials-icon"><i class="fab fa-instagram-square"></i></p></a>
-            <a href="http://twitch.tv" target="_blank"><p class="socials-icon"><i class="fab fa-twitch"></i></p></a>
-            <a href="http://youtube.com" target="_blank"><p class="socials-icon"><i class="fab fa-youtube"></i></p></a> -->
-        </div>
-        <div class="weather-app">
-            <div class="temperature">
-                <div class="icon-div"><img class="temperature-icon" src="/src/images/weather/sunny.png"></div>
-                <h1 class="temperature-degree"></h1>
-                <img class="degree-icon" src="/src/images/weather/degrees.png">
+    <script>
+        window.fbAsyncInit = function() {
+          FB.init({
+            appId            : '521968462396867',
+            autoLogAppEvents : true,
+            xfbml            : true,
+            version          : 'v11.0'
+          });
+        };
+      </script>
+      <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+    <div class="container">
+        <header class="header">
+            <div class="socials">
+                <p class="socials-icon"><i class="fas fa-grip-horizontal"></i></p>
             </div>
-            <p class="location"></p>
-            <input type="text" autocomplete="off" class="search-box" placeholder="SEARCH">
-            <div class="extra-info">
-                <img src="/src/images/weather/humidity.png"><span class="humidity">0%</span> 
-                <img src="/src/images/weather/wind.png"><span class="wind">0 mph</span>
-            </div>
-        </div>
-    </div>
-    <main>
-        <div class="time-app">
-            <time class="time">00:00</time>
-            <h1 class="greeting"></h1>
-            <div class="intention">
-                <div class="intention-question-container">
-                    <h3 class="intention-question">What is your intention for today?</h3>
-                    <input type="text" class="intention-input">
+            <div class="weather-app">
+                <div class="temperature">
+                    <div class="icon-div"><img class="temperature-icon" src="/src/images/weather/sunny.png"></div>
+                    <h1 class="temperature-degree"></h1>
+                    <img class="degree-icon" src="/src/images/weather/degrees.png">
                 </div>
-                <div class="intention-answer-container">
-                    <h3 class="intention-today">Today</h3>
-                    <div class="intention-cta">
-                        <h3 class="intention-answer">Intention Answer</h3>
-                        <p class="intention-icons"><i class="fas fa-pen"></i></p>
-                        <p class="intention-icons"><i class="fas fa-times"></i></p>
+                <p class="location"></p>
+                <input type="text" autocomplete="off" class="search-box" placeholder="SEARCH">
+                <div class="extra-info">
+                    <img src="/src/images/weather/humidity.png"><span class="humidity">0%</span> 
+                    <img src="/src/images/weather/wind.png"><span class="wind">0 mph</span>
+                </div>
+            </div>
+        </header>
+        <main>
+            <div class="time-app">
+                <time class="time">00:00</time>
+                <h1 class="greeting"></h1>
+                <div class="intention">
+                    <div class="intention-question-container">
+                        <h3 class="intention-question">What is your intention for today?</h3>
+                        <input type="text" class="intention-input">
+                    </div>
+                    <div class="intention-answer-container">
+                        <h3 class="intention-today">Today</h3>
+                        <div class="intention-cta">
+                            <h3 class="intention-answer">Intention Answer</h3>
+                            <p class="intention-icons"><i class="fas fa-pen"></i></p>
+                            <p class="intention-icons"><i class="fas fa-times"></i></p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="todo-open">TODO</div>
-        <div class="todo-app">
-            <div class="date-box">
-                <h1 class="today-date"></h1>
-                <div class="select">
-                    <select name="todos" class="filter-todo">
-                        <option value="all">All</option>
-                        <option value="completed">Completed</option>
-                        <option value="uncompleted">Uncompleted</option>
-                    </select>
+            <div class="todo-open">TODO</div>
+            <div class="todo-app">
+                <div class="date-box">
+                    <h1 class="today-date"></h1>
+                    <div class="select">
+                        <select name="todos" class="filter-todo">
+                            <option value="all">All</option>
+                            <option value="completed">Completed</option>
+                            <option value="uncompleted">Uncompleted</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="todo-container">
+                    <div class="todo-list" id="todolist"></div>
+                </div>
+                <div class="underline"></div>
+                <div class="add-task">  
+                    <form>
+                        <input type="text" class="add-input" placeholder="Add a task">
+                        <button class="add-btn" type="submit"><img src="/src/images/todo/plus.png"></button>
+                    </form>
                 </div>
             </div>
-            <div class="todo-container">
-                <div class="todo-list" id="todolist"></div>
-            </div>
-            <div class="underline"></div>
-            <div class="add-task">  
-                <form>
-                    <input type="text" class="add-input" placeholder="Add a task">
-                    <button class="add-btn" type="submit"><img src="/src/images/todo/plus.png"></button>
-                </form>
-            </div>
-        </div>
-    </main>
+        </main>
 
-    <footer>
-        <div class="background-info">
-            <p class="background-location">Baja California, Mexico, Ensenada</p>
-            <div class="background-details">
-                <a href="https://unsplash.com/@luckybeanz" target="_blank" class="background-user-link">
-                    <p class="background-user">Mark Harpur</p>
-                </a>
-                <p class="background-icon"><i class="fas fa-redo changeBackground"></i></p>
-                <a href="https://unsplash.com/photos/HUOvKWXEdFY" target="_black" class="background-photo"><p class="background-icon"><i class="fas fa-heart"></i></p></a>
-            </div>
-        </div>
-        <div class="quotes-info">
-            <p class="quote">"The journey of a 1000miles begins with one step"</p>
-            <div class="quote-details">
-                <p class="quote-origin">Lao Tzu</p>
-                <p class="quote-icon"><i class="fas fa-redo changeQuote"></i></p>
-                <p class="quote-icon"><i class="fas fa-heart"></i></p>
-                <div class="share">
-                    <p class="quote-icon shareBtn"><i class="fas fa-share-square"></i></p>
-                    <div class="share-box">
-                        <ul>
-                            <li class="social-facebook"><i class="fab fa-facebook-square"></i></li>
-                            <li class="social-twitter"><i class="fab fa-twitter-square"></i></li>
-                            <li class="social-pinterest"><i class="fab fa-pinterest-square"></i></li>
-                            <li class="social-email"><i class="far fa-envelope"></i></li>
-                            <li class="social-quote"><i class="fas fa-quote-left"></i></li>
-                        </ul>
-                    </div>
+        <footer>
+            <div class="background-info">
+                <p class="background-location">Baja California, Mexico, Ensenada</p>
+                <div class="background-details">
+                    <a href="https://unsplash.com/@luckybeanz" target="_blank" class="background-user-link">
+                        <p class="background-user">Mark Harpur</p>
+                    </a>
+                    <p class="background-icon"><i class="fas fa-redo changeBackground"></i></p>
+                    <a href="https://unsplash.com/photos/HUOvKWXEdFY" target="_blank" class="background-photo"><p class="background-icon"><i class="fas fa-heart"></i></p></a>
                 </div>
-                <p class="quote-icon"><i class="fas fa-archive"></i></p>
             </div>
-        </div>
-        <div class="footer-space"></div>
-    </footer>
+            <div class="quotes-info">
+                <p class="quote">"The journey of a 1000miles begins with one step"</p>
+                <div class="quote-details">
+                    <p class="quote-origin">Lao Tzu</p>
+                    <p class="quote-icon"><i class="fas fa-redo changeQuote"></i></p>
+                    <p class="quote-icon"><i class="fas fa-heart"></i></p>
+                    <div class="share">
+                        <p class="quote-icon shareBtn"><i class="fas fa-share-square"></i></p>
+                        <div class="share-box">
+                            <ul>
+                                <a href="#" target="_blank" class="social-facebook"><i class="fab fa-facebook-square"></i></a>
+                                <a href="#" target="_blank" class="social-twitter"><i class="fab fa-twitter-square"></i></a>
+                                <a href="#" target="_blank" class="social-linked"><i class="fab fa-linkedin"></i></a>
+                                <a href="#" target="_blank" class="social-whatsapp"><i class="fab fa-whatsapp-square"></i></a>
+                                <a href="#" target="_blank" class="social-quote"><i class="fas fa-quote-left"></i></a>
+                            </ul>
+                        </div>
+                    </div>
+                    <p class="quote-icon"><i class="fas fa-archive"></i></p>
+                </div>
+            </div>
+            <div class="footer-space"></div>
+        </footer>
+    </div>
     
       
     <script>

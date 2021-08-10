@@ -278,6 +278,7 @@ intentionCta.addEventListener('mouseleave', removeIntentionIcons);
 function setIntention() {
   var intention;
   if (localStorage.getItem('intention') === null) intention = [];else intention = JSON.parse(localStorage.getItem('intention'));
+  var dateNow = new Date();
 
   if (intention[1] !== dateNow.toDateString()) {
     intention = [];
@@ -361,7 +362,7 @@ var inactivityTime = function inactivityTime() {
     document.querySelector('.intention').style.opacity = '1';
     document.body.style.cursor = "default";
     clearTimeout(time);
-    time = setTimeout(logout, 60000);
+    time = setTimeout(logout, 30000);
   }
 };
 
@@ -382,14 +383,20 @@ var quotesInfo = document.querySelector('.quotes-info');
 var inspirationalQuote = document.querySelector('.quote');
 var quoteDetails = document.querySelector('.quote-details');
 var shareBtn = document.querySelector('.shareBtn');
-var shareBox = document.querySelector('.share-box');
+var shareBox = document.querySelector('.share-box'); // Social Icons
+
+var facebookBtn = document.querySelector('.social-facebook');
+var twitterBtn = document.querySelector('.social-twitter');
+var linkedBtn = document.querySelector('.social-linked');
+var whatsappBtn = document.querySelector('.social-whatsapp');
+var quoteBtn = document.querySelector('.social-quote');
 changeBackground.addEventListener('click', generateBackground);
 changeQuote.addEventListener('click', generateQuote);
 backgroundInfo.addEventListener('mouseenter', showBackgroundDetails);
 backgroundInfo.addEventListener('mouseleave', showBackgroundDetails);
 quotesInfo.addEventListener('mouseenter', showQuoteDetails);
 quotesInfo.addEventListener('mouseleave', showQuoteDetails);
-shareBtn.addEventListener('click', shareQuote);
+shareBtn.addEventListener('click', openQuoteBox);
 
 function reset_animation(element) {
   element.style.animation = 'none';
@@ -406,10 +413,12 @@ function generateQuote() {
     var index = Math.floor(Math.random() * data.length);
     reset_animation(inspirationalQuote);
     quote.textContent = "".concat(data[index].text);
+    shareQuote("".concat(data[index].text, " - ").concat(data[index].author));
 
     if (data[index].author === null) {
       reset_animation(quoteOrigin);
       quoteOrigin.textContent = 'Unknown';
+      shareQuote("".concat(data[index].text, " - Unknown"));
     } else {
       reset_animation(quoteOrigin);
       quoteOrigin.textContent = "".concat(data[index].author);
@@ -417,8 +426,22 @@ function generateQuote() {
   });
 }
 
-function shareQuote() {
+function openQuoteBox() {
   shareBox.classList.toggle('share-open');
+}
+
+function shareQuote(quote) {
+  var postUrl = encodeURI(document.location.href);
+  var postTitle = encodeURI(quote); // facebookBtn.setAttribute('href', `http://www.facebook.com/sharer/sharer.php?s=100&p[url]=${fburl}&p[title]=${fbtitle}`)
+
+  facebookBtn.addEventListener('click', function () {
+    FB.api("/me/feed", "POST", {
+      "message": postTitle
+    }, function (response) {});
+  });
+  twitterBtn.setAttribute('href', "");
+  linkedBtn.setAttribute('href', "");
+  whatsappBtn.setAttribute('href', "https://api.whatsapp.com/send?text=".concat(postTitle));
 }
 
 function generateBackground() {
@@ -427,7 +450,6 @@ function generateBackground() {
   }).then(function (data) {
     var bgIndex = data[Math.floor(Math.random() * data.length)];
     document.body.style.backgroundImage = "url(".concat(bgIndex.urls.full, ")");
-    console.log(bgIndex);
     return fetch("https://api.unsplash.com/photos/".concat(bgIndex.id, "/?client_id=").concat(api.keyTwo));
   }).then(function (response) {
     return response.json();
@@ -447,6 +469,7 @@ function showBackgroundDetails() {
 function showQuoteDetails() {
   inspirationalQuote.classList.toggle('background-show');
   quoteDetails.classList.toggle('background-show');
+  shareBox.classList.remove('share-open');
 } // Todo List App
 
 
@@ -681,7 +704,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65120" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55157" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
