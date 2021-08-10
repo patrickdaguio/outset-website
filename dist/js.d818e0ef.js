@@ -191,6 +191,7 @@ window.addEventListener("load", function () {
   greetings();
   generateQuote();
   dateToday();
+  setIntention();
   changeDate();
 });
 
@@ -274,12 +275,38 @@ intentionInput.addEventListener('keypress', changeIntention);
 intentionCta.addEventListener('mouseover', intentionAnswerIcons);
 intentionCta.addEventListener('mouseleave', removeIntentionIcons);
 
+function setIntention() {
+  var intention;
+  if (localStorage.getItem('intention') === null) intention = [];else intention = JSON.parse(localStorage.getItem('intention'));
+
+  if (intention[1] !== dateNow.toDateString()) {
+    intention = [];
+    localStorage.setItem('intention', JSON.stringify(intention));
+  } else if (intention.length > 0) {
+    intentionQuestionContainer.style.visibility = 'hidden';
+    intentionAnswer.textContent = intention[0];
+    intentionAnswerContainer.style.visibility = 'visible';
+    intentionAnswerContainer.style.opacity = '1';
+  } else {
+    intentionQuestionContainer.style.visibility = 'visible';
+    intentionAnswerContainer.style.visibility = 'hidden';
+    intentionAnswerContainer.style.opacity = '0';
+  }
+}
+
 function changeIntention(e) {
+  var intention;
+  if (localStorage.getItem('intention') === null) intention = [];else intention = JSON.parse(localStorage.getItem('intention'));
+  var inputDate = new Date();
+
   if (e.keyCode === 13 && e.target.value !== '') {
     intentionQuestionContainer.style.opacity = '0';
+    intention[0] = e.target.value;
+    intention[1] = inputDate.toDateString();
+    localStorage.setItem('intention', JSON.stringify(intention));
     setTimeout(function () {
       intentionQuestionContainer.style.visibility = 'hidden';
-      intentionAnswer.textContent = e.target.value;
+      intentionAnswer.textContent = intention[0];
       intentionAnswerContainer.style.visibility = 'visible';
       intentionAnswerContainer.style.opacity = '1';
     }, 600);
@@ -287,6 +314,8 @@ function changeIntention(e) {
 }
 
 function intentionAnswerIcons() {
+  var intention;
+  if (localStorage.getItem('intention') === null) intention = [];else intention = JSON.parse(localStorage.getItem('intention'));
   intentionIcons.forEach(function (icon) {
     icon.style.visibility = 'visible';
     icon.addEventListener('click', function (e) {
@@ -295,11 +324,15 @@ function intentionAnswerIcons() {
         intentionAnswerContainer.style.visibility = 'hidden';
         intentionQuestionContainer.style.opacity = '1';
         intentionQuestionContainer.style.visibility = 'visible';
+        intention[0] = intentionInput.value;
       }, 600);
 
       if (e.target.classList.contains('fa-times')) {
         intentionInput.value = '';
+        intention = [];
       }
+
+      localStorage.setItem('intention', JSON.stringify(intention));
     });
   });
 }
@@ -308,7 +341,33 @@ function removeIntentionIcons() {
   intentionIcons.forEach(function (icon) {
     return icon.style.visibility = 'hidden';
   });
-} // Footer
+}
+
+var inactivityTime = function inactivityTime() {
+  var time;
+  window.onload = resetTimer; // DOM Events
+
+  document.onmousemove = resetTimer;
+  document.onkeydown = resetTimer;
+
+  function logout() {
+    greeting.style.opacity = '0';
+    document.querySelector('.intention').style.opacity = '0';
+    document.body.style.cursor = "none";
+  }
+
+  function resetTimer() {
+    greeting.style.opacity = '1';
+    document.querySelector('.intention').style.opacity = '1';
+    document.body.style.cursor = "default";
+    clearTimeout(time);
+    time = setTimeout(logout, 60000);
+  }
+};
+
+window.onload = function () {
+  inactivityTime();
+}; // Footer
 
 
 var backgroundLocation = document.querySelector('.background-location');
@@ -322,26 +381,44 @@ var changeQuote = document.querySelector('.changeQuote');
 var quotesInfo = document.querySelector('.quotes-info');
 var inspirationalQuote = document.querySelector('.quote');
 var quoteDetails = document.querySelector('.quote-details');
+var shareBtn = document.querySelector('.shareBtn');
+var shareBox = document.querySelector('.share-box');
 changeBackground.addEventListener('click', generateBackground);
 changeQuote.addEventListener('click', generateQuote);
 backgroundInfo.addEventListener('mouseenter', showBackgroundDetails);
 backgroundInfo.addEventListener('mouseleave', showBackgroundDetails);
 quotesInfo.addEventListener('mouseenter', showQuoteDetails);
 quotesInfo.addEventListener('mouseleave', showQuoteDetails);
+shareBtn.addEventListener('click', shareQuote);
+
+function reset_animation(element) {
+  element.style.animation = 'none';
+  element.offsetHeight;
+  /* trigger reflow */
+
+  element.style.animation = null;
+}
 
 function generateQuote() {
   fetch("https://type.fit/api/quotes").then(function (response) {
     return response.json();
   }).then(function (data) {
     var index = Math.floor(Math.random() * data.length);
+    reset_animation(inspirationalQuote);
     quote.textContent = "".concat(data[index].text);
 
     if (data[index].author === null) {
+      reset_animation(quoteOrigin);
       quoteOrigin.textContent = 'Unknown';
     } else {
+      reset_animation(quoteOrigin);
       quoteOrigin.textContent = "".concat(data[index].author);
     }
   });
+}
+
+function shareQuote() {
+  shareBox.classList.toggle('share-open');
 }
 
 function generateBackground() {
@@ -355,7 +432,6 @@ function generateBackground() {
   }).then(function (response) {
     return response.json();
   }).then(function (data) {
-    console.log(data);
     data.location.title === null ? backgroundLocation.textContent = 'Unknown' : backgroundLocation.textContent = data.location.title;
     backgroundUser.textContent = data.user.name;
     backgroundUserLink.href = data.user.links.html;
@@ -605,7 +681,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54925" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65120" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

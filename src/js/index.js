@@ -39,6 +39,7 @@ window.addEventListener("load", () => {
     greetings();
     generateQuote();
     dateToday();
+    setIntention()
     changeDate();
 })
 
@@ -100,7 +101,6 @@ function greetings() {
     let currentTime = `${hours}:${minutes}`;
 
     time.textContent = currentTime;
-
     setTimeout(greetings, 1000);
     
     if (hours >= 12 && hours < 18) {
@@ -129,12 +129,41 @@ intentionInput.addEventListener('keypress', changeIntention)
 intentionCta.addEventListener('mouseover', intentionAnswerIcons)
 intentionCta.addEventListener('mouseleave', removeIntentionIcons)
 
+function setIntention() {
+    let intention;
+    if (localStorage.getItem('intention') === null) intention = []
+    else intention = JSON.parse(localStorage.getItem('intention'))
+
+    if (intention[1] !== dateNow.toDateString()) {
+        intention = [] 
+        localStorage.setItem('intention', JSON.stringify(intention))
+    } else if (intention.length > 0) {
+        intentionQuestionContainer.style.visibility = 'hidden'
+        intentionAnswer.textContent = intention[0]
+        intentionAnswerContainer.style.visibility = 'visible'
+        intentionAnswerContainer.style.opacity = '1'
+    } else {
+        intentionQuestionContainer.style.visibility = 'visible'
+        intentionAnswerContainer.style.visibility = 'hidden'
+        intentionAnswerContainer.style.opacity = '0'
+    }
+}
+
 function changeIntention(e) {
+    let intention;
+    if (localStorage.getItem('intention') === null) intention = []
+    else intention = JSON.parse(localStorage.getItem('intention'))
+
+    let inputDate = new Date()
+
     if (e.keyCode === 13 && e.target.value !== '') {
         intentionQuestionContainer.style.opacity = '0'
+        intention[0] = e.target.value
+        intention[1] = inputDate.toDateString()
+        localStorage.setItem('intention', JSON.stringify(intention))
         setTimeout(() => {
             intentionQuestionContainer.style.visibility = 'hidden'
-            intentionAnswer.textContent = e.target.value
+            intentionAnswer.textContent = intention[0]
             intentionAnswerContainer.style.visibility = 'visible'
             intentionAnswerContainer.style.opacity = '1'
         }, 600)
@@ -142,6 +171,10 @@ function changeIntention(e) {
 }
 
 function intentionAnswerIcons() {
+    let intention;
+    if (localStorage.getItem('intention') === null) intention = []
+    else intention = JSON.parse(localStorage.getItem('intention'))
+
     intentionIcons.forEach(icon => {
         icon.style.visibility = 'visible'
         icon.addEventListener('click', (e) => {
@@ -150,10 +183,13 @@ function intentionAnswerIcons() {
                 intentionAnswerContainer.style.visibility = 'hidden'
                 intentionQuestionContainer.style.opacity = '1'
                 intentionQuestionContainer.style.visibility = 'visible'
+                intention[0] = intentionInput.value
             }, 600)
             if (e.target.classList.contains('fa-times')) {
                 intentionInput.value = ''
+                intention = []
             }
+            localStorage.setItem('intention', JSON.stringify(intention))
         })
     })
 }
@@ -161,6 +197,32 @@ function intentionAnswerIcons() {
 function removeIntentionIcons() {
     intentionIcons.forEach(icon => icon.style.visibility = 'hidden')
 } 
+
+const inactivityTime = function () {
+    let time;
+    window.onload = resetTimer;
+    // DOM Events
+    document.onmousemove = resetTimer;
+    document.onkeydown = resetTimer;
+
+    function logout() {
+        greeting.style.opacity = '0'
+        document.querySelector('.intention').style.opacity = '0'
+        document.body.style.cursor = "none";
+    }
+
+    function resetTimer() {
+        greeting.style.opacity = '1'
+        document.querySelector('.intention').style.opacity = '1'
+        document.body.style.cursor = "default";
+        clearTimeout(time);
+        time = setTimeout(logout, 60000)
+    }
+};
+
+window.onload = function() {
+    inactivityTime();
+  }
 
 // Footer
 
@@ -175,6 +237,8 @@ const changeQuote = document.querySelector('.changeQuote')
 const quotesInfo = document.querySelector('.quotes-info')
 const inspirationalQuote = document.querySelector('.quote')
 const quoteDetails = document.querySelector('.quote-details')
+const shareBtn = document.querySelector('.shareBtn')
+const shareBox = document.querySelector('.share-box')
 
 changeBackground.addEventListener('click', generateBackground)
 changeQuote.addEventListener('click', generateQuote);
@@ -182,20 +246,34 @@ backgroundInfo.addEventListener('mouseenter', showBackgroundDetails)
 backgroundInfo.addEventListener('mouseleave', showBackgroundDetails)
 quotesInfo.addEventListener('mouseenter', showQuoteDetails)
 quotesInfo.addEventListener('mouseleave', showQuoteDetails)
+shareBtn.addEventListener('click', shareQuote)
 
+function reset_animation(element) {
+    element.style.animation = 'none';
+    element.offsetHeight; /* trigger reflow */
+    element.style.animation = null; 
+  }
+  
 function generateQuote() {
     fetch("https://type.fit/api/quotes")
     .then(function(response) {
         return response.json();
     }).then(function(data) {
         let index = Math.floor(Math.random() * data.length);
+        reset_animation(inspirationalQuote)
         quote.textContent = `${data[index].text}`;
         if (data[index].author === null) {
+            reset_animation(quoteOrigin)
             quoteOrigin.textContent = 'Unknown';
         } else {
+            reset_animation(quoteOrigin)
             quoteOrigin.textContent = `${data[index].author}`;
         }
     });
+}
+
+function shareQuote() {
+    shareBox.classList.toggle('share-open')
 }
 
 function generateBackground() {
@@ -212,7 +290,6 @@ function generateBackground() {
         return response.json()
     })
     .then(data => {
-        console.log(data)
         data.location.title === null ? backgroundLocation.textContent = 'Unknown' : backgroundLocation.textContent = data.location.title
         backgroundUser.textContent = data.user.name
         backgroundUserLink.href = data.user.links.html

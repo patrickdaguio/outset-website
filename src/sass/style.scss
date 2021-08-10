@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap");
 
 @mixin flex($display, $align, $margin-bottom) {
   display: $display;
@@ -63,6 +63,7 @@ body {
   @include flex(flex, initial, 0em);
   justify-content: space-between;
   padding: 2em 3em;
+  animation: opacity 1s ease-in-out;
 }
 
 .socials {
@@ -96,7 +97,7 @@ body {
       }
     }
     .temperature-degree {
-      @include textStyle(2.5em, 700, 2px 2px 4px rgba(0, 0, 0, 0.3), -0.1em);
+      @include textStyle(2.5em, 700, 2px 2px 6px rgba(0, 0, 0, 0.2), -0.1em);
       margin-left: 0.2em;
     }
     .degree-icon {
@@ -104,7 +105,7 @@ body {
     }
   }
   .location {
-    @include textStyle(1.5em, 700, 4px 4px 3px rgba(0, 0, 0, 0.4), 0.4em);
+    @include textStyle(1.5em, 500, 2px 2px 6px rgba(0, 0, 0, 0.2), 0.4em);
   }
   .search-box {
     @include removeOriginal(none, none, auto);
@@ -117,7 +118,7 @@ body {
     }
   }
   .extra-info {
-    @include textStyle(1.5em, normal, 2px 4px 4px rgba(8, 5, 5, 0.3), 0em);
+    @include textStyle(1.5em, normal, 2px 2px 6px rgba(0, 0, 0, 0.2), 0em);
     display: flex;
     p {
       margin-top: 0.4em;
@@ -141,17 +142,31 @@ body {
   justify-content: space-between;
   .time-app {
     text-align: left;
-  }
-  .intention {
-    margin: initial !important;
-    margin-top: 3.35em !important;
+    .intention {
+      margin: initial !important;
+      margin-top: 3.35em !important;
+      .intention-answer-container {
+        .intention-cta {
+          justify-content: flex-start;
+          .intention-answer {
+            margin-left: 0em;
+          }
+        }
+      }
+      .intention-question-container {
+        .intention-input {
+          text-align: left;
+        }
+      }
+    }
   }
 }
 
 main {
   display: block;
   text-align: center;
-  padding: 4em 3em 2em 3em;
+  padding: 2em 3em 2em 3em;
+  animation: opacity 1s ease-in-out;
 
   @include mQ(1300px) {
     align-items: center;
@@ -166,10 +181,11 @@ main {
       margin-left: 0em;
     }
     .time {
-      @include textStyle(11em, 400, none, 0em);
+      @include textStyle(11em, 500, none, 0em);
     }
     .greeting {
       @include textStyle(4.1em, 500, none, 0em);
+      transition: 0.6s opacity ease-in-out;
     }
     .intention {
       display: flex;
@@ -179,6 +195,7 @@ main {
       width: 600px;
       margin: auto;
       margin-top: 3.35em;
+      transition: 0.6s opacity ease-in-out;
 
       .intention-question,
       .intention-answer {
@@ -216,6 +233,7 @@ main {
         transition: 0.6s opacity ease-in-out;
         .intention-today {
           @include textStyle(1.5em, 700, none, 0em);
+          text-transform: uppercase;
         }
         .intention-answer {
           margin-left: 1.65em;
@@ -420,12 +438,13 @@ footer {
   bottom: 0px;
   width: 100%;
   height: 80px;
-  padding: 0.5em 3em;
+  padding: 0.25em 3em;
+  animation: opacity 1s ease-in-out;
   .background-info {
     color: white;
     flex: 0 0 220px;
     .background-location {
-      transform: translateZ(0) translateY(10px);
+      transform: translateZ(0) translateY(6px);
       transition: 0.3s ease-in-out;
       font-size: 0.9em;
     }
@@ -443,12 +462,17 @@ footer {
       }
       p {
         cursor: pointer;
-        margin-right: 0.6em;
         transition: 0.3s;
         color: rgb(202, 193, 198);
         &:hover {
           color: white;
         }
+        i {
+          margin-right: 0.6em;
+        }
+      }
+      .background-user-link {
+        margin-right: 0.6em;
       }
     }
   }
@@ -461,6 +485,7 @@ footer {
       transform: translateZ(0) translateY(9px);
       text-align: center;
       transition: 0.3s ease-in-out;
+      animation: opacity 0.7s ease-in-out;
     }
     .quote-details {
       display: flex;
@@ -473,6 +498,7 @@ footer {
       .quote-origin {
         @include textStyle(0.9em, 400, none, 0em);
         cursor: auto;
+        animation: opacity 0.7s ease-in-out;
       }
       p {
         cursor: pointer;
@@ -569,6 +595,15 @@ footer {
   }
 }
 
+@keyframes opacity {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 // Media Queries
 
 @media screen and (max-height: 750px) {
@@ -593,4 +628,57 @@ footer {
   right: 0px !important;
   margin-right: 4em !important;
   opacity: 1 !important;
+}
+
+.share-open {
+  opacity: 1 !important;
+  transform: scale(1) translateY(0px) !important;
+}
+
+.share {
+  position: relative;
+  .share-box {
+    transform-origin: 50% 150%;
+    transform: scale(0) translateY(-30px);
+    opacity: 0;
+    position: absolute;
+    bottom: 24px;
+    left: -89px;
+    transition: 0.5s;
+    ul {
+      position: relative;
+      display: flex;
+      color: #fff;
+      height: 34px;
+      width: 192px;
+      background: white;
+      border-radius: 0.4em;
+      align-items: center;
+      list-style: none;
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: 0px auto;
+        bottom: -6px;
+        height: 0;
+        width: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 6px solid white;
+      }
+      li {
+        font-size: 20px;
+        cursor: pointer;
+        width: 38px;
+        text-align: center;
+        color: rgba(80, 69, 69, 0.8);
+        &:hover {
+          color: rgba(80, 69, 69, 1);
+        }
+      }
+    }
+  }
 }
