@@ -435,12 +435,19 @@ function shareQuote(quote) {
   var postTitle = encodeURI(quote); // facebookBtn.setAttribute('href', `http://www.facebook.com/sharer/sharer.php?s=100&p[url]=${fburl}&p[title]=${fbtitle}`)
 
   facebookBtn.addEventListener('click', function () {
-    FB.api("/me/feed", "POST", {
-      "message": postTitle
-    }, function (response) {});
+    var body = 'Reading JS SDK documentation';
+    FB.api('/me/feed', 'post', {
+      message: body
+    }, function (response) {
+      if (!response || response.error) {
+        alert('Error occured');
+      } else {
+        alert('Post ID: ' + response.id);
+      }
+    });
   });
-  twitterBtn.setAttribute('href', "");
-  linkedBtn.setAttribute('href', "");
+  twitterBtn.setAttribute('href', "https://twitter.com/share?&text=".concat(postTitle));
+  linkedBtn.setAttribute('href', "https://www.linkedin.com/sharing/share-offsite/?url=".concat(postUrl));
   whatsappBtn.setAttribute('href', "https://api.whatsapp.com/send?text=".concat(postTitle));
 }
 
@@ -704,7 +711,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55157" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65417" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
