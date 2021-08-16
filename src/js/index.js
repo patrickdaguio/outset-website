@@ -81,6 +81,38 @@ function displayResults(weather) {
     searchBox.value = '';
 }
 
+// Links App
+
+const chromeTab = document.querySelector('.chrome-tab')
+const linkIcon = document.querySelector('.links-icon')
+const nippleWrapper = document.querySelector('.nipple-wrapper')
+const linksMenuWrapper = document.querySelector('.links-container')
+const addLinksContainer = document.querySelector('.add-links-container')
+const linksListContainer = document.querySelector('.links-list-container')
+const linksOuterWrapper = document.querySelector('.links-outer-wrapper')
+const linksApp = document.querySelector('.links')
+
+chromeTab.addEventListener('click', () => window.open('chrome://newtab'))
+linkIcon.addEventListener('click', () => {
+    nippleWrapper.classList.toggle('share-open')
+    linksMenuWrapper.classList.remove('second-tab')
+    linksOuterWrapper.style.height = linksListContainer.offsetHeight + 'px'
+})
+linksMenuWrapper.addEventListener('click', (e) => {
+    if (e.target.classList.contains('link-input') || e.target.classList.contains('link-input-text') || e.target.classList.contains('fa-plus')) {
+        linksMenuWrapper.classList.add('second-tab')
+        linksOuterWrapper.style.height = addLinksContainer.offsetHeight + 'px'
+    } else if (e.target.classList.contains('fa-arrow-left')) {
+        linksMenuWrapper.classList.remove('second-tab')
+        linksOuterWrapper.style.height = linksListContainer.offsetHeight + 'px'
+    }
+})
+
+document.addEventListener('click', (e) => {
+    if (!linksApp.contains(e.target)) {
+        nippleWrapper.classList.remove('share-open')
+    }
+})
 
 // Greeting App
 
@@ -292,8 +324,8 @@ function shareQuote(quote) {
     let postUrl = encodeURI(document.location.href)
     let postTitle = encodeURI(quote)
 
-    // facebookBtn.setAttribute('href', `http://www.facebook.com/sharer/sharer.php?s=100&p[url]=${fburl}&p[title]=${fbtitle}`)
-    facebookBtn.addEventListener('click', () => {
+    facebookBtn.setAttribute('href', `http://www.facebook.com/sharer/sharer.php?s=100&p[title]=${postTitle}`)
+/*     facebookBtn.addEventListener('click', () => {
         var body = 'Reading JS SDK documentation';
         FB.api('/me/feed', 'post', { message: body }, function(response) {
           if (!response || response.error) {
@@ -302,13 +334,19 @@ function shareQuote(quote) {
             alert('Post ID: ' + response.id);
           }
         });
-        })
+        }) */
     twitterBtn.setAttribute('href', `https://twitter.com/share?&text=${postTitle}`)
     linkedBtn.setAttribute('href', `https://www.linkedin.com/sharing/share-offsite/?url=${postUrl}`)
     whatsappBtn.setAttribute('href', `https://api.whatsapp.com/send?text=${postTitle}`)
+    quoteBtn.addEventListener('click', async function copyPageUrl() {
+        try {
+          await navigator.clipboard.writeText(quote);
+          quoteBtn.querySelector('span').textContent = 'Copied!'
+        } catch (err) {
+            quoteBtn.querySelector('span').textContent = 'Copy Failed'
+        }
+      });
 }
-
-
 
 function generateBackground() {
     fetch(`https://api.unsplash.com/collections/GsNw3bdVLPM/photos/?client_id=${api.keyTwo}&per_page=30`)
@@ -316,6 +354,7 @@ function generateBackground() {
         return response.json()
     })
     .then(data => {
+        console.log(generateUniqueRandom(data))
         let bgIndex =  data[Math.floor(Math.random()*data.length)];
         document.body.style.backgroundImage = `url(${bgIndex.urls.full})`
         return fetch(`https://api.unsplash.com/photos/${bgIndex.id}/?client_id=${api.keyTwo}`)
@@ -337,11 +376,30 @@ function showBackgroundDetails() {
 
 function showQuoteDetails() {
     inspirationalQuote.classList.toggle('background-show')
+    quoteBtn.querySelector('span').textContent = 'Copy to clipboard'
     quoteDetails.classList.toggle('background-show')
     shareBox.classList.remove('share-open')
 }
 
+let uniqueNumbersArray = []
 
+function generateUniqueRandom(maxNr) {
+
+    //Generate random number
+    let random = (Math.random() * maxNr.length).toFixed();
+
+    if(!uniqueNumbersArray.includes(random)) {
+        uniqueNumbersArray.push(random);
+        return random;
+    } else {
+        if(uniqueNumbersArray.length < maxNr.length) {
+          //Recursively generate number
+         return generateUniqueRandom(maxNr);
+        } else {
+            uniqueNumbersArray = []
+        }
+    }
+}
 
 // Todo List App
 

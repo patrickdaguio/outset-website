@@ -124,7 +124,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var config = {
+const config = {
   MY_KEY_1: '4e64f52c084e3654951dbc0177bdf7ae',
   MY_KEY_2: 'ZEGSTnyNsYLB0Y4mz8ZKMJjhGu3qkKsJmpXk3LAgsJQ'
 };
@@ -161,28 +161,28 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // Weather App
 // API 
-var api = {
+const api = {
   keyOne: _config.default.MY_KEY_1,
   keyTwo: _config.default.MY_KEY_2,
   base: "https://api.openweathermap.org/data/2.5/"
 }; // HTML TAgs
 
-var searchBox = document.querySelector('.search-box');
-var temperatureIcon = document.querySelector('.temperature-icon');
-var temperatureDegree = document.querySelector('.temperature-degree');
-var geolocation = document.querySelector('.location');
-var humidity = document.querySelector('.humidity');
-var wind = document.querySelector('.wind');
+const searchBox = document.querySelector('.search-box');
+const temperatureIcon = document.querySelector('.temperature-icon');
+const temperatureDegree = document.querySelector('.temperature-degree');
+const geolocation = document.querySelector('.location');
+const humidity = document.querySelector('.humidity');
+const wind = document.querySelector('.wind');
 searchBox.addEventListener('keypress', setQuery);
-window.addEventListener("load", function () {
-  var lon;
-  var lat;
+window.addEventListener("load", () => {
+  let lon;
+  let lat;
 
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function (position) {
+    navigator.geolocation.getCurrentPosition(position => {
       lon = position.coords.longitude;
       lat = position.coords.latitude;
-      fetch("".concat(api.base, "weather?lat=").concat(lat, "&lon=").concat(lon, "&units=metric&APPID=").concat(api.keyOne)).then(function (weather) {
+      fetch(`${api.base}weather?lat=${lat}&lon=${lon}&units=metric&APPID=${api.keyOne}`).then(weather => {
         return weather.json();
       }).then(displayResults);
     });
@@ -202,52 +202,81 @@ function setQuery(e) {
 }
 
 function getResults(query) {
-  fetch("".concat(api.base, "weather?q=").concat(query, "&units=metric&APPID=").concat(api.keyOne)).then(function (weather) {
+  fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.keyOne}`).then(weather => {
     return weather.json();
   }).then(displayResults);
 }
 
 function displayResults(weather) {
   temperatureDegree.textContent = Math.round(weather.main.temp);
-  geolocation.textContent = "".concat(weather.name, ", ").concat(weather.sys.country);
-  humidity.textContent = "".concat(weather.main.humidity, "%");
-  wind.textContent = "".concat(weather.wind.speed.toFixed(1), "mph");
+  geolocation.textContent = `${weather.name}, ${weather.sys.country}`;
+  humidity.textContent = `${weather.main.humidity}%`;
+  wind.textContent = `${weather.wind.speed.toFixed(1)}mph`;
 
   if (weather.weather[0].main === "Thunderstorm") {
-    temperatureIcon.src = "".concat(require("../images/weather/storming.png"));
+    temperatureIcon.src = `${require("../images/weather/storming.png")}`;
   } else if (weather.weather[0].main === "Clear") {
-    temperatureIcon.src = "".concat(require("../images/weather/sunny.png"));
+    temperatureIcon.src = `${require("../images/weather/sunny.png")}`;
   } else if (weather.weather[0].main === "Snow") {
-    temperatureIcon.src = "".concat(require("../images/weather/snowing.png"));
+    temperatureIcon.src = `${require("../images/weather/snowing.png")}`;
   } else if (weather.weather[0].main === "Rain") {
-    temperatureIcon.src = "".concat(require("../images/weather/raining.png"));
+    temperatureIcon.src = `${require("../images/weather/raining.png")}`;
   } else if (weather.weather[0].description === "few clouds" || weather.weather[0].description === "scattered clouds") {
-    temperatureIcon.src = "".concat(require("../images/weather/cloudy sun.png"));
+    temperatureIcon.src = `${require("../images/weather/cloudy sun.png")}`;
   } else if (weather.weather[0].main === "Drizzle") {
-    temperatureIcon.src = "".concat(require("../images/weather/cloudy rain.png"));
+    temperatureIcon.src = `${require("../images/weather/cloudy rain.png")}`;
   } else if (weather.weather[0].description === "broken clouds" || weather.weather[0].description === "overcast clouds") {
-    temperatureIcon.src = "".concat(require("../images/weather/cloudy.png"));
+    temperatureIcon.src = `${require("../images/weather/cloudy.png")}`;
   } else if (weather.wind.speed > 30) {
-    temperatureIcon.src = "".concat(require("../images/weather/windy.png"));
+    temperatureIcon.src = `${require("../images/weather/windy.png")}`;
   }
 
   searchBox.value = '';
-} // Greeting App
+} // Links App
+
+
+const chromeTab = document.querySelector('.chrome-tab');
+const linkIcon = document.querySelector('.links-icon');
+const nippleWrapper = document.querySelector('.nipple-wrapper');
+const linksMenuWrapper = document.querySelector('.links-container');
+const addLinksContainer = document.querySelector('.add-links-container');
+const linksListContainer = document.querySelector('.links-list-container');
+const linksOuterWrapper = document.querySelector('.links-outer-wrapper');
+const linksApp = document.querySelector('.links');
+chromeTab.addEventListener('click', () => window.open('chrome://newtab'));
+linkIcon.addEventListener('click', () => {
+  nippleWrapper.classList.toggle('share-open');
+  linksMenuWrapper.classList.remove('second-tab');
+  linksOuterWrapper.style.height = linksListContainer.offsetHeight + 'px';
+});
+linksMenuWrapper.addEventListener('click', e => {
+  if (e.target.classList.contains('link-input') || e.target.classList.contains('link-input-text') || e.target.classList.contains('fa-plus')) {
+    linksMenuWrapper.classList.add('second-tab');
+    linksOuterWrapper.style.height = addLinksContainer.offsetHeight + 'px';
+  } else if (e.target.classList.contains('fa-arrow-left')) {
+    linksMenuWrapper.classList.remove('second-tab');
+    linksOuterWrapper.style.height = linksListContainer.offsetHeight + 'px';
+  }
+});
+document.addEventListener('click', e => {
+  if (!linksApp.contains(e.target)) {
+    nippleWrapper.classList.remove('share-open');
+  }
+}); // Greeting App
 // HTML Tags
 
-
-var time = document.querySelector('.time');
-var greeting = document.querySelector('.greeting');
-var quote = document.querySelector('.quote');
-var quoteOrigin = document.querySelector('.quote-origin');
-var todayDate = document.querySelector('.today-date');
+const time = document.querySelector('.time');
+const greeting = document.querySelector('.greeting');
+const quote = document.querySelector('.quote');
+const quoteOrigin = document.querySelector('.quote-origin');
+const todayDate = document.querySelector('.today-date');
 
 function greetings() {
-  var date = new Date(); // Time
+  let date = new Date(); // Time
 
-  var hours = addZero(date.getHours());
-  var minutes = addZero(date.getMinutes());
-  var currentTime = "".concat(hours, ":").concat(minutes);
+  let hours = addZero(date.getHours());
+  let minutes = addZero(date.getMinutes());
+  let currentTime = `${hours}:${minutes}`;
   time.textContent = currentTime;
   setTimeout(greetings, 1000);
 
@@ -261,24 +290,24 @@ function greetings() {
 }
 
 function addZero(num) {
-  return num < 10 ? "0".concat(num) : num;
+  return num < 10 ? `0${num}` : num;
 } // Intention
 
 
-var intentionInput = document.querySelector('.intention-input');
-var intentionAnswer = document.querySelector('.intention-answer');
-var intentionCta = document.querySelector('.intention-cta');
-var intentionIcons = document.querySelectorAll('.intention-icons');
-var intentionQuestionContainer = document.querySelector('.intention-question-container');
-var intentionAnswerContainer = document.querySelector('.intention-answer-container');
+const intentionInput = document.querySelector('.intention-input');
+const intentionAnswer = document.querySelector('.intention-answer');
+const intentionCta = document.querySelector('.intention-cta');
+const intentionIcons = document.querySelectorAll('.intention-icons');
+const intentionQuestionContainer = document.querySelector('.intention-question-container');
+const intentionAnswerContainer = document.querySelector('.intention-answer-container');
 intentionInput.addEventListener('keypress', changeIntention);
 intentionCta.addEventListener('mouseover', intentionAnswerIcons);
 intentionCta.addEventListener('mouseleave', removeIntentionIcons);
 
 function setIntention() {
-  var intention;
+  let intention;
   if (localStorage.getItem('intention') === null) intention = [];else intention = JSON.parse(localStorage.getItem('intention'));
-  var dateNow = new Date();
+  let dateNow = new Date();
 
   if (intention[1] !== dateNow.toDateString()) {
     intention = [];
@@ -296,16 +325,16 @@ function setIntention() {
 }
 
 function changeIntention(e) {
-  var intention;
+  let intention;
   if (localStorage.getItem('intention') === null) intention = [];else intention = JSON.parse(localStorage.getItem('intention'));
-  var inputDate = new Date();
+  let inputDate = new Date();
 
   if (e.keyCode === 13 && e.target.value !== '') {
     intentionQuestionContainer.style.opacity = '0';
     intention[0] = e.target.value;
     intention[1] = inputDate.toDateString();
     localStorage.setItem('intention', JSON.stringify(intention));
-    setTimeout(function () {
+    setTimeout(() => {
       intentionQuestionContainer.style.visibility = 'hidden';
       intentionAnswer.textContent = intention[0];
       intentionAnswerContainer.style.visibility = 'visible';
@@ -315,13 +344,13 @@ function changeIntention(e) {
 }
 
 function intentionAnswerIcons() {
-  var intention;
+  let intention;
   if (localStorage.getItem('intention') === null) intention = [];else intention = JSON.parse(localStorage.getItem('intention'));
-  intentionIcons.forEach(function (icon) {
+  intentionIcons.forEach(icon => {
     icon.style.visibility = 'visible';
-    icon.addEventListener('click', function (e) {
+    icon.addEventListener('click', e => {
       intentionAnswerContainer.style.opacity = '0';
-      setTimeout(function () {
+      setTimeout(() => {
         intentionAnswerContainer.style.visibility = 'hidden';
         intentionQuestionContainer.style.opacity = '1';
         intentionQuestionContainer.style.visibility = 'visible';
@@ -339,13 +368,11 @@ function intentionAnswerIcons() {
 }
 
 function removeIntentionIcons() {
-  intentionIcons.forEach(function (icon) {
-    return icon.style.visibility = 'hidden';
-  });
+  intentionIcons.forEach(icon => icon.style.visibility = 'hidden');
 }
 
-var inactivityTime = function inactivityTime() {
-  var time;
+const inactivityTime = function () {
+  let time;
   window.onload = resetTimer; // DOM Events
 
   document.onmousemove = resetTimer;
@@ -371,25 +398,25 @@ window.onload = function () {
 }; // Footer
 
 
-var backgroundLocation = document.querySelector('.background-location');
-var changeBackground = document.querySelector('.changeBackground');
-var heartBackground = document.querySelector('.background-photo');
-var backgroundDetails = document.querySelector('.background-details');
-var backgroundInfo = document.querySelector('.background-info');
-var backgroundUser = document.querySelector('.background-user');
-var backgroundUserLink = document.querySelector('.background-user-link');
-var changeQuote = document.querySelector('.changeQuote');
-var quotesInfo = document.querySelector('.quotes-info');
-var inspirationalQuote = document.querySelector('.quote');
-var quoteDetails = document.querySelector('.quote-details');
-var shareBtn = document.querySelector('.shareBtn');
-var shareBox = document.querySelector('.share-box'); // Social Icons
+const backgroundLocation = document.querySelector('.background-location');
+const changeBackground = document.querySelector('.changeBackground');
+const heartBackground = document.querySelector('.background-photo');
+const backgroundDetails = document.querySelector('.background-details');
+const backgroundInfo = document.querySelector('.background-info');
+const backgroundUser = document.querySelector('.background-user');
+const backgroundUserLink = document.querySelector('.background-user-link');
+const changeQuote = document.querySelector('.changeQuote');
+const quotesInfo = document.querySelector('.quotes-info');
+const inspirationalQuote = document.querySelector('.quote');
+const quoteDetails = document.querySelector('.quote-details');
+const shareBtn = document.querySelector('.shareBtn');
+const shareBox = document.querySelector('.share-box'); // Social Icons
 
-var facebookBtn = document.querySelector('.social-facebook');
-var twitterBtn = document.querySelector('.social-twitter');
-var linkedBtn = document.querySelector('.social-linked');
-var whatsappBtn = document.querySelector('.social-whatsapp');
-var quoteBtn = document.querySelector('.social-quote');
+const facebookBtn = document.querySelector('.social-facebook');
+const twitterBtn = document.querySelector('.social-twitter');
+const linkedBtn = document.querySelector('.social-linked');
+const whatsappBtn = document.querySelector('.social-whatsapp');
+const quoteBtn = document.querySelector('.social-quote');
 changeBackground.addEventListener('click', generateBackground);
 changeQuote.addEventListener('click', generateQuote);
 backgroundInfo.addEventListener('mouseenter', showBackgroundDetails);
@@ -410,18 +437,18 @@ function generateQuote() {
   fetch("https://type.fit/api/quotes").then(function (response) {
     return response.json();
   }).then(function (data) {
-    var index = Math.floor(Math.random() * data.length);
+    let index = Math.floor(Math.random() * data.length);
     reset_animation(inspirationalQuote);
-    quote.textContent = "".concat(data[index].text);
-    shareQuote("".concat(data[index].text, " - ").concat(data[index].author));
+    quote.textContent = `${data[index].text}`;
+    shareQuote(`${data[index].text} - ${data[index].author}`);
 
     if (data[index].author === null) {
       reset_animation(quoteOrigin);
       quoteOrigin.textContent = 'Unknown';
-      shareQuote("".concat(data[index].text, " - Unknown"));
+      shareQuote(`${data[index].text} - Unknown`);
     } else {
       reset_animation(quoteOrigin);
-      quoteOrigin.textContent = "".concat(data[index].author);
+      quoteOrigin.textContent = `${data[index].author}`;
     }
   });
 }
@@ -431,36 +458,44 @@ function openQuoteBox() {
 }
 
 function shareQuote(quote) {
-  var postUrl = encodeURI(document.location.href);
-  var postTitle = encodeURI(quote); // facebookBtn.setAttribute('href', `http://www.facebook.com/sharer/sharer.php?s=100&p[url]=${fburl}&p[title]=${fbtitle}`)
+  let postUrl = encodeURI(document.location.href);
+  let postTitle = encodeURI(quote);
+  facebookBtn.setAttribute('href', `http://www.facebook.com/sharer/sharer.php?s=100&p[title]=${postTitle}`);
+  /*     facebookBtn.addEventListener('click', () => {
+          var body = 'Reading JS SDK documentation';
+          FB.api('/me/feed', 'post', { message: body }, function(response) {
+            if (!response || response.error) {
+              alert('Error occured');
+            } else {
+              alert('Post ID: ' + response.id);
+            }
+          });
+          }) */
 
-  facebookBtn.addEventListener('click', function () {
-    var body = 'Reading JS SDK documentation';
-    FB.api('/me/feed', 'post', {
-      message: body
-    }, function (response) {
-      if (!response || response.error) {
-        alert('Error occured');
-      } else {
-        alert('Post ID: ' + response.id);
-      }
-    });
+  twitterBtn.setAttribute('href', `https://twitter.com/share?&text=${postTitle}`);
+  linkedBtn.setAttribute('href', `https://www.linkedin.com/sharing/share-offsite/?url=${postUrl}`);
+  whatsappBtn.setAttribute('href', `https://api.whatsapp.com/send?text=${postTitle}`);
+  quoteBtn.addEventListener('click', async function copyPageUrl() {
+    try {
+      await navigator.clipboard.writeText(quote);
+      quoteBtn.querySelector('span').textContent = 'Copied!';
+    } catch (err) {
+      quoteBtn.querySelector('span').textContent = 'Copy Failed';
+    }
   });
-  twitterBtn.setAttribute('href', "https://twitter.com/share?&text=".concat(postTitle));
-  linkedBtn.setAttribute('href', "https://www.linkedin.com/sharing/share-offsite/?url=".concat(postUrl));
-  whatsappBtn.setAttribute('href', "https://api.whatsapp.com/send?text=".concat(postTitle));
 }
 
 function generateBackground() {
-  fetch("https://api.unsplash.com/collections/GsNw3bdVLPM/photos/?client_id=".concat(api.keyTwo, "&per_page=30")).then(function (response) {
+  fetch(`https://api.unsplash.com/collections/GsNw3bdVLPM/photos/?client_id=${api.keyTwo}&per_page=30`).then(response => {
     return response.json();
-  }).then(function (data) {
-    var bgIndex = data[Math.floor(Math.random() * data.length)];
-    document.body.style.backgroundImage = "url(".concat(bgIndex.urls.full, ")");
-    return fetch("https://api.unsplash.com/photos/".concat(bgIndex.id, "/?client_id=").concat(api.keyTwo));
-  }).then(function (response) {
+  }).then(data => {
+    console.log(generateUniqueRandom(data));
+    let bgIndex = data[Math.floor(Math.random() * data.length)];
+    document.body.style.backgroundImage = `url(${bgIndex.urls.full})`;
+    return fetch(`https://api.unsplash.com/photos/${bgIndex.id}/?client_id=${api.keyTwo}`);
+  }).then(response => {
     return response.json();
-  }).then(function (data) {
+  }).then(data => {
     data.location.title === null ? backgroundLocation.textContent = 'Unknown' : backgroundLocation.textContent = data.location.title;
     backgroundUser.textContent = data.user.name;
     backgroundUserLink.href = data.user.links.html;
@@ -475,26 +510,46 @@ function showBackgroundDetails() {
 
 function showQuoteDetails() {
   inspirationalQuote.classList.toggle('background-show');
+  quoteBtn.querySelector('span').textContent = 'Copy to clipboard';
   quoteDetails.classList.toggle('background-show');
   shareBox.classList.remove('share-open');
+}
+
+let uniqueNumbersArray = [];
+
+function generateUniqueRandom(maxNr) {
+  //Generate random number
+  let random = (Math.random() * maxNr.length).toFixed();
+
+  if (!uniqueNumbersArray.includes(random)) {
+    uniqueNumbersArray.push(random);
+    return random;
+  } else {
+    if (uniqueNumbersArray.length < maxNr.length) {
+      //Recursively generate number
+      return generateUniqueRandom(maxNr);
+    } else {
+      uniqueNumbersArray = [];
+    }
+  }
 } // Todo List App
 
 
 function dateToday(x) {
-  var date = new Date();
-  var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-  var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  todayDate.textContent = "".concat(days[date.getDay()], ", ").concat(date.getDate(), " ").concat(months[date.getMonth()], " ").concat(date.getFullYear());
+  let date = new Date();
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  todayDate.textContent = `${days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
 } // HTML Tags
 
 
-var todoList = document.querySelector('.todo-list');
-var addInput = document.querySelector('.add-input');
-var addBtn = document.querySelector('.add-btn');
-var filterOption = document.querySelector('.filter-todo');
-var todoOpen = document.querySelector('.todo-open');
-var todoApp = document.querySelector('.todo-app');
-var main = document.querySelector('main');
+const todoList = document.querySelector('.todo-list');
+const addInput = document.querySelector('.add-input');
+const addBtn = document.querySelector('.add-btn');
+const filterOption = document.querySelector('.filter-todo');
+const todoOpen = document.querySelector('.todo-open');
+const todoApp = document.querySelector('.todo-app');
+const main = document.querySelector('main');
 document.addEventListener('DOMContentLoaded', getTodos);
 addBtn.addEventListener('click', addTodo);
 todoList.addEventListener('click', deleteCheck);
@@ -507,7 +562,7 @@ function openTodoList() {
 } // Global - LocalStorage variable
 
 
-var todos;
+let todos;
 
 if (localStorage.getItem('todos') === null) {
   todos = [];
@@ -518,23 +573,23 @@ if (localStorage.getItem('todos') === null) {
 function addTodo(event) {
   event.preventDefault(); // Todo DIV
 
-  var todoDiv = document.createElement('div');
+  const todoDiv = document.createElement('div');
   todoDiv.classList.add("todo"); // Todo LI
 
-  var newTodo = document.createElement('li');
+  const newTodo = document.createElement('li');
   newTodo.innerText = addInput.value;
   newTodo.classList.add('todo-item');
   todoDiv.appendChild(newTodo); // Add todo to Local Storage
 
   saveLocalTodos(addInput.value); // Check Mark Button
 
-  var completedButton = document.createElement('button');
-  completedButton.innerHTML = "<img src='".concat(require("../images/todo/uncheck1.png"), "'>");
+  const completedButton = document.createElement('button');
+  completedButton.innerHTML = `<img src='${require("../images/todo/uncheck1.png")}'>`;
   completedButton.classList.add('complete-btn');
   todoDiv.appendChild(completedButton); // Delete Mark Button
 
-  var trashButton = document.createElement('button');
-  trashButton.innerHTML = "<img src='".concat(require("../images/todo/trash1.png"), "'>");
+  const trashButton = document.createElement('button');
+  trashButton.innerHTML = `<img src='${require("../images/todo/trash1.png")}'>`;
   trashButton.classList.add('trash-btn');
   todoDiv.appendChild(trashButton);
   todoList.appendChild(todoDiv);
@@ -542,9 +597,9 @@ function addTodo(event) {
 }
 
 function deleteCheck(e) {
-  var item = e.target;
-  var todo = item.parentElement;
-  var nodes = Array.prototype.slice.call(todoList.children); // Check Mark
+  const item = e.target;
+  const todo = item.parentElement;
+  const nodes = Array.prototype.slice.call(todoList.children); // Check Mark
 
   if (item.classList[0] === 'complete-btn') {
     todo.classList.toggle('completed');
@@ -579,7 +634,7 @@ function deleteCheck(e) {
 }
 
 function filterTodo(e) {
-  var todos = todoList.childNodes;
+  const todos = todoList.childNodes;
   todos.forEach(function (todo) {
     switch (e.target.value) {
       case 'all':
@@ -618,27 +673,27 @@ function saveLocalTodos(todo) {
 function getTodos() {
   todos.forEach(function (todo) {
     // Todo DIV
-    var todoDiv = document.createElement('div');
+    const todoDiv = document.createElement('div');
     todoDiv.classList.add("todo"); // Todo LI
 
-    var newTodo = document.createElement('li');
+    const newTodo = document.createElement('li');
     newTodo.innerText = todo.item;
     newTodo.classList.add('todo-item');
     todoDiv.appendChild(newTodo); // Check Mark Button
 
-    var completedButton = document.createElement('button');
-    completedButton.innerHTML = "<img src='".concat(require("../images/todo/uncheck1.png"), "'>");
+    const completedButton = document.createElement('button');
+    completedButton.innerHTML = `<img src='${require("../images/todo/uncheck1.png")}'>`;
     completedButton.classList.add('complete-btn');
     todoDiv.appendChild(completedButton); // Delete Mark Button
 
-    var trashButton = document.createElement('button');
-    trashButton.innerHTML = "<img src='".concat(require("../images/todo/trash1.png"), "'>");
+    const trashButton = document.createElement('button');
+    trashButton.innerHTML = `<img src='${require("../images/todo/trash1.png")}'>`;
     trashButton.classList.add('trash-btn');
     todoDiv.appendChild(trashButton);
 
     if (todo.status === 'complete') {
       newTodo.parentElement.classList.add('completed');
-      completedButton.innerHTML = "<img src='".concat(require("../images/todo/checked1.png"), "'>");
+      completedButton.innerHTML = `<img src='${require("../images/todo/checked1.png")}'>`;
     }
 
     todoList.appendChild(todoDiv);
@@ -651,22 +706,22 @@ function removeLocalTodos(todo) {
 }
 
 function changeDate() {
-  var date = new Date();
-  var shortenedDays = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'];
-  var shortenedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+  let date = new Date();
+  const shortenedDays = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'];
+  const shortenedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 
   if (x.matches) {
-    todayDate.textContent = "".concat(shortenedDays[date.getDay()], ", ").concat(date.getDate(), " ").concat(shortenedMonths[date.getMonth()], " ").concat(date.getFullYear());
+    todayDate.textContent = `${shortenedDays[date.getDay()]}, ${date.getDate()} ${shortenedMonths[date.getMonth()]} ${date.getFullYear()}`;
   } else {
     dateToday();
   }
 }
 
-var x = window.matchMedia("(max-width: 1350px)");
+const x = window.matchMedia("(max-width: 1350px)");
 x.addEventListener('change', changeDate);
 new Sortable(todolist, {
   animation: 150,
-  onUpdate: function onUpdate(e) {
+  onUpdate: function (e) {
     function array_move(arr, old_index, new_index) {
       arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
       return arr;
@@ -677,9 +732,9 @@ new Sortable(todolist, {
     localStorage.setItem('todos', JSON.stringify(todos));
   }
 });
-document.addEventListener('DOMContentLoaded', function () {
-  var todoItems = document.querySelectorAll('.todo-item');
-  todoItems.forEach(function (items) {
+document.addEventListener('DOMContentLoaded', () => {
+  const todoItems = document.querySelectorAll('.todo-item');
+  todoItems.forEach(items => {
     items.setAttribute("contenteditable", "true");
   });
 });
@@ -711,7 +766,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65417" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58468" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

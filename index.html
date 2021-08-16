@@ -13,7 +13,7 @@
     <title>Outset</title>
 </head>
 <body>
-    <script>
+<!--     <script>
         window.fbAsyncInit = function() {
           FB.init({
             appId            : '521968462396867',
@@ -23,11 +23,78 @@
           });
         };
       </script>
-      <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+      <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script> -->
     <div class="container">
         <header class="header">
-            <div class="socials">
-                <p class="socials-icon"><i class="fas fa-grip-horizontal"></i></p>
+            <div class="links">
+                <p class="links-icon"><i class="fas fa-grip-horizontal"></i></p>
+                <div class="nipple-wrapper">
+                    <div class="links-outer-wrapper">
+                        <div class="links-inner-wrapper">
+                            <div class="links-container">
+                                <div class="links-list-container">
+                                    <h3>Links</h3>
+                                    <div class="chrome-tab">
+                                        <i class="fab fa-chrome"></i>
+                                        <span>Chrome Tab</span>
+                                    </div>
+                                    <ul class="links-list">
+                                        <li class="link">
+                                            <div class="link-wrapper">
+                                                <a href="https://www.google.com/" class="link-url">
+                                                    <img src="https://s2.googleusercontent.com/s2/favicons?domain=google.com&sz=32" class="link-favicon">
+                                                    <span class="link-text">Google</span>
+                                                </a>
+                                            </div>
+                                            <div class="link-options">
+                                                <div class="ellipsis-wrapper">
+                                                    <i class="fas fa-ellipsis-h"></i>
+                                                </div>
+                                                <div class="link-dropdown">
+                                                    <ul class="dropdown-list">
+                                                        <li class="edit-link">Edit</li>
+                                                        <li class="delete-link">Delete</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div class="link-input">
+                                        <i class="fas fa-plus"></i>
+                                        <span class="link-input-text">New Link</span>
+                                    </div>
+                                </div>
+                                <div class="add-links-container">
+                                    <p class="back-arrow"><i class="fas fa-arrow-left"></i></p>
+                                    <div class="add-links">
+                                        <div class="add-name-wrapper">
+                                            <label>Name</label>
+                                            <input type="text" class="add-url-name" autocomplete="off">
+                                        </div>
+                                        <div class="add-urls-wrapper">
+                                            <label>Links</label>
+                                            <ul class="urls-list">
+                                                <li class="url">
+                                                    <a class="url-link" href="#" target="_blank"><span class="url-text">google.com</span></a>
+                                                    <p class="url-delete"><i class="fas fa-times"></i></p>
+                                                </li>
+                                            </ul>
+                                            <input type="text" class="add-url-link" autocomplete="off" placeholder="example.com">
+                                            <div class="add-tab-wrapper">
+                                                <i class="fas fa-plus"></i>
+                                                <span>Add another tab</span>
+                                            </div>
+                                        </div>
+                                        <div class="add-cta-wrapper">
+                                            <button class="create-url-btn">Create</button>
+                                            <button class="update-url-btn">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="weather-app">
                 <div class="temperature">
@@ -36,7 +103,7 @@
                     <img class="degree-icon" src="/src/images/weather/degrees.png">
                 </div>
                 <p class="location"></p>
-                <input type="text" autocomplete="off" class="search-box" placeholder="SEARCH">
+                <input type="text" autocomplete="off" class="search-box" placeholder="Search">
                 <div class="extra-info">
                     <img src="/src/images/weather/humidity.png"><span class="humidity">0%</span> 
                     <img src="/src/images/weather/wind.png"><span class="wind">0 mph</span>
@@ -103,16 +170,16 @@
                 <div class="quote-details">
                     <p class="quote-origin">Lao Tzu</p>
                     <p class="quote-icon"><i class="fas fa-redo changeQuote"></i></p>
-                    <p class="quote-icon"><i class="fas fa-heart"></i></p>
+                    <p class="quote-icon"><i class="far fa-heart"></i></p>
                     <div class="share">
                         <p class="quote-icon shareBtn"><i class="fas fa-share-square"></i></p>
                         <div class="share-box">
                             <ul>
-                                <a href="#" target="_blank" class="social-facebook"><i class="fab fa-facebook-square"></i></a>
-                                <a href="#" target="_blank" class="social-twitter"><i class="fab fa-twitter-square"></i></a>
-                                <a href="#" target="_blank" class="social-linked"><i class="fab fa-linkedin"></i></a>
-                                <a href="#" target="_blank" class="social-whatsapp"><i class="fab fa-whatsapp-square"></i></a>
-                                <a href="#" target="_blank" class="social-quote"><i class="fas fa-quote-left"></i></a>
+                                <a href="#" target="_blank" class="social-facebook"><i class="fab fa-facebook-square"></i><span>Share to Facebook</span></a>
+                                <a href="#" target="_blank" class="social-twitter"><i class="fab fa-twitter-square"></i><span>Share to Twitter</span></a>
+                                <a href="#" target="_blank" class="social-linked"><i class="fab fa-linkedin"></i><span>Share to LinkedIn</span></a>
+                                <a href="#" target="_blank" class="social-whatsapp"><i class="fab fa-whatsapp-square"></i><span>Share to Whatsapp</span></a>
+                                <a class="social-quote"><i class="fas fa-quote-left"></i><span>Copy to clipboard</span></a>
                             </ul>
                         </div>
                     </div>
