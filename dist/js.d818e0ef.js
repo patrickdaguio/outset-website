@@ -233,6 +233,7 @@ function displayResults(weather) {
 
   searchBox.value = '';
 } // Links App
+// Design
 
 
 const chromeTab = document.querySelector('.chrome-tab');
@@ -242,27 +243,172 @@ const linksMenuWrapper = document.querySelector('.links-container');
 const addLinksContainer = document.querySelector('.add-links-container');
 const linksListContainer = document.querySelector('.links-list-container');
 const linksOuterWrapper = document.querySelector('.links-outer-wrapper');
-const linksApp = document.querySelector('.links');
+const linksApp = document.querySelector('.links'); // Functionality
+
+const linkName = document.querySelector('.add-url-name');
+const urlsList = document.querySelector('.urls-list');
+const userUrlLink = document.querySelector('.add-url-link');
+const addTabWrapper = document.querySelector('.add-tab-wrapper');
+const createUrlBtn = document.querySelector('.create-url-btn');
+const linksList = document.querySelector('.links-list');
+
+function linkify(url) {
+  let urlRegex = /^(http|https):\/\//gi;
+  let removedSpace = url.replace(/\s+/g, '');
+
+  if (!urlRegex.test(removedSpace)) {
+    return `http://${removedSpace}`;
+  }
+
+  return removedSpace;
+}
+
+const linksObject = {
+  urls: '',
+  resetInputs: function () {
+    linkName.value = '';
+    userUrlLink.value = '';
+    urlsList.textContent = '';
+  },
+  addExtraTab: function (e) {
+    if (addTabWrapper.contains(e.target)) {
+      userUrlLink.value = '';
+      userUrlLink.style.display = 'block';
+      userUrlLink.focus();
+      linksOuterWrapper.style.height = addLinksContainer.offsetHeight + 'px';
+    } else if (e.target.classList.contains('url-delete')) {
+      e.target.parentElement.remove();
+      linksOuterWrapper.style.height = addLinksContainer.offsetHeight + 'px';
+
+      if (urlsList.children.length === 0) {
+        userUrlLink.style.display = 'block';
+        linksOuterWrapper.style.height = addLinksContainer.offsetHeight + 'px';
+      }
+    }
+  },
+  addUrlLink: function (e) {
+    let extraUrl = `<li class="url">
+            <a class="url-link" href="${linkify(userUrlLink.value)}" target="_blank"><span class="url-text">${userUrlLink.value}</span></a>
+            <i class="fas fa-times url-delete"></i>
+        </li>`;
+
+    if (e.keyCode === 13 && e.target.value !== '' || addTabWrapper.contains(e.target) && userUrlLink.value !== '') {
+      urlsList.insertAdjacentHTML('beforeend', extraUrl);
+      console.log(linkify(userUrlLink.value));
+      userUrlLink.style.display = 'none';
+      userUrlLink.value = '';
+      linksOuterWrapper.style.height = addLinksContainer.offsetHeight + 'px';
+    }
+  },
+  saveUrlLink: function () {
+    if (linkName.value === '') {
+      linkName.classList.add('warning');
+      linkName.focus();
+      linkName.addEventListener('animationend', function () {
+        linkName.classList.remove('warning');
+      });
+    } else if (userUrlLink.value === '') {
+      userUrlLink.classList.add('warning');
+      userUrlLink.focus();
+      userUrlLink.addEventListener('animationend', function () {
+        userUrlLink.classList.remove('warning');
+      });
+    }
+
+    if (linkName.value !== '' && userUrlLink.value !== '' || urlsList.children.length > 0) {
+      const links = [];
+      const urls = document.querySelectorAll('.url-link');
+
+      if (userUrlLink.value !== '') {
+        links.push(linkify(userUrlLink.value));
+      }
+
+      console.log(links[0]);
+      urls.forEach(url => links.push(url.getAttribute('href')));
+      linksObject.urls.push({
+        name: linkName.value,
+        links,
+        img: `https://s2.googleusercontent.com/s2/favicons?domain_url=${links[0]}` // img: `https://icons.duckduckgo.com/ip2/${links[0]}.ico`
+        //img: `${links[0]}/favicon.ico`
+
+      });
+      localStorage.setItem('urls', JSON.stringify(linksObject.urls));
+      linksObject.resetInputs();
+      userUrlLink.style.display = 'block';
+      linksMenuWrapper.classList.remove('second-tab');
+      linksOuterWrapper.style.height = linksListContainer.offsetHeight + 'px';
+    }
+  },
+  loadUrls: function () {
+    let loadedUrl;
+    linksObject.urls.forEach((url, i) => {
+      loadedUrl = `               
+            <li class="link">
+                <div class="link-wrapper">
+                    <a href="#" class="link-url">
+                        <img src="${url.img}" class="link-favicon">
+                        <span class="link-text">${url.name}</span>
+                    </a>
+                </div>
+                <div class="link-options">
+                    <div class="ellipsis-wrapper">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </div>
+                    <div class="link-dropdown">
+                        <ul class="dropdown-list">
+                            <li class="edit-link">Edit</li>
+                            <li class="delete-link">Delete</li>
+                        </ul>
+                    </div>
+                </div>
+            </li>`;
+      linksList.insertAdjacentHTML('beforeend', loadedUrl);
+      const multipleLinks = document.querySelectorAll('.link-url');
+      multipleLinks[i].addEventListener('click', () => {
+        url.links.forEach(link => window.open(link));
+      });
+    });
+  }
+};
+if (localStorage.getItem('urls') === null) linksObject.urls = [];else linksObject.urls = JSON.parse(localStorage.getItem('urls'));
 chromeTab.addEventListener('click', () => window.open('chrome://newtab'));
 linkIcon.addEventListener('click', () => {
+  linksObject.resetInputs();
   nippleWrapper.classList.toggle('share-open');
   linksMenuWrapper.classList.remove('second-tab');
+  userUrlLink.style.display = 'block';
   linksOuterWrapper.style.height = linksListContainer.offsetHeight + 'px';
 });
 linksMenuWrapper.addEventListener('click', e => {
   if (e.target.classList.contains('link-input') || e.target.classList.contains('link-input-text') || e.target.classList.contains('fa-plus')) {
     linksMenuWrapper.classList.add('second-tab');
     linksOuterWrapper.style.height = addLinksContainer.offsetHeight + 'px';
+    linkName.focus({
+      preventScroll: true
+    });
   } else if (e.target.classList.contains('fa-arrow-left')) {
     linksMenuWrapper.classList.remove('second-tab');
     linksOuterWrapper.style.height = linksListContainer.offsetHeight + 'px';
+    linksObject.resetInputs();
+  }
+});
+addTabWrapper.addEventListener('click', linksObject.addUrlLink);
+createUrlBtn.addEventListener('click', linksObject.saveUrlLink);
+addLinksContainer.addEventListener('click', linksObject.addExtraTab);
+userUrlLink.addEventListener('keypress', linksObject.addUrlLink);
+linkName.addEventListener('keypress', e => {
+  if (e.keyCode === 13 && e.target.value !== '') {
+    userUrlLink.focus();
   }
 });
 document.addEventListener('click', e => {
-  if (!linksApp.contains(e.target)) {
+  if (!linksApp.contains(e.target) && !e.target.classList.contains('url-delete')) {
     nippleWrapper.classList.remove('share-open');
+    linksMenuWrapper.classList.remove('second-tab');
+    linksObject.resetInputs();
   }
-}); // Greeting App
+});
+window.addEventListener('DOMContentLoaded', linksObject.loadUrls); // Greeting App
 // HTML Tags
 
 const time = document.querySelector('.time');
@@ -489,7 +635,6 @@ function generateBackground() {
   fetch(`https://api.unsplash.com/collections/GsNw3bdVLPM/photos/?client_id=${api.keyTwo}&per_page=30`).then(response => {
     return response.json();
   }).then(data => {
-    console.log(generateUniqueRandom(data));
     let bgIndex = data[Math.floor(Math.random() * data.length)];
     document.body.style.backgroundImage = `url(${bgIndex.urls.full})`;
     return fetch(`https://api.unsplash.com/photos/${bgIndex.id}/?client_id=${api.keyTwo}`);
@@ -766,7 +911,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58468" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50941" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
