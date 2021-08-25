@@ -176,7 +176,7 @@ const linksObject = {
             }
             if (typeof index === 'number') {
                 linksObject.urls[index] = { 
-                    name: linkName.value,
+                    name: (linkName.value !== '') ? linkName.value : linksObject.urls[index].name,
                     links: validLinks,
                     user: userLinks,
                     img: `https://s2.googleusercontent.com/s2/favicons?domain_url=${validLinks[0]}`
@@ -191,12 +191,14 @@ const linksObject = {
             }
             localStorage.setItem('urls', JSON.stringify(linksObject.urls))
             linksObject.resetInputs()
-            userUrlLink.style.display = 'block'
+            linksObject.loadUrls()
             linksMenuWrapper.classList.remove('second-tab')
             linksOuterWrapper.style.height = linksListContainer.offsetHeight + 'px'
+            userUrlLink.style.display = 'block'
         }
     },
     loadUrls: function() {
+        linksList.innerHTML = ''
         let loadedUrl
         linksObject.urls.forEach((url, i) => {
             loadedUrl = `               
@@ -248,6 +250,7 @@ const linksObject = {
                 let linkIndex = linksObject.urls[nodes.indexOf(listItem)]
                 linksMenuWrapper.classList.add('second-tab')
                 createUrlBtn.style.display = 'none'
+                saveUrlBtn.style.display = 'block'
                 linkName.value = linkIndex.name
                 linkIndex.links.forEach((link, i) => {
                     let savedUrl = 
