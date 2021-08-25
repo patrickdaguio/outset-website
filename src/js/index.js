@@ -100,6 +100,7 @@ const urlsList = document.querySelector('.urls-list')
 const userUrlLink = document.querySelector('.add-url-link')
 const addTabWrapper = document.querySelector('.add-tab-wrapper')
 const createUrlBtn = document.querySelector('.create-url-btn')
+const saveUrlBtn = document.querySelector('.update-url-btn')
 const linksList = document.querySelector('.links-list')
 
 function linkify(url) {
@@ -113,6 +114,7 @@ function linkify(url) {
 
 const linksObject = {
     urls: '',
+    editUrlIndex: '',
     resetInputs: function() {
         linkName.value = ''
         userUrlLink.value = ''
@@ -141,13 +143,12 @@ const linksObject = {
         </li>`
         if ((e.keyCode === 13 && e.target.value !== '') || (addTabWrapper.contains(e.target) && userUrlLink.value !== '')) {
             urlsList.insertAdjacentHTML('beforeend', extraUrl)
-            console.log(linkify(userUrlLink.value))
             userUrlLink.style.display = 'none'
             userUrlLink.value = ''
             linksOuterWrapper.style.height = addLinksContainer.offsetHeight + 'px'
         }
     },
-    saveUrlLink: function () {
+    saveUrlLink: function (index) {
         if (linkName.value === '') {
             linkName.classList.add('warning')  
             linkName.focus()
@@ -163,20 +164,31 @@ const linksObject = {
             });
         }
         if ((linkName.value !== '' && userUrlLink.value !== '') || urlsList.children.length > 0) {
-            const links = []
+            const validLinks = []
+            const userLinks = []
             const urls = document.querySelectorAll('.url-link')
+            const urlText = document.querySelectorAll('.url-text')
+            urls.forEach(url => validLinks.push(url.getAttribute('href')))
+            urlText.forEach(text => userLinks.push(text.textContent))
             if (userUrlLink.value !== '') {
-                links.push(linkify(userUrlLink.value))
+                validLinks.push(linkify(userUrlLink.value))
+                userLinks.push(userUrlLink.value)
             }
-            console.log(links[0])
-            urls.forEach(url => links.push(url.getAttribute('href')))
-            linksObject.urls.push({ 
-                name: linkName.value,
-                links,
-                img: `https://s2.googleusercontent.com/s2/favicons?domain_url=${links[0]}`
-                // img: `https://icons.duckduckgo.com/ip2/${links[0]}.ico`
-                //img: `${links[0]}/favicon.ico`
-            })
+            if (typeof index === 'number') {
+                linksObject.urls[index] = { 
+                    name: linkName.value,
+                    links: validLinks,
+                    user: userLinks,
+                    img: `https://s2.googleusercontent.com/s2/favicons?domain_url=${validLinks[0]}`
+                }
+            } else if (typeof index === 'object') {
+                linksObject.urls.push({ 
+                    name: linkName.value,
+                    links: validLinks,
+                    user: userLinks,
+                    img: `https://s2.googleusercontent.com/s2/favicons?domain_url=${validLinks[0]}`
+                })
+            }
             localStorage.setItem('urls', JSON.stringify(linksObject.urls))
             linksObject.resetInputs()
             userUrlLink.style.display = 'block'
@@ -209,12 +221,50 @@ const linksObject = {
             </li>`
             linksList.insertAdjacentHTML('beforeend', loadedUrl)
             const multipleLinks = document.querySelectorAll('.link-url')
-            multipleLinks[i].addEventListener('click', () => {
-                url.links.forEach(link => window.open(link))
-            })
+            multipleLinks[i].onclick = () => url.links.reverse().forEach(link => window.open(link))
         })
+        const ellipsisWrapper = document.querySelectorAll('.ellipsis-wrapper')
+        let curr, prev
+        curr = prev = 0
+        ellipsisWrapper.forEach((ellipsis, i ) => ellipsis.addEventListener('click', (e) => {
+            prev = curr
+            if (ellipsis.contains(e.target)) {
+                curr = i
+                ellipsis.nextElementSibling.classList.toggle('visibility')
+                if (curr != prev) ellipsisWrapper[prev].nextElementSibling.classList.remove('visibility')
+            }
+        }))
+        const dropdownList = document.querySelectorAll('.dropdown-list')
+        const nodes = Array.prototype.slice.call(linksList.children);
+        dropdownList.forEach(list => list.addEventListener('click', (e) => {
+            let listItem = e.target.parentElement.parentElement.parentElement.parentElement
+            if (e.target.className === 'delete-link') {
+                linksObject.urls.splice(nodes.indexOf(listItem), 1)
+                nodes.splice(nodes.indexOf(listItem), 1)
+                listItem.remove()
+                localStorage.setItem('urls', JSON.stringify(linksObject.urls))
+                linksOuterWrapper.style.height = linksListContainer.offsetHeight + 'px'
+            } else if (e.target.className === 'edit-link') {
+                let linkIndex = linksObject.urls[nodes.indexOf(listItem)]
+                linksMenuWrapper.classList.add('second-tab')
+                createUrlBtn.style.display = 'none'
+                linkName.value = linkIndex.name
+                linkIndex.links.forEach((link, i) => {
+                    let savedUrl = 
+                    `<li class="url">
+                        <a class="url-link" href="${link}" target="_blank"><span class="url-text">${linkIndex.user[i]}</span></a>
+                        <i class="fas fa-times url-delete"></i>
+                    </li>`
+                    urlsList.insertAdjacentHTML('beforeend', savedUrl)
+                })
+                linksOuterWrapper.style.height = addLinksContainer.offsetHeight + 'px'
+                linksObject.editUrlIndex = nodes.indexOf(listItem)
+            }
+        })) 
     }
 }
+
+
 
 if (localStorage.getItem('urls') === null) linksObject.urls = []
 else linksObject.urls = JSON.parse(localStorage.getItem('urls'));
@@ -222,6 +272,7 @@ else linksObject.urls = JSON.parse(localStorage.getItem('urls'));
 chromeTab.addEventListener('click', () => window.open('chrome://newtab'))
 linkIcon.addEventListener('click', () => {
     linksObject.resetInputs()
+    linksObject.loadUrls()
     nippleWrapper.classList.toggle('share-open')
     linksMenuWrapper.classList.remove('second-tab')
     userUrlLink.style.display = 'block'
@@ -230,15 +281,19 @@ linkIcon.addEventListener('click', () => {
 linksMenuWrapper.addEventListener('click', (e) => {
     if (e.target.classList.contains('link-input') || e.target.classList.contains('link-input-text') || e.target.classList.contains('fa-plus')) {
         linksMenuWrapper.classList.add('second-tab')
+        saveUrlBtn.style.display = 'none'
+        createUrlBtn.style.display = 'block'
         linksOuterWrapper.style.height = addLinksContainer.offsetHeight + 'px'
         linkName.focus({preventScroll:true})
     } else if (e.target.classList.contains('fa-arrow-left')) {
+        linksObject.loadUrls()
         linksMenuWrapper.classList.remove('second-tab')
         linksOuterWrapper.style.height = linksListContainer.offsetHeight + 'px'
         linksObject.resetInputs()
     }
 })
 
+saveUrlBtn.addEventListener('click', function () { linksObject.saveUrlLink(linksObject.editUrlIndex)})
 addTabWrapper.addEventListener('click', linksObject.addUrlLink)
 createUrlBtn.addEventListener('click', linksObject.saveUrlLink)
 addLinksContainer.addEventListener('click', linksObject.addExtraTab)
@@ -249,14 +304,19 @@ linkName.addEventListener('keypress', (e) => {
     }
 })
 document.addEventListener('click', (e) => {
-    if (!linksApp.contains(e.target) && !e.target.classList.contains('url-delete')) {
-        nippleWrapper.classList.remove('share-open')
+    if (!linksApp.contains(e.target) && !e.target.classList.contains('url-delete') && !e.target.classList.contains('delete-link')) {        nippleWrapper.classList.remove('share-open')
         linksMenuWrapper.classList.remove('second-tab')
         linksObject.resetInputs()
     }
+    const dropdownList = document.querySelectorAll('.link-options')
+    dropdownList.forEach(list => {
+        if (!list.contains(e.target)) {
+            list.children[1].classList.remove('visibility')
+        }
+    })
 })
 
-window.addEventListener('DOMContentLoaded', linksObject.loadUrls)
+// window.addEventListener('DOMContentLoaded', linksObject.loadUrls)
 
 // Greeting App
 

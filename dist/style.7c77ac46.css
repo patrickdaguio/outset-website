@@ -346,6 +346,11 @@ body {
   transform: translateX(-25%) !important;
 }
 
+.visibility {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
 .weather-app {
   display: flex;
   align-items: flex-end;

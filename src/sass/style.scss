@@ -369,6 +369,11 @@ body {
   transform: translateX(-25%) !important;
 }
 
+.visibility {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
 .weather-app {
   @include flex(flex, flex-end, 0em);
   flex-direction: column;
