@@ -35,7 +35,7 @@ window.addEventListener("load", () => {
             }).then(displayResults);
         });
     }
-
+    checkUserName()
     greetings();
     generateQuote();
     dateToday();
@@ -319,8 +319,6 @@ document.addEventListener('click', (e) => {
     })
 })
 
-// window.addEventListener('DOMContentLoaded', linksObject.loadUrls)
-
 // Greeting App
 
 // HTML Tags
@@ -332,6 +330,10 @@ const quoteOrigin = document.querySelector('.quote-origin');
 const todayDate = document.querySelector('.today-date');
 
 function greetings() {
+    let userName 
+    if (localStorage.getItem('username') === null) userName = ''
+    else userName = JSON.parse(localStorage.getItem('username'))
+
     let date = new Date();
 
     // Time
@@ -343,11 +345,11 @@ function greetings() {
     setTimeout(greetings, 1000);
     
     if (hours >= 12 && hours < 18) {
-        greeting.textContent = 'Good afternoon, Patrick';
+        greeting.textContent = `Good afternoon, ${userName}`;
     } else if (hours >= 18 && hours !== 4) {
-        greeting.textContent = 'Good evening, Patrick';
+        greeting.textContent = `Good evening, ${userName}`;
     } else if (hours >= 4 && hours < 12) {
-        greeting.textContent = 'Good morning, Patrick';
+        greeting.textContent = `Good morning, ${userName}`;
     }
 }
 
@@ -818,3 +820,72 @@ document.addEventListener('DOMContentLoaded', () => {
         items.setAttribute("contenteditable", "true");
     })
 }) 
+
+// Personal Name Functionality
+
+const introContainer = document.querySelector('.introduction')
+const introQuestionContainer = document.querySelector('.intro-question')
+const userInputName = document.querySelector('.intro-name-input')
+const introCta = document.querySelector('.intro-cta')
+const introConfirmationContainer = document.querySelector('.intro-confirmation')
+const changeName = document.querySelector('.change-name')
+const saveName = document.querySelector('.confirm-name')
+const container = document.querySelector('.container')
+const introName = document.querySelector('.intro-name-title')
+
+function setUserName(e) {
+
+    if (e.keyCode === 13 && e.target.value !== '') {
+        introQuestionContainer.style.opacity = '0'
+        setTimeout(() => {
+            introQuestionContainer.style.visibility = 'hidden'
+            introName.textContent = e.target.value
+            introCta.style.visibility = 'visible'
+            introCta.style.opacity = '1'
+            introConfirmationContainer.style.visibility = 'visible'
+            introConfirmationContainer.style.opacity = '1'
+        }, 1000)
+    }
+}
+
+function changeUserName() {
+    introCta.style.opacity = '0'
+    introConfirmationContainer.style.opacity = '0'
+    setTimeout(() => {
+        introConfirmationContainer.style.visibility = 'hidden'
+        introCta.style.visibility = 'hidden'
+        introQuestionContainer.style.opacity = '1'
+        introQuestionContainer.style.visibility = 'visible'
+        userInputName.textContent = introName.textContent
+    }, 1000)
+}
+
+function saveUserName() {
+    let userName 
+    if (localStorage.getItem('username') === null) userName = ''
+    else userName = JSON.parse(localStorage.getItem('username'))
+
+    userName = introName.textContent
+    localStorage.setItem('username', JSON.stringify(userName))
+    introContainer.style.opacity = '0'
+    setTimeout(() => {
+        introContainer.style.visibility = 'hidden'
+        container.classList.add('visibility')
+    }, 1000)
+}
+
+function checkUserName() {
+    if (localStorage.getItem('username') === null) {
+        container.classList.remove('visibility')
+        introContainer.style.visibility = 'visible'
+        introContainer.style.opacity = '1'
+    } else {
+        container.classList.add('visibility')
+        introContainer.style.visibility = 'hidden'
+        introContainer.style.opacity = '0'
+    }
+}
+
+userInputName.addEventListener('keypress', setUserName)
+changeName.addEventListener('click', changeUserName)
+saveName.addEventListener('click', saveUserName)

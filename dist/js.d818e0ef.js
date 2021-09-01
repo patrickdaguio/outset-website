@@ -188,6 +188,7 @@ window.addEventListener("load", () => {
     });
   }
 
+  checkUserName();
   greetings();
   generateQuote();
   dateToday();
@@ -475,8 +476,7 @@ document.addEventListener('click', e => {
       list.children[1].classList.remove('visibility');
     }
   });
-}); // window.addEventListener('DOMContentLoaded', linksObject.loadUrls)
-// Greeting App
+}); // Greeting App
 // HTML Tags
 
 const time = document.querySelector('.time');
@@ -486,6 +486,8 @@ const quoteOrigin = document.querySelector('.quote-origin');
 const todayDate = document.querySelector('.today-date');
 
 function greetings() {
+  let userName;
+  if (localStorage.getItem('username') === null) userName = '';else userName = JSON.parse(localStorage.getItem('username'));
   let date = new Date(); // Time
 
   let hours = addZero(date.getHours());
@@ -495,11 +497,11 @@ function greetings() {
   setTimeout(greetings, 1000);
 
   if (hours >= 12 && hours < 18) {
-    greeting.textContent = 'Good afternoon, Patrick';
+    greeting.textContent = `Good afternoon, ${userName}`;
   } else if (hours >= 18 && hours !== 4) {
-    greeting.textContent = 'Good evening, Patrick';
+    greeting.textContent = `Good evening, ${userName}`;
   } else if (hours >= 4 && hours < 12) {
-    greeting.textContent = 'Good morning, Patrick';
+    greeting.textContent = `Good morning, ${userName}`;
   }
 }
 
@@ -950,7 +952,71 @@ document.addEventListener('DOMContentLoaded', () => {
   todoItems.forEach(items => {
     items.setAttribute("contenteditable", "true");
   });
-});
+}); // Personal Name Functionality
+
+const introContainer = document.querySelector('.introduction');
+const introQuestionContainer = document.querySelector('.intro-question');
+const userInputName = document.querySelector('.intro-name-input');
+const introCta = document.querySelector('.intro-cta');
+const introConfirmationContainer = document.querySelector('.intro-confirmation');
+const changeName = document.querySelector('.change-name');
+const saveName = document.querySelector('.confirm-name');
+const container = document.querySelector('.container');
+const introName = document.querySelector('.intro-name-title');
+
+function setUserName(e) {
+  if (e.keyCode === 13 && e.target.value !== '') {
+    introQuestionContainer.style.opacity = '0';
+    setTimeout(() => {
+      introQuestionContainer.style.visibility = 'hidden';
+      introName.textContent = e.target.value;
+      introCta.style.visibility = 'visible';
+      introCta.style.opacity = '1';
+      introConfirmationContainer.style.visibility = 'visible';
+      introConfirmationContainer.style.opacity = '1';
+    }, 1000);
+  }
+}
+
+function changeUserName() {
+  introCta.style.opacity = '0';
+  introConfirmationContainer.style.opacity = '0';
+  setTimeout(() => {
+    introConfirmationContainer.style.visibility = 'hidden';
+    introCta.style.visibility = 'hidden';
+    introQuestionContainer.style.opacity = '1';
+    introQuestionContainer.style.visibility = 'visible';
+    userInputName.textContent = introName.textContent;
+  }, 1000);
+}
+
+function saveUserName() {
+  let userName;
+  if (localStorage.getItem('username') === null) userName = '';else userName = JSON.parse(localStorage.getItem('username'));
+  userName = introName.textContent;
+  localStorage.setItem('username', JSON.stringify(userName));
+  introContainer.style.opacity = '0';
+  setTimeout(() => {
+    introContainer.style.visibility = 'hidden';
+    container.classList.add('visibility');
+  }, 1000);
+}
+
+function checkUserName() {
+  if (localStorage.getItem('username') === null) {
+    container.classList.remove('visibility');
+    introContainer.style.visibility = 'visible';
+    introContainer.style.opacity = '1';
+  } else {
+    container.classList.add('visibility');
+    introContainer.style.visibility = 'hidden';
+    introContainer.style.opacity = '0';
+  }
+}
+
+userInputName.addEventListener('keypress', setUserName);
+changeName.addEventListener('click', changeUserName);
+saveName.addEventListener('click', saveUserName);
 },{"./config":"src/js/config.js","../images/weather/storming.png":"src/images/weather/storming.png","../images/weather/sunny.png":"src/images/weather/sunny.png","../images/weather/snowing.png":"src/images/weather/snowing.png","../images/weather/raining.png":"src/images/weather/raining.png","../images/weather/cloudy sun.png":"src/images/weather/cloudy sun.png","../images/weather/cloudy rain.png":"src/images/weather/cloudy rain.png","../images/weather/cloudy.png":"src/images/weather/cloudy.png","../images/weather/windy.png":"src/images/weather/windy.png","../images/todo/uncheck1.png":"src/images/todo/uncheck1.png","../images/todo/trash1.png":"src/images/todo/trash1.png","../images/todo/checked1.png":"src/images/todo/checked1.png"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -979,7 +1045,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56409" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62650" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

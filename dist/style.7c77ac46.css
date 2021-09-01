@@ -22,6 +22,9 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  opacity: 0;
+  visibility: hidden;
+  transition: 1s opacity ease-in-out;
 }
 .container header {
   flex: 0 1 auto;
@@ -31,6 +34,90 @@ body {
 }
 .container footer {
   flex: 0 1 80px;
+}
+
+.introduction {
+  background-image: url("/sunset2.e4520467.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute;
+  height: 100vh;
+  right: 0;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  visibility: visible;
+  opacity: 1;
+  transition: 1s opacity ease-in-out;
+}
+.introduction .intro-question-container {
+  position: relative;
+  flex: 1;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  opacity: 0;
+  animation: opacity 2s forwards 0.3s;
+}
+.introduction .intro-question-container h3 {
+  font-size: 3.9em;
+  font-weight: 400;
+  text-shadow: none;
+  margin-bottom: 0em;
+  color: white;
+}
+.introduction .intro-question-container .intro-question {
+  transition: 1s opacity ease-in-out;
+}
+.introduction .intro-question-container .intro-question input {
+  width: 100%;
+  padding-top: 10px;
+  display: block;
+  background: 0;
+  border: 0;
+  border-bottom: 3px solid #fff;
+  color: #fff;
+  font-size: 3.3em;
+  line-height: 1.2em;
+  font-weight: 500;
+  outline: none;
+  text-align: center;
+}
+.introduction .intro-question-container .intro-confirmation {
+  opacity: 0;
+  position: absolute;
+  transition: 1s opacity ease-in-out;
+}
+.introduction .intro-question-container .intro-confirmation .intro-name-title {
+  line-height: 1.5em;
+}
+.introduction .intro-question-container .intro-cta {
+  position: absolute;
+  margin-top: 16em;
+  opacity: 0;
+  transition: 1s opacity ease-in-out;
+}
+.introduction .intro-question-container .intro-cta button {
+  outline: none;
+  border: 2px white solid;
+  padding: 0.5em 1em;
+  border-radius: 20em;
+  background-color: transparent;
+  cursor: pointer;
+  color: white;
+  font-size: 1em;
+  transition: 0.3s;
+}
+.introduction .intro-question-container .intro-cta button:first-child {
+  margin-right: 1em;
+}
+.introduction .intro-question-container .intro-cta button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .header {
@@ -425,6 +512,7 @@ body {
   grid-template-columns: 2fr 1fr;
   gap: 2em;
   justify-content: space-between;
+  align-content: center;
 }
 .main-left .time-app {
   text-align: left;
@@ -443,9 +531,13 @@ body {
 }
 
 main {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   padding: 3em 3em;
+  padding-top: 0em;
   animation: opacity 1s ease-in-out;
 }
 main .time-app {
