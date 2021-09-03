@@ -152,6 +152,24 @@ module.exports = "/uncheck1.c79750a4.png";
 module.exports = "/trash1.3c262aa8.png";
 },{}],"src/images/todo/checked1.png":[function(require,module,exports) {
 module.exports = "/checked1.cc84f948.png";
+},{}],"src/images/svgs/focus.svg":[function(require,module,exports) {
+module.exports = "/focus.f05fe073.svg";
+},{}],"src/images/svgs/todo.svg":[function(require,module,exports) {
+module.exports = "/todo.f671e78d.svg";
+},{}],"src/images/svgs/links.svg":[function(require,module,exports) {
+module.exports = "/links.a288049c.svg";
+},{}],"src/images/svgs/calendar.svg":[function(require,module,exports) {
+module.exports = "/calendar.32236b4a.svg";
+},{}],"src/images/svgs/clock.svg":[function(require,module,exports) {
+module.exports = "/clock.b335656b.svg";
+},{}],"src/images/svgs/weather.svg":[function(require,module,exports) {
+module.exports = "/weather.8d2dfabf.svg";
+},{}],"src/images/svgs/picture.svg":[function(require,module,exports) {
+module.exports = "/picture.173af9e8.svg";
+},{}],"src/images/svgs/quote.svg":[function(require,module,exports) {
+module.exports = "/quote.ed9d3258.svg";
+},{}],"src/images/svgs/mantra.svg":[function(require,module,exports) {
+module.exports = "/mantra.b7a8c186.svg";
 },{}],"src/js/index.js":[function(require,module,exports) {
 "use strict";
 
@@ -1016,8 +1034,313 @@ function checkUserName() {
 
 userInputName.addEventListener('keypress', setUserName);
 changeName.addEventListener('click', changeUserName);
-saveName.addEventListener('click', saveUserName);
-},{"./config":"src/js/config.js","../images/weather/storming.png":"src/images/weather/storming.png","../images/weather/sunny.png":"src/images/weather/sunny.png","../images/weather/snowing.png":"src/images/weather/snowing.png","../images/weather/raining.png":"src/images/weather/raining.png","../images/weather/cloudy sun.png":"src/images/weather/cloudy sun.png","../images/weather/cloudy rain.png":"src/images/weather/cloudy rain.png","../images/weather/cloudy.png":"src/images/weather/cloudy.png","../images/weather/windy.png":"src/images/weather/windy.png","../images/todo/uncheck1.png":"src/images/todo/uncheck1.png","../images/todo/trash1.png":"src/images/todo/trash1.png","../images/todo/checked1.png":"src/images/todo/checked1.png"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+saveName.addEventListener('click', saveUserName); // Features
+
+const featuresIcons = document.querySelectorAll('.features-icon');
+const featuresDesc = document.querySelector('.features-desc');
+const featuresBtn = document.querySelector('.features-btn');
+const featuresWelcome = document.querySelector('.features-welcome');
+const featuresDots = document.querySelectorAll('.dot');
+const featuresContent = document.querySelector('.features-content');
+const featuresHeading = document.querySelector('.features-heading');
+const featuresSvg = document.querySelectorAll('.features-svg');
+const iconDesc = document.querySelectorAll('.icon-desc');
+const featuresFooter = document.querySelector('.features-footer');
+let featuresIndex = 1;
+let oldFeaturesIndex = 0;
+featuresIcons.forEach((icon, i) => icon.addEventListener('mouseover', () => {
+  if (i === 0) {
+    switch (featuresIndex) {
+      case 2:
+        featuresDesc.textContent = 'Inspiring Photography';
+        break;
+
+      case 3:
+        featuresDesc.textContent = 'Set a daily intention reminder';
+        break;
+
+      case 4:
+        featuresDesc.textContent = 'Set key dates';
+        break;
+    }
+  } else if (i === 1) {
+    switch (featuresIndex) {
+      case 2:
+        featuresDesc.textContent = 'Timeless Wisdom';
+        break;
+
+      case 3:
+        featuresDesc.textContent = 'Organise your daily tasks';
+        break;
+
+      case 4:
+        featuresDesc.textContent = 'Set a time to focus';
+        break;
+    }
+  } else {
+    switch (featuresIndex) {
+      case 2:
+        featuresDesc.textContent = 'Positive Concepts';
+        break;
+
+      case 3:
+        featuresDesc.textContent = 'Quickly access your most used websites';
+        break;
+
+      case 4:
+        featuresDesc.textContent = 'Check weather worldwide';
+        break;
+    }
+  }
+}));
+featuresIcons.forEach(icon => icon.addEventListener('mouseleave', () => {
+  switch (featuresIndex) {
+    case 2:
+      featuresDesc.textContent = 'Breathe life into your browser';
+      break;
+
+    case 3:
+      featuresDesc.textContent = 'Approach each day with intent';
+      break;
+
+    case 4:
+      featuresDesc.textContent = 'Enjoy the extra features of Outset';
+      break;
+  }
+}));
+
+function showNextFeature() {
+  if (featuresIndex === 1) {
+    featuresWelcome.style.animation = 'fadeOut 1s forwards';
+    featuresFooter.style.animation = 'none';
+    featuresDots[oldFeaturesIndex].classList.remove('active');
+    featuresDots[featuresIndex].classList.add('active');
+    featuresWelcome.addEventListener('animationend', function changeContent() {
+      featuresFooter.style.animation = 'opacity 1s forwards';
+      featuresWelcome.style.display = 'none';
+      featuresContent.style.display = 'block';
+      featuresContent.style.animation = 'zoomIn 0.7s ease-in forwards';
+      featuresWelcome.removeEventListener('animationend', changeContent);
+    });
+    oldFeaturesIndex = featuresIndex;
+    featuresIndex++;
+  } else if (featuresIndex === 2) {
+    featuresContent.style.animation = 'fadeOut 1s forwards';
+    featuresFooter.style.animation = 'none';
+    featuresDots[oldFeaturesIndex].classList.remove('active');
+    featuresDots[featuresIndex].classList.add('active');
+    featuresContent.addEventListener('animationend', function changeContent() {
+      featuresFooter.style.animation = 'opacity 1s forwards';
+      featuresHeading.textContent = 'Focus';
+      featuresDesc.textContent = 'Approach each day with intent';
+      featuresSvg[0].src = `${require("../images/svgs/focus.svg")}`;
+      featuresSvg[1].src = `${require("../images/svgs/todo.svg")}`;
+      featuresSvg[2].src = `${require("../images/svgs/links.svg")}`;
+      iconDesc[0].textContent = 'Focus';
+      iconDesc[1].textContent = 'To-do';
+      iconDesc[2].textContent = 'Links';
+      featuresContent.style.animation = 'zoomIn 0.7s ease-in forwards';
+      featuresContent.removeEventListener('animationend', changeContent);
+    });
+    oldFeaturesIndex = featuresIndex;
+    featuresIndex++;
+  } else if (featuresIndex === 3) {
+    featuresContent.style.animation = 'fadeOut 1s forwards';
+    featuresFooter.style.animation = 'none';
+    featuresDots[oldFeaturesIndex].classList.remove('active');
+    featuresDots[featuresIndex].classList.add('active');
+    featuresContent.addEventListener('animationend', function changeContent() {
+      featuresFooter.style.animation = 'opacity 1s forwards';
+      featuresHeading.textContent = 'Extra Features';
+      featuresDesc.textContent = 'Enjoy the extra features of Outset';
+      featuresSvg[0].src = `${require("../images/svgs/calendar.svg")}`;
+      featuresSvg[1].src = `${require("../images/svgs/clock.svg")}`;
+      featuresSvg[2].src = `${require("../images/svgs/weather.svg")}`;
+      iconDesc[0].textContent = 'Calendar';
+      iconDesc[1].textContent = 'Timer';
+      iconDesc[2].textContent = 'Weather';
+      featuresContent.style.animation = 'zoomIn 0.7s ease-in forwards';
+      featuresContent.removeEventListener('animationend', changeContent);
+    });
+    oldFeaturesIndex = featuresIndex;
+    featuresIndex++;
+  }
+
+  if (featuresIndex === 4) featuresBtn.textContent = 'Get Started';else featuresBtn.textContent = 'Next';
+}
+
+featuresBtn.addEventListener('click', showNextFeature);
+featuresDots.forEach((dot, i) => dot.addEventListener('click', () => {
+  if (i !== 3) featuresBtn.textContent = 'Next';else featuresBtn.textContent = 'Get Started';
+
+  switch (i) {
+    case 0:
+      featuresIndex = 0;
+      featuresContent.style.animation = 'fadeOut 1s forwards';
+      featuresFooter.style.animation = 'none';
+      featuresDots[oldFeaturesIndex].classList.remove('active');
+      featuresDots[featuresIndex].classList.add('active');
+      featuresContent.addEventListener('animationend', function changeContent() {
+        featuresFooter.style.animation = 'opacity 1s forwards';
+        featuresContent.style.display = 'none';
+        featuresWelcome.style.display = 'block';
+        reset_animation(featuresWelcome);
+        featuresHeading.textContent = 'Inspiration';
+        featuresDesc.textContent = 'Breathe life into your browser';
+        featuresSvg[0].src = `${require("../images/svgs/picture.svg")}`;
+        featuresSvg[1].src = `${require("../images/svgs/quote.svg")}`;
+        featuresSvg[2].src = `${require("../images/svgs/mantra.svg")}`;
+        iconDesc[0].textContent = 'Photos';
+        iconDesc[1].textContent = 'Quotes';
+        iconDesc[2].textContent = 'Mantras';
+        featuresContent.style.animation = 'zoomIn 0.7s ease-in forwards';
+        featuresContent.removeEventListener('animationend', changeContent);
+      });
+      oldFeaturesIndex = featuresIndex;
+      featuresIndex++;
+      break;
+
+    case 1:
+      featuresIndex = 1;
+
+      if (featuresWelcome.style.display != 'none') {
+        featuresWelcome.style.animation = 'fadeOut 1s forwards';
+        featuresFooter.style.animation = 'none';
+        featuresDots[oldFeaturesIndex].classList.remove('active');
+        featuresDots[featuresIndex].classList.add('active');
+        featuresWelcome.addEventListener('animationend', function changeContent() {
+          featuresFooter.style.animation = 'opacity 1s forwards';
+          featuresWelcome.style.display = 'none';
+          featuresContent.style.display = 'block';
+          featuresHeading.textContent = 'Inspiration';
+          featuresDesc.textContent = 'Breathe life into your browser';
+          featuresSvg[0].src = `${require("../images/svgs/picture.svg")}`;
+          featuresSvg[1].src = `${require("../images/svgs/quote.svg")}`;
+          featuresSvg[2].src = `${require("../images/svgs/mantra.svg")}`;
+          iconDesc[0].textContent = 'Photos';
+          iconDesc[1].textContent = 'Quotes';
+          iconDesc[2].textContent = 'Mantras';
+          featuresContent.style.animation = 'zoomIn 0.7s ease-in forwards';
+          featuresWelcome.removeEventListener('animationend', changeContent);
+        });
+      } else {
+        featuresContent.style.animation = 'fadeOut 1s forwards';
+        featuresFooter.style.animation = 'none';
+        featuresDots[oldFeaturesIndex].classList.remove('active');
+        featuresDots[featuresIndex].classList.add('active');
+        featuresContent.addEventListener('animationend', function changeContent() {
+          featuresFooter.style.animation = 'opacity 1s forwards';
+          featuresHeading.textContent = 'Inspiration';
+          featuresDesc.textContent = 'Breathe life into your browser';
+          featuresSvg[0].src = `${require("../images/svgs/picture.svg")}`;
+          featuresSvg[1].src = `${require("../images/svgs/quote.svg")}`;
+          featuresSvg[2].src = `${require("../images/svgs/mantra.svg")}`;
+          iconDesc[0].textContent = 'Photos';
+          iconDesc[1].textContent = 'Quotes';
+          iconDesc[2].textContent = 'Mantras';
+          featuresContent.style.animation = 'zoomIn 0.7s ease-in forwards';
+          featuresContent.removeEventListener('animationend', changeContent);
+        });
+      }
+
+      oldFeaturesIndex = featuresIndex;
+      featuresIndex++;
+      break;
+
+    case 2:
+      featuresIndex = 2;
+
+      if (featuresWelcome.style.display != 'none') {
+        featuresWelcome.style.animation = 'fadeOut 1s forwards';
+        featuresFooter.style.animation = 'none';
+        featuresDots[oldFeaturesIndex].classList.remove('active');
+        featuresDots[featuresIndex].classList.add('active');
+        featuresWelcome.addEventListener('animationend', function changeContent() {
+          featuresFooter.style.animation = 'opacity 1s forwards';
+          featuresWelcome.style.display = 'none';
+          featuresContent.style.display = 'block';
+          featuresHeading.textContent = 'Focus';
+          featuresDesc.textContent = 'Approach each day with intent';
+          featuresSvg[0].src = `${require("../images/svgs/focus.svg")}`;
+          featuresSvg[1].src = `${require("../images/svgs/todo.svg")}`;
+          featuresSvg[2].src = `${require("../images/svgs/links.svg")}`;
+          iconDesc[0].textContent = 'Focus';
+          iconDesc[1].textContent = 'To-do';
+          iconDesc[2].textContent = 'Links';
+          featuresWelcome.removeEventListener('animationend', changeContent);
+        });
+      } else {
+        featuresContent.style.animation = 'fadeOut 1s forwards';
+        featuresFooter.style.animation = 'none';
+        featuresDots[oldFeaturesIndex].classList.remove('active');
+        featuresDots[featuresIndex].classList.add('active');
+        featuresContent.addEventListener('animationend', function changeContent() {
+          featuresFooter.style.animation = 'opacity 1s forwards';
+          featuresHeading.textContent = 'Focus';
+          featuresDesc.textContent = 'Approach each day with intent';
+          featuresSvg[0].src = `${require("../images/svgs/focus.svg")}`;
+          featuresSvg[1].src = `${require("../images/svgs/todo.svg")}`;
+          featuresSvg[2].src = `${require("../images/svgs/links.svg")}`;
+          iconDesc[0].textContent = 'Focus';
+          iconDesc[1].textContent = 'To-do';
+          iconDesc[2].textContent = 'Links';
+          featuresContent.style.animation = 'zoomIn 0.7s ease-in forwards';
+          featuresContent.removeEventListener('animationend', changeContent);
+        });
+      }
+
+      oldFeaturesIndex = featuresIndex;
+      featuresIndex++;
+      break;
+
+    case 3:
+      featuresIndex = 3;
+
+      if (featuresWelcome.style.display != 'none') {
+        featuresWelcome.style.animation = 'fadeOut 1s forwards';
+        featuresFooter.style.animation = 'none';
+        featuresDots[oldFeaturesIndex].classList.remove('active');
+        featuresDots[featuresIndex].classList.add('active');
+        featuresWelcome.addEventListener('animationend', function changeContent() {
+          featuresFooter.style.animation = 'opacity 1s forwards';
+          featuresWelcome.style.display = 'none';
+          featuresContent.style.display = 'block';
+          featuresHeading.textContent = 'Extra Features';
+          featuresDesc.textContent = 'Enjoy the extra features of Outset';
+          featuresSvg[0].src = `${require("../images/svgs/calendar.svg")}`;
+          featuresSvg[1].src = `${require("../images/svgs/clock.svg")}`;
+          featuresSvg[2].src = `${require("../images/svgs/weather.svg")}`;
+          iconDesc[0].textContent = 'Calendar';
+          iconDesc[1].textContent = 'Timer';
+          iconDesc[2].textContent = 'Weather';
+          featuresWelcome.removeEventListener('animationend', changeContent);
+        });
+      } else {
+        featuresContent.style.animation = 'fadeOut 1s forwards';
+        featuresFooter.style.animation = 'none';
+        featuresDots[oldFeaturesIndex].classList.remove('active');
+        featuresDots[featuresIndex].classList.add('active');
+        featuresContent.addEventListener('animationend', function changeContent() {
+          featuresFooter.style.animation = 'opacity 1s forwards';
+          featuresHeading.textContent = 'Extra Features';
+          featuresDesc.textContent = 'Enjoy the extra features of Outset';
+          featuresSvg[0].src = `${require("../images/svgs/calendar.svg")}`;
+          featuresSvg[1].src = `${require("../images/svgs/clock.svg")}`;
+          featuresSvg[2].src = `${require("../images/svgs/weather.svg")}`;
+          iconDesc[0].textContent = 'Calendar';
+          iconDesc[1].textContent = 'Timer';
+          iconDesc[2].textContent = 'Weather';
+          featuresContent.style.animation = 'zoomIn 0.7s ease-in forwards';
+          featuresContent.removeEventListener('animationend', changeContent);
+        });
+      }
+
+      oldFeaturesIndex = featuresIndex;
+      featuresIndex++;
+      break;
+  }
+}));
+},{"./config":"src/js/config.js","../images/weather/storming.png":"src/images/weather/storming.png","../images/weather/sunny.png":"src/images/weather/sunny.png","../images/weather/snowing.png":"src/images/weather/snowing.png","../images/weather/raining.png":"src/images/weather/raining.png","../images/weather/cloudy sun.png":"src/images/weather/cloudy sun.png","../images/weather/cloudy rain.png":"src/images/weather/cloudy rain.png","../images/weather/cloudy.png":"src/images/weather/cloudy.png","../images/weather/windy.png":"src/images/weather/windy.png","../images/todo/uncheck1.png":"src/images/todo/uncheck1.png","../images/todo/trash1.png":"src/images/todo/trash1.png","../images/todo/checked1.png":"src/images/todo/checked1.png","../images/svgs/focus.svg":"src/images/svgs/focus.svg","../images/svgs/todo.svg":"src/images/svgs/todo.svg","../images/svgs/links.svg":"src/images/svgs/links.svg","../images/svgs/calendar.svg":"src/images/svgs/calendar.svg","../images/svgs/clock.svg":"src/images/svgs/clock.svg","../images/svgs/weather.svg":"src/images/svgs/weather.svg","../images/svgs/picture.svg":"src/images/svgs/picture.svg","../images/svgs/quote.svg":"src/images/svgs/quote.svg","../images/svgs/mantra.svg":"src/images/svgs/mantra.svg"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -1045,7 +1368,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62650" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65220" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
