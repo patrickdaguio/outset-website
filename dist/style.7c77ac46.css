@@ -9,7 +9,7 @@
 
 body {
   font-family: "Roboto", sans-serif;
-  background-image: url("/sunset1.2dd3f8a4.jpg");
+  background-image: url("/sunset2.e4520467.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: bottom center;
@@ -24,7 +24,7 @@ body {
   min-height: 100vh;
   opacity: 0;
   visibility: hidden;
-  transition: 1s opacity ease-in-out;
+  transition: 2s opacity ease-in-out;
 }
 .container header {
   flex: 0 1 auto;
@@ -40,7 +40,7 @@ body {
   background-image: url("/sunset2.e4520467.jpg");
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: bottom center;
   position: absolute;
   height: 100vh;
   right: 0;
@@ -50,19 +50,32 @@ body {
   display: flex;
   flex-direction: column;
   visibility: visible;
-  opacity: 1;
+  opacity: 0;
   transition: 1s opacity ease-in-out;
+}
+.introduction .introduction-overlay {
+  position: absolute;
+  height: 100vh;
+  right: 0;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  display: none;
+  background: rgba(0, 0, 0, 0.5);
+  animation: opacity 1s ease-in;
 }
 .introduction .intro-question-container {
   position: relative;
   flex: 1;
+  z-index: 2;
   display: inline-flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  opacity: 0;
-  animation: opacity 2s forwards 0.3s;
+  opacity: 1;
+  transition: 1s opacity ease-in-out;
 }
 .introduction .intro-question-container h3 {
   font-size: 3.9em;
@@ -89,6 +102,7 @@ body {
   text-align: center;
 }
 .introduction .intro-question-container .intro-confirmation {
+  visibility: hidden;
   opacity: 0;
   position: absolute;
   transition: 1s opacity ease-in-out;
@@ -100,6 +114,7 @@ body {
   position: absolute;
   margin-top: 16em;
   opacity: 0;
+  visibility: hidden;
   transition: 1s opacity ease-in-out;
 }
 .introduction .intro-question-container .intro-cta button {
@@ -130,6 +145,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  display: none;
+  opacity: 0;
+  animation: opacity 1.6s ease-in-out forwards;
 }
 .features .features-container {
   overflow: hidden;
@@ -256,6 +274,9 @@ body {
 }
 .features .features-container .features-footer .dot:hover {
   transform: scale(1.75);
+}
+.features .features-container .features-footer .dot:first-child {
+  pointer-events: none;
 }
 .features .features-container .features-footer .active {
   opacity: 0.8;

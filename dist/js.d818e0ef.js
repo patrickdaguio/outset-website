@@ -515,11 +515,11 @@ function greetings() {
   setTimeout(greetings, 1000);
 
   if (hours >= 12 && hours < 18) {
-    greeting.textContent = `Good afternoon, ${userName}`;
+    greeting.textContent = `Good afternoon, ${userName[0]}`;
   } else if (hours >= 18 && hours !== 4) {
-    greeting.textContent = `Good evening, ${userName}`;
+    greeting.textContent = `Good evening, ${userName[0]}`;
   } else if (hours >= 4 && hours < 12) {
-    greeting.textContent = `Good morning, ${userName}`;
+    greeting.textContent = `Good morning, ${userName[0]}`;
   }
 }
 
@@ -972,7 +972,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 }); // Personal Name Functionality
 
-const introContainer = document.querySelector('.introduction');
+const introduction = document.querySelector('.introduction');
+const introductionContainer = document.querySelector('.intro-question-container');
 const introQuestionContainer = document.querySelector('.intro-question');
 const userInputName = document.querySelector('.intro-name-input');
 const introCta = document.querySelector('.intro-cta');
@@ -981,6 +982,9 @@ const changeName = document.querySelector('.change-name');
 const saveName = document.querySelector('.confirm-name');
 const container = document.querySelector('.container');
 const introName = document.querySelector('.intro-name-title');
+const featuresSection = document.querySelector('.features');
+const introductionOverlay = document.querySelector('.introduction-overlay');
+const featuresUsername = document.querySelector('.features-user-name');
 
 function setUserName(e) {
   if (e.keyCode === 13 && e.target.value !== '') {
@@ -1005,30 +1009,42 @@ function changeUserName() {
     introQuestionContainer.style.opacity = '1';
     introQuestionContainer.style.visibility = 'visible';
     userInputName.textContent = introName.textContent;
+    userInputName.focus();
   }, 1000);
 }
 
 function saveUserName() {
   let userName;
-  if (localStorage.getItem('username') === null) userName = '';else userName = JSON.parse(localStorage.getItem('username'));
-  userName = introName.textContent;
+  if (localStorage.getItem('username') === null) userName = [];else userName = JSON.parse(localStorage.getItem('username'));
+  userName[0] = introName.textContent;
   localStorage.setItem('username', JSON.stringify(userName));
-  introContainer.style.opacity = '0';
+  introductionContainer.style.opacity = '0';
+  introductionOverlay.style.display = 'block';
+  featuresUsername.textContent = userName[0];
   setTimeout(() => {
-    introContainer.style.visibility = 'hidden';
-    container.classList.add('visibility');
+    introductionContainer.style.display = 'none';
+    featuresSection.style.display = 'flex';
   }, 1000);
 }
 
 function checkUserName() {
+  let userName;
+  if (localStorage.getItem('username') === null) userName = [];else userName = JSON.parse(localStorage.getItem('username'));
+
   if (localStorage.getItem('username') === null) {
     container.classList.remove('visibility');
-    introContainer.style.visibility = 'visible';
-    introContainer.style.opacity = '1';
+    introduction.style.visibility = 'visible';
+    introduction.style.opacity = '1';
+  } else if (userName.length === 1) {
+    featuresUsername.textContent = userName[0];
+    introductionContainer.style.display = 'none';
+    introductionOverlay.style.display = 'block';
+    featuresSection.style.display = 'flex';
   } else {
+    introductionOverlay.style.display = 'none';
+    introduction.style.visibility = 'hidden';
+    introduction.style.opacity = '0';
     container.classList.add('visibility');
-    introContainer.style.visibility = 'hidden';
-    introContainer.style.opacity = '0';
   }
 }
 
@@ -1046,6 +1062,7 @@ const featuresHeading = document.querySelector('.features-heading');
 const featuresSvg = document.querySelectorAll('.features-svg');
 const iconDesc = document.querySelectorAll('.icon-desc');
 const featuresFooter = document.querySelector('.features-footer');
+const featuresContainer = document.querySelector('.features-container');
 let featuresIndex = 1;
 let oldFeaturesIndex = 0;
 featuresIcons.forEach((icon, i) => icon.addEventListener('mouseover', () => {
@@ -1109,61 +1126,71 @@ featuresIcons.forEach(icon => icon.addEventListener('mouseleave', () => {
   }
 }));
 
-function showNextFeature() {
+function displayFeatures(heading, desc, src1, src2, src3, text1, text2, text3) {
+  featuresFooter.style.animation = 'opacity 1s forwards';
+  featuresHeading.textContent = heading;
+  featuresDesc.textContent = desc;
+  featuresSvg[0].src = src1;
+  featuresSvg[1].src = src2;
+  featuresSvg[2].src = src3;
+  iconDesc[0].textContent = text1;
+  iconDesc[1].textContent = text2;
+  iconDesc[2].textContent = text3;
+  featuresContent.style.animation = 'zoomIn 0.7s ease-in forwards';
+}
+
+function fadeElements(el1, el2) {
+  featuresDots[oldFeaturesIndex].style.pointerEvents = 'all';
+  featuresDots[featuresIndex].style.pointerEvents = 'none';
+  el1.style.animation = 'fadeOut 1s forwards';
+  el2.style.animation = 'none';
+  featuresDots[oldFeaturesIndex].classList.remove('active');
+  featuresDots[featuresIndex].classList.add('active');
+}
+
+function elementsDisplay(el1, el2) {
+  el1.style.display = 'none';
+  el2.style.display = 'block';
+}
+
+function showNextFeature(e) {
   if (featuresIndex === 1) {
-    featuresWelcome.style.animation = 'fadeOut 1s forwards';
-    featuresFooter.style.animation = 'none';
-    featuresDots[oldFeaturesIndex].classList.remove('active');
-    featuresDots[featuresIndex].classList.add('active');
+    fadeElements(featuresWelcome, featuresFooter);
     featuresWelcome.addEventListener('animationend', function changeContent() {
       featuresFooter.style.animation = 'opacity 1s forwards';
-      featuresWelcome.style.display = 'none';
-      featuresContent.style.display = 'block';
+      elementsDisplay(featuresWelcome, featuresContent);
       featuresContent.style.animation = 'zoomIn 0.7s ease-in forwards';
       featuresWelcome.removeEventListener('animationend', changeContent);
     });
     oldFeaturesIndex = featuresIndex;
     featuresIndex++;
   } else if (featuresIndex === 2) {
-    featuresContent.style.animation = 'fadeOut 1s forwards';
-    featuresFooter.style.animation = 'none';
-    featuresDots[oldFeaturesIndex].classList.remove('active');
-    featuresDots[featuresIndex].classList.add('active');
+    fadeElements(featuresContent, featuresFooter);
     featuresContent.addEventListener('animationend', function changeContent() {
-      featuresFooter.style.animation = 'opacity 1s forwards';
-      featuresHeading.textContent = 'Focus';
-      featuresDesc.textContent = 'Approach each day with intent';
-      featuresSvg[0].src = `${require("../images/svgs/focus.svg")}`;
-      featuresSvg[1].src = `${require("../images/svgs/todo.svg")}`;
-      featuresSvg[2].src = `${require("../images/svgs/links.svg")}`;
-      iconDesc[0].textContent = 'Focus';
-      iconDesc[1].textContent = 'To-do';
-      iconDesc[2].textContent = 'Links';
-      featuresContent.style.animation = 'zoomIn 0.7s ease-in forwards';
+      displayFeatures('Focus', 'Approach each day with intent', `${require("../images/svgs/focus.svg")}`, `${require("../images/svgs/todo.svg")}`, `${require("../images/svgs/links.svg")}`, 'Focus', 'To-do', 'Links');
       featuresContent.removeEventListener('animationend', changeContent);
     });
     oldFeaturesIndex = featuresIndex;
     featuresIndex++;
   } else if (featuresIndex === 3) {
-    featuresContent.style.animation = 'fadeOut 1s forwards';
-    featuresFooter.style.animation = 'none';
-    featuresDots[oldFeaturesIndex].classList.remove('active');
-    featuresDots[featuresIndex].classList.add('active');
+    fadeElements(featuresContent, featuresFooter);
     featuresContent.addEventListener('animationend', function changeContent() {
-      featuresFooter.style.animation = 'opacity 1s forwards';
-      featuresHeading.textContent = 'Extra Features';
-      featuresDesc.textContent = 'Enjoy the extra features of Outset';
-      featuresSvg[0].src = `${require("../images/svgs/calendar.svg")}`;
-      featuresSvg[1].src = `${require("../images/svgs/clock.svg")}`;
-      featuresSvg[2].src = `${require("../images/svgs/weather.svg")}`;
-      iconDesc[0].textContent = 'Calendar';
-      iconDesc[1].textContent = 'Timer';
-      iconDesc[2].textContent = 'Weather';
-      featuresContent.style.animation = 'zoomIn 0.7s ease-in forwards';
+      displayFeatures('Extra Features', 'Enjoy the extra features of Outset', `${require("../images/svgs/calendar.svg")}`, `${require("../images/svgs/clock.svg")}`, `${require("../images/svgs/weather.svg")}`, 'Calendar', 'Timer', 'Weather');
       featuresContent.removeEventListener('animationend', changeContent);
     });
     oldFeaturesIndex = featuresIndex;
     featuresIndex++;
+  } else if (featuresIndex === 4) {
+    let userName = JSON.parse(localStorage.getItem('username'));
+    userName.push('started');
+    localStorage.setItem('username', JSON.stringify(userName));
+    featuresContainer.style.animation = 'fadeOut 1s forwards';
+    introduction.style.opacity = '0';
+    setTimeout(() => {
+      featuresSection.style.display = 'none';
+      introduction.style.display = 'none';
+      container.classList.add('visibility');
+    }, 1000);
   }
 
   if (featuresIndex === 4) featuresBtn.textContent = 'Get Started';else featuresBtn.textContent = 'Next';
@@ -1176,24 +1203,11 @@ featuresDots.forEach((dot, i) => dot.addEventListener('click', () => {
   switch (i) {
     case 0:
       featuresIndex = 0;
-      featuresContent.style.animation = 'fadeOut 1s forwards';
-      featuresFooter.style.animation = 'none';
-      featuresDots[oldFeaturesIndex].classList.remove('active');
-      featuresDots[featuresIndex].classList.add('active');
+      fadeElements(featuresContent, featuresFooter);
       featuresContent.addEventListener('animationend', function changeContent() {
-        featuresFooter.style.animation = 'opacity 1s forwards';
-        featuresContent.style.display = 'none';
-        featuresWelcome.style.display = 'block';
+        elementsDisplay(featuresContent, featuresWelcome);
         reset_animation(featuresWelcome);
-        featuresHeading.textContent = 'Inspiration';
-        featuresDesc.textContent = 'Breathe life into your browser';
-        featuresSvg[0].src = `${require("../images/svgs/picture.svg")}`;
-        featuresSvg[1].src = `${require("../images/svgs/quote.svg")}`;
-        featuresSvg[2].src = `${require("../images/svgs/mantra.svg")}`;
-        iconDesc[0].textContent = 'Photos';
-        iconDesc[1].textContent = 'Quotes';
-        iconDesc[2].textContent = 'Mantras';
-        featuresContent.style.animation = 'zoomIn 0.7s ease-in forwards';
+        displayFeatures('Inspiration', 'Breathe life into your browser', `${require("../images/svgs/picture.svg")}`, `${require("../images/svgs/quote.svg")}`, `${require("../images/svgs/mantra.svg")}`, 'Photos', 'Quotes', 'Mantras');
         featuresContent.removeEventListener('animationend', changeContent);
       });
       oldFeaturesIndex = featuresIndex;
@@ -1204,41 +1218,16 @@ featuresDots.forEach((dot, i) => dot.addEventListener('click', () => {
       featuresIndex = 1;
 
       if (featuresWelcome.style.display != 'none') {
-        featuresWelcome.style.animation = 'fadeOut 1s forwards';
-        featuresFooter.style.animation = 'none';
-        featuresDots[oldFeaturesIndex].classList.remove('active');
-        featuresDots[featuresIndex].classList.add('active');
+        fadeElements(featuresWelcome, featuresFooter);
         featuresWelcome.addEventListener('animationend', function changeContent() {
-          featuresFooter.style.animation = 'opacity 1s forwards';
-          featuresWelcome.style.display = 'none';
-          featuresContent.style.display = 'block';
-          featuresHeading.textContent = 'Inspiration';
-          featuresDesc.textContent = 'Breathe life into your browser';
-          featuresSvg[0].src = `${require("../images/svgs/picture.svg")}`;
-          featuresSvg[1].src = `${require("../images/svgs/quote.svg")}`;
-          featuresSvg[2].src = `${require("../images/svgs/mantra.svg")}`;
-          iconDesc[0].textContent = 'Photos';
-          iconDesc[1].textContent = 'Quotes';
-          iconDesc[2].textContent = 'Mantras';
-          featuresContent.style.animation = 'zoomIn 0.7s ease-in forwards';
+          displayFeatures('Inspiration', 'Breathe life into your browser', `${require("../images/svgs/picture.svg")}`, `${require("../images/svgs/quote.svg")}`, `${require("../images/svgs/mantra.svg")}`, 'Photos', 'Quotes', 'Mantras');
+          elementsDisplay(featuresWelcome, featuresContent);
           featuresWelcome.removeEventListener('animationend', changeContent);
         });
       } else {
-        featuresContent.style.animation = 'fadeOut 1s forwards';
-        featuresFooter.style.animation = 'none';
-        featuresDots[oldFeaturesIndex].classList.remove('active');
-        featuresDots[featuresIndex].classList.add('active');
+        fadeElements(featuresContent, featuresFooter);
         featuresContent.addEventListener('animationend', function changeContent() {
-          featuresFooter.style.animation = 'opacity 1s forwards';
-          featuresHeading.textContent = 'Inspiration';
-          featuresDesc.textContent = 'Breathe life into your browser';
-          featuresSvg[0].src = `${require("../images/svgs/picture.svg")}`;
-          featuresSvg[1].src = `${require("../images/svgs/quote.svg")}`;
-          featuresSvg[2].src = `${require("../images/svgs/mantra.svg")}`;
-          iconDesc[0].textContent = 'Photos';
-          iconDesc[1].textContent = 'Quotes';
-          iconDesc[2].textContent = 'Mantras';
-          featuresContent.style.animation = 'zoomIn 0.7s ease-in forwards';
+          displayFeatures('Inspiration', 'Breathe life into your browser', `${require("../images/svgs/picture.svg")}`, `${require("../images/svgs/quote.svg")}`, `${require("../images/svgs/mantra.svg")}`, 'Photos', 'Quotes', 'Mantras');
           featuresContent.removeEventListener('animationend', changeContent);
         });
       }
@@ -1251,40 +1240,16 @@ featuresDots.forEach((dot, i) => dot.addEventListener('click', () => {
       featuresIndex = 2;
 
       if (featuresWelcome.style.display != 'none') {
-        featuresWelcome.style.animation = 'fadeOut 1s forwards';
-        featuresFooter.style.animation = 'none';
-        featuresDots[oldFeaturesIndex].classList.remove('active');
-        featuresDots[featuresIndex].classList.add('active');
+        fadeElements(featuresWelcome, featuresFooter);
         featuresWelcome.addEventListener('animationend', function changeContent() {
-          featuresFooter.style.animation = 'opacity 1s forwards';
-          featuresWelcome.style.display = 'none';
-          featuresContent.style.display = 'block';
-          featuresHeading.textContent = 'Focus';
-          featuresDesc.textContent = 'Approach each day with intent';
-          featuresSvg[0].src = `${require("../images/svgs/focus.svg")}`;
-          featuresSvg[1].src = `${require("../images/svgs/todo.svg")}`;
-          featuresSvg[2].src = `${require("../images/svgs/links.svg")}`;
-          iconDesc[0].textContent = 'Focus';
-          iconDesc[1].textContent = 'To-do';
-          iconDesc[2].textContent = 'Links';
+          elementsDisplay(featuresWelcome, featuresContent);
+          displayFeatures('Focus', 'Approach each day with intent', `${require("../images/svgs/focus.svg")}`, `${require("../images/svgs/todo.svg")}`, `${require("../images/svgs/links.svg")}`, 'Focus', 'To-do', 'Links');
           featuresWelcome.removeEventListener('animationend', changeContent);
         });
       } else {
-        featuresContent.style.animation = 'fadeOut 1s forwards';
-        featuresFooter.style.animation = 'none';
-        featuresDots[oldFeaturesIndex].classList.remove('active');
-        featuresDots[featuresIndex].classList.add('active');
+        fadeElements(featuresContent, featuresFooter);
         featuresContent.addEventListener('animationend', function changeContent() {
-          featuresFooter.style.animation = 'opacity 1s forwards';
-          featuresHeading.textContent = 'Focus';
-          featuresDesc.textContent = 'Approach each day with intent';
-          featuresSvg[0].src = `${require("../images/svgs/focus.svg")}`;
-          featuresSvg[1].src = `${require("../images/svgs/todo.svg")}`;
-          featuresSvg[2].src = `${require("../images/svgs/links.svg")}`;
-          iconDesc[0].textContent = 'Focus';
-          iconDesc[1].textContent = 'To-do';
-          iconDesc[2].textContent = 'Links';
-          featuresContent.style.animation = 'zoomIn 0.7s ease-in forwards';
+          displayFeatures('Focus', 'Approach each day with intent', `${require("../images/svgs/focus.svg")}`, `${require("../images/svgs/todo.svg")}`, `${require("../images/svgs/links.svg")}`, 'Focus', 'To-do', 'Links');
           featuresContent.removeEventListener('animationend', changeContent);
         });
       }
@@ -1297,40 +1262,16 @@ featuresDots.forEach((dot, i) => dot.addEventListener('click', () => {
       featuresIndex = 3;
 
       if (featuresWelcome.style.display != 'none') {
-        featuresWelcome.style.animation = 'fadeOut 1s forwards';
-        featuresFooter.style.animation = 'none';
-        featuresDots[oldFeaturesIndex].classList.remove('active');
-        featuresDots[featuresIndex].classList.add('active');
+        fadeElements(featuresWelcome, featuresFooter);
         featuresWelcome.addEventListener('animationend', function changeContent() {
-          featuresFooter.style.animation = 'opacity 1s forwards';
-          featuresWelcome.style.display = 'none';
-          featuresContent.style.display = 'block';
-          featuresHeading.textContent = 'Extra Features';
-          featuresDesc.textContent = 'Enjoy the extra features of Outset';
-          featuresSvg[0].src = `${require("../images/svgs/calendar.svg")}`;
-          featuresSvg[1].src = `${require("../images/svgs/clock.svg")}`;
-          featuresSvg[2].src = `${require("../images/svgs/weather.svg")}`;
-          iconDesc[0].textContent = 'Calendar';
-          iconDesc[1].textContent = 'Timer';
-          iconDesc[2].textContent = 'Weather';
+          elementsDisplay(featuresWelcome, featuresContent);
+          displayFeatures('Extra Features', 'Enjoy the extra features of Outset', `${require("../images/svgs/calendar.svg")}`, `${require("../images/svgs/clock.svg")}`, `${require("../images/svgs/weather.svg")}`, 'Calendar', 'Timer', 'Weather');
           featuresWelcome.removeEventListener('animationend', changeContent);
         });
       } else {
-        featuresContent.style.animation = 'fadeOut 1s forwards';
-        featuresFooter.style.animation = 'none';
-        featuresDots[oldFeaturesIndex].classList.remove('active');
-        featuresDots[featuresIndex].classList.add('active');
+        fadeElements(featuresContent, featuresFooter);
         featuresContent.addEventListener('animationend', function changeContent() {
-          featuresFooter.style.animation = 'opacity 1s forwards';
-          featuresHeading.textContent = 'Extra Features';
-          featuresDesc.textContent = 'Enjoy the extra features of Outset';
-          featuresSvg[0].src = `${require("../images/svgs/calendar.svg")}`;
-          featuresSvg[1].src = `${require("../images/svgs/clock.svg")}`;
-          featuresSvg[2].src = `${require("../images/svgs/weather.svg")}`;
-          iconDesc[0].textContent = 'Calendar';
-          iconDesc[1].textContent = 'Timer';
-          iconDesc[2].textContent = 'Weather';
-          featuresContent.style.animation = 'zoomIn 0.7s ease-in forwards';
+          displayFeatures('Extra Features', 'Enjoy the extra features of Outset', `${require("../images/svgs/calendar.svg")}`, `${require("../images/svgs/clock.svg")}`, `${require("../images/svgs/weather.svg")}`, 'Calendar', 'Timer', 'Weather');
           featuresContent.removeEventListener('animationend', changeContent);
         });
       }
@@ -1368,7 +1309,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65220" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57699" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
