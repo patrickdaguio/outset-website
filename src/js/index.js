@@ -325,8 +325,6 @@ document.addEventListener('click', (e) => {
 
 const time = document.querySelector('.time');
 const greeting = document.querySelector('.greeting');
-const quote = document.querySelector('.quote');
-const quoteOrigin = document.querySelector('.quote-origin');
 const todayDate = document.querySelector('.today-date');
 
 function greetings() {
@@ -480,6 +478,7 @@ const changeQuote = document.querySelector('.changeQuote')
 const quotesInfo = document.querySelector('.quotes-info')
 const inspirationalQuote = document.querySelector('.quote')
 const quoteDetails = document.querySelector('.quote-details')
+const quoteOrigin = document.querySelector('.quote-origin');
 const shareBtn = document.querySelector('.shareBtn')
 const shareBox = document.querySelector('.share-box')
 
@@ -490,6 +489,11 @@ const twitterBtn = document.querySelector('.social-twitter')
 const linkedBtn = document.querySelector('.social-linked')
 const whatsappBtn = document.querySelector('.social-whatsapp')
 const quoteBtn = document.querySelector('.social-quote')
+const archiveBtn = document.querySelector('.fa-archive')
+const closeArchiveBtn = document.querySelector('.closeArchive')
+const archiveContainer = document.querySelector('.archive')
+const saveQuoteBtn = document.querySelector('.saveQuote')
+const archiveQuotesContainer = document.querySelector('.archive-quotes-container')
 
 changeBackground.addEventListener('click', generateBackground)
 changeQuote.addEventListener('click', generateQuote);
@@ -498,8 +502,12 @@ backgroundInfo.addEventListener('mouseleave', showBackgroundDetails)
 quotesInfo.addEventListener('mouseenter', showQuoteDetails)
 quotesInfo.addEventListener('mouseleave', showQuoteDetails)
 shareBtn.addEventListener('click', openQuoteBox)
+archiveBtn.addEventListener('click', openArchiveBox)
+closeArchiveBtn.addEventListener('click', closeArchiveBox)
+saveQuoteBtn.addEventListener('click', archiveQuote)
 
 function reset_animation(element) {
+    
     element.style.animation = 'none';
     element.offsetHeight; /* trigger reflow */
     element.style.animation = null; 
@@ -512,7 +520,7 @@ function generateQuote() {
     }).then(function(data) {
         let index = Math.floor(Math.random() * data.length);
         reset_animation(inspirationalQuote)
-        quote.textContent = `${data[index].text}`;
+        inspirationalQuote.textContent = `${data[index].text}`;
         shareQuote(`${data[index].text} - ${data[index].author}`)
         if (data[index].author === null) {
             reset_animation(quoteOrigin)
@@ -547,7 +555,7 @@ function shareQuote(quote) {
     twitterBtn.setAttribute('href', `https://twitter.com/share?&text=${postTitle}`)
     linkedBtn.setAttribute('href', `https://www.linkedin.com/sharing/share-offsite/?url=${postUrl}`)
     whatsappBtn.setAttribute('href', `https://api.whatsapp.com/send?text=${postTitle}`)
-    quoteBtn.addEventListener('click', async function copyPageUrl() {
+    quoteBtn.addEventListener('click', async function copyQuote() {
         try {
           await navigator.clipboard.writeText(quote);
           quoteBtn.querySelector('span').textContent = 'Copied!'
@@ -557,35 +565,122 @@ function shareQuote(quote) {
       });
 }
 
-function generateBackground() {
-    fetch(`https://api.unsplash.com/collections/GsNw3bdVLPM/photos/?client_id=${api.keyTwo}&per_page=30`)
-    .then(response => {
-        return response.json()
+function openArchiveBox() {
+    let quotes; 
+    if (localStorage.getItem('quotes') === null) quotes = []
+    else quotes = JSON.parse(localStorage.getItem('quotes'));
+
+    archiveContainer.style.opacity = '1'
+    archiveContainer.style.display = 'flex'
+
+    archiveQuotesContainer.innerHTML = ''
+
+    quotes.forEach(quote => {
+
+        const quoteInfoDiv = document.createElement('div');
+        quoteInfoDiv.classList.add("archive-quote-info");
+    
+        const archiveQuote = document.createElement('p');
+        archiveQuote.textContent = quote.quote;
+        archiveQuote.classList.add('archive-quote');
+        quoteInfoDiv.appendChild(archiveQuote);
+    
+        const archiveOrigin = document.createElement('p');
+        archiveOrigin.textContent = quote.origin;
+        archiveOrigin.classList.add('archive-origin');
+        quoteInfoDiv.appendChild(archiveOrigin);
+    
+        const archiveCtaDiv = document.createElement('div');
+        archiveCtaDiv.classList.add("archive-cta");
+    
+        const archiveCopyIcon = document.createElement('i')
+        archiveCopyIcon.classList.add('fas', 'fa-share-square');
+    
+        const archiveCopyBtn = document.createElement('p');
+        archiveCopyBtn.appendChild(archiveCopyIcon);
+        archiveCopyBtn.classList.add('archive-icons');
+        archiveCtaDiv.appendChild(archiveCopyBtn);
+    
+        const archiveTrashIcon = document.createElement('i')
+        archiveTrashIcon.classList.add('fas', 'fa-trash');
+    
+        const archiveTrashBtn = document.createElement('p');
+        archiveTrashBtn.appendChild(archiveTrashIcon);
+        archiveTrashBtn.classList.add('archive-icons');
+        archiveCtaDiv.appendChild(archiveTrashBtn);
+    
+        quoteInfoDiv.appendChild(archiveCtaDiv);
+    
+        archiveQuotesContainer.appendChild(quoteInfoDiv);
     })
-    .then(data => {
-        let bgIndex =  data[Math.floor(Math.random()*data.length)];
-        document.body.style.backgroundImage = `url(${bgIndex.urls.full})`
-        return fetch(`https://api.unsplash.com/photos/${bgIndex.id}/?client_id=${api.keyTwo}`)
-    }).then(response => {
-        return response.json()
-    })
-    .then(data => {
-        data.location.title === null ? backgroundLocation.textContent = 'Unknown' : backgroundLocation.textContent = data.location.title
-        backgroundUser.textContent = data.user.name
-        backgroundUserLink.href = data.user.links.html
-        heartBackground.href = data.links.html
-    })
+
+}
+
+/*     linksList.innerHTML = ''
+    let loadedUrl
+    linksObject.urls.forEach((url, i) => {
+        loadedUrl = `               
+        <li class="link">
+            <div class="link-wrapper">
+                <a href="#" class="link-url">
+                    <img src="${url.img}" class="link-favicon">
+                    <span class="link-text">${url.name}</span>
+                </a>
+            </div>
+            <div class="link-options">
+                <div class="ellipsis-wrapper">
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+                <div class="link-dropdown">
+                    <ul class="dropdown-list">
+                        <li class="edit-link">Edit</li>
+                        <li class="delete-link">Delete</li>
+                    </ul>
+                </div>
+            </div>
+        </li>`
+        linksList.insertAdjacentHTML('beforeend', loadedUrl) */
+
+function closeArchiveBox() {
+    archiveContainer.style.opacity = '0'
+    setTimeout(() => {
+        archiveContainer.style.display = 'none'
+    }, 300)
+}
+
+function archiveQuote() {
+    let quotes; 
+    if (localStorage.getItem('quotes') === null) quotes = []
+    else quotes = JSON.parse(localStorage.getItem('quotes'));
+
+    saveQuoteBtn.classList.replace('far', 'fas')
+
+    quotes.push({quote: inspirationalQuote.textContent, origin: quoteOrigin.textContent})
+    localStorage.setItem('quotes', JSON.stringify(quotes));
+}
+
+async function generateBackground() {
+    const response = await fetch(`https://api.unsplash.com/collections/GsNw3bdVLPM/photos/?client_id=${api.keyTwo}&per_page=30`)
+    const data = await response.json()
+    const bgIndex =  await data[Math.floor(Math.random()*data.length)];
+    document.body.style.backgroundImage = `url(${bgIndex.urls.full})`
+    const responseTwo = await fetch(`https://api.unsplash.com/photos/${bgIndex.id}/?client_id=${api.keyTwo}`)
+    const dataTwo  = await responseTwo.json()
+    dataTwo.location.title === null ? backgroundLocation.textContent = 'Unknown' : backgroundLocation.textContent = dataTwo.location.title
+    backgroundUser.textContent = dataTwo.user.name
+    backgroundUserLink.href = dataTwo.user.links.html
+    heartBackground.href = dataTwo.links.html
 }
 
 function showBackgroundDetails() {
-    backgroundDetails.classList.toggle('background-show')
+    backgroundDetails.classList.toggle('visibility')
     backgroundLocation.classList.toggle('background-show')
 }
 
 function showQuoteDetails() {
     inspirationalQuote.classList.toggle('background-show')
     quoteBtn.querySelector('span').textContent = 'Copy to clipboard'
-    quoteDetails.classList.toggle('background-show')
+    quoteDetails.classList.toggle('visibility')
     shareBox.classList.remove('share-open')
 }
 

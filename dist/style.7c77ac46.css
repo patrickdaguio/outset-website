@@ -15,7 +15,7 @@ body {
   background-position: bottom center;
   height: 100%;
   overflow-x: hidden;
-  transition: all 0.5s ease-in-out;
+  transition: background-image 2s ease-in-out;
 }
 
 .container {
@@ -1001,6 +1001,124 @@ main .todo-app .add-task form .add-btn:hover {
   }
 }
 
+.archive {
+  position: absolute;
+  height: 100vh;
+  right: 0;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+  z-index: 99;
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.5);
+  color: rgba(80, 69, 69, 0.8);
+  animation: opacity 0.3s ease-in;
+  transition: opacity 0.3s ease-out;
+}
+.archive h3 {
+  font-size: 1.6em;
+  margin-bottom: 0.75em;
+}
+.archive i {
+  cursor: pointer;
+}
+.archive i:hover {
+  color: #504545;
+}
+.archive .archive-container {
+  padding: 1.2em 2em;
+  height: 500px;
+  width: 600px;
+  border-radius: 0.5em;
+  background-color: white;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.archive .archive-container .archive-top {
+  display: flex;
+  justify-content: space-between;
+}
+.archive .archive-container .archive-top i {
+  font-size: 1.5em;
+}
+.archive .archive-container .archive-search-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1em;
+  padding-bottom: 1em;
+  border-bottom: 1px solid rgba(80, 69, 69, 0.8);
+}
+.archive .archive-container .archive-search-bar input {
+  color: #504545;
+  outline: none;
+  padding: 0.25em;
+  width: 100%;
+  margin-left: 1em;
+}
+.archive .archive-container .archive-quotes-container {
+  flex: 1 1 auto;
+  overflow: auto;
+}
+.archive .archive-container .archive-quotes-container .archive-quote-info {
+  display: grid;
+  grid-template-columns: 3fr 0.8fr 0.4fr;
+  align-items: center;
+  padding-right: 1em;
+  padding-bottom: 1em;
+  margin: 1em 0em;
+  border-bottom: 1px solid rgba(80, 69, 69, 0.8);
+  gap: 0.75em;
+}
+.archive .archive-container .archive-quotes-container .archive-quote-info:first-child {
+  margin-top: 0em;
+}
+.archive .archive-container .archive-quotes-container .archive-quote-info:last-child {
+  border: none;
+  margin-bottom: 0em;
+  padding-bottom: 0em;
+}
+.archive .archive-container .archive-quotes-container .archive-quote-info p {
+  font-size: 0.9em;
+}
+.archive .archive-container .archive-quotes-container .archive-quote-info .archive-origin {
+  text-align: center;
+}
+.archive .archive-container .archive-quotes-container .archive-quote-info .archive-cta {
+  display: flex;
+  justify-content: space-between;
+}
+.archive .archive-container .archive-add-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 1em;
+  flex: 0 0 40px;
+  border-top: 1px solid rgba(80, 69, 69, 0.8);
+  /*       position: absolute;
+  bottom: 0; */
+}
+.archive .archive-container .archive-add-container i {
+  font-size: 1.7em;
+}
+.archive .archive-container .archive-add-container input {
+  color: #504545;
+  outline: none;
+  padding: 0.25em;
+}
+.archive .archive-container .archive-add-container .archive-add-quote {
+  width: 75%;
+  margin-right: 1em;
+}
+.archive .archive-container .archive-add-container .archive-add-origin {
+  width: 20%;
+  margin-right: 1em;
+}
+
 footer {
   display: flex;
   align-items: flex-end;
@@ -1030,7 +1148,6 @@ footer .background-info .background-details .background-photo {
   text-decoration: none;
 }
 footer .background-info .background-details p {
-  cursor: pointer;
   transition: 0.3s;
   color: #cac1c6;
 }
@@ -1038,6 +1155,7 @@ footer .background-info .background-details p:hover {
   color: white;
 }
 footer .background-info .background-details p i {
+  cursor: pointer;
   margin-right: 0.6em;
 }
 footer .background-info .background-details .background-user-link {
@@ -1076,13 +1194,13 @@ footer .quotes-info .quote-details .quote-origin {
   animation: opacity 0.7s ease-in-out;
 }
 footer .quotes-info .quote-details p {
-  cursor: pointer;
   margin-right: 0.6em;
   transition: 0.3s;
   color: #cac1c6;
 }
 footer .quotes-info .quote-details p i {
   font-size: 0.8em;
+  cursor: pointer;
 }
 footer .quotes-info .quote-details p:hover {
   color: white;
@@ -1180,7 +1298,6 @@ footer .footer-space {
 
 .background-show {
   transform: translateZ(0) translateY(-8px) !important;
-  opacity: 1 !important;
 }
 
 .todo-list {
