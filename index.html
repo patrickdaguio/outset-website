@@ -13,6 +13,17 @@
     <title>Outset</title>
 </head>
 <body>
+    <script>
+        window.fbAsyncInit = function() {
+          FB.init({
+            appId            : '521968462396867',
+            autoLogAppEvents : true,
+            xfbml            : true,
+            version          : 'v11.0'
+          });
+        };
+      </script>
+      <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
     <div class="introduction">
         <div class="introduction-overlay"></div>
         <div class="intro-question-container">
@@ -68,17 +79,6 @@
             </div>
         </div>
     </div>
-<!--     <script>
-        window.fbAsyncInit = function() {
-          FB.init({
-            appId            : '521968462396867',
-            autoLogAppEvents : true,
-            xfbml            : true,
-            version          : 'v11.0'
-          });
-        };
-      </script>
-      <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script> -->
     <div class="container">
         <header class="header">
             <div class="links">

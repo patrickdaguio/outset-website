@@ -1072,14 +1072,20 @@ main .todo-app .add-task form .add-btn:hover {
   margin: 1em 0em;
   border-bottom: 1px solid rgba(80, 69, 69, 0.8);
   gap: 0.75em;
-  cursor: pointer;
 }
 .archive .archive-container .archive-quotes-container .archive-quote-info:last-child {
   border: none;
   padding-bottom: 0em;
 }
 .archive .archive-container .archive-quotes-container .archive-quote-info p {
+  display: flex;
+  align-items: center;
   font-size: 0.9em;
+}
+.archive .archive-container .archive-quotes-container .archive-quote-info p .fa-arrows-alt {
+  display: block;
+  cursor: pointer;
+  margin-right: 1em;
 }
 .archive .archive-container .archive-quotes-container .archive-quote-info .archive-origin {
   text-align: center;
@@ -1330,6 +1336,8 @@ footer .footer-space {
 
 .todo-list {
   padding: 0em 2em 0em 2em;
+  max-height: 505px;
+  overflow: auto;
 }
 @media screen and (max-width: 1350px) {
   .todo-list {

@@ -1035,13 +1035,19 @@ main {
         margin: 1em 0em;
         border-bottom: 1px solid rgba(80, 69, 69, 0.8);
         gap: 0.75em;
-        cursor: pointer;
         &:last-child {
           border: none;
           padding-bottom: 0em;
         }
         p {
+          display: flex;
+          align-items: center;
           font-size: 0.9em;
+          .fa-arrows-alt {
+            display: block;
+            cursor: pointer;
+            margin-right: 1em;
+          }
         }
         .archive-origin {
           text-align: center;
@@ -1294,6 +1300,8 @@ footer {
 
 .todo-list {
   padding: 0em 2em 0em 2em;
+  max-height: 505px;
+  overflow: auto;
   @include mQ(1350px) {
     padding: 0em 1.3em 0em 1.3em;
   }

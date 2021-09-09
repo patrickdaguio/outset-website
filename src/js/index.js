@@ -517,13 +517,34 @@ function reset_animation(element) {
     element.offsetHeight; /* trigger reflow */
     element.style.animation = null; 
   }
+
+  let uniqueNumbersArray = []
+
+function generateUniqueRandom(maxNr) {
+
+    //Generate random number
+    let random = (Math.random() * maxNr.length).toFixed();
+
+    if(!uniqueNumbersArray.includes(random)) {
+        uniqueNumbersArray.push(random);
+        return random;
+    } else {
+        if(uniqueNumbersArray.length < maxNr.length) {
+          //Recursively generate number
+         return generateUniqueRandom(maxNr);
+        } else {
+            uniqueNumbersArray = []
+        }
+    }
+}
   
 function generateQuote() {
     fetch("https://type.fit/api/quotes")
     .then(function(response) {
         return response.json();
     }).then(function(data) {
-        let index = Math.floor(Math.random() * data.length);
+/*         let index = Math.floor(Math.random() * data.length); */
+        let index = generateUniqueRandom(data)
         reset_animation(inspirationalQuote)
         inspirationalQuote.textContent = `${data[index].text}`; 
         shareQuote(`${data[index].text} - ${data[index].author}`)
@@ -547,8 +568,8 @@ function shareQuote(quote) {
     let postUrl = encodeURI(document.location.href)
     let postTitle = encodeURI(quote)
 
-    facebookBtn.setAttribute('href', `http://www.facebook.com/sharer/sharer.php?s=100&p[title]=${postTitle}`)
-/*     facebookBtn.addEventListener('click', () => {
+    //facebookBtn.setAttribute('href', `http://www.facebook.com/sharer/sharer.php?s=100&p[title]=${postTitle}`)
+     facebookBtn.addEventListener('click', () => {
         var body = 'Reading JS SDK documentation';
         FB.api('/me/feed', 'post', { message: body }, function(response) {
           if (!response || response.error) {
@@ -557,7 +578,7 @@ function shareQuote(quote) {
             alert('Post ID: ' + response.id);
           }
         });
-        }) */
+        }) 
     twitterBtn.setAttribute('href', `https://twitter.com/share?&text=${postTitle}`)
     linkedBtn.setAttribute('href', `https://www.linkedin.com/sharing/share-offsite/?url=${postUrl}`)
     whatsappBtn.setAttribute('href', `https://api.whatsapp.com/send?text=${postTitle}`)
@@ -580,6 +601,10 @@ function generateQuoteElements(quote, origin) {
     archiveQuote.textContent = quote;
     archiveQuote.classList.add('archive-quote');
     quoteInfoDiv.appendChild(archiveQuote);
+
+    const draggableIcon = document.createElement('i')
+    draggableIcon.classList.add('fas', 'fa-arrows-alt')
+    archiveQuote.prepend(draggableIcon)
 
     const archiveOrigin = document.createElement('p');
     archiveOrigin.textContent = origin;
@@ -739,6 +764,7 @@ function archiveQuote() {
 }
 
 new Sortable(archiveQuotesContainer, {
+    handle: '.fa-arrows-alt',
     animation: 150,
     onUpdate: function(e) {
         let quotes; 
@@ -760,7 +786,8 @@ new Sortable(archiveQuotesContainer, {
 async function generateBackground() {
     const response = await fetch(`https://api.unsplash.com/collections/GsNw3bdVLPM/photos/?client_id=${api.keyTwo}&per_page=30`)
     const data = await response.json()
-    const bgIndex =  await data[Math.floor(Math.random()*data.length)];
+    const bgIndex =  await data[generateUniqueRandom(data)];
+    console.log(data)
     document.body.style.backgroundImage = `url(${bgIndex.urls.full})`
     const responseTwo = await fetch(`https://api.unsplash.com/photos/${bgIndex.id}/?client_id=${api.keyTwo}`)
     const dataTwo  = await responseTwo.json()
@@ -782,25 +809,6 @@ function showQuoteDetails() {
     shareBox.classList.remove('share-open')
 }
 
-let uniqueNumbersArray = []
-
-function generateUniqueRandom(maxNr) {
-
-    //Generate random number
-    let random = (Math.random() * maxNr.length).toFixed();
-
-    if(!uniqueNumbersArray.includes(random)) {
-        uniqueNumbersArray.push(random);
-        return random;
-    } else {
-        if(uniqueNumbersArray.length < maxNr.length) {
-          //Recursively generate number
-         return generateUniqueRandom(maxNr);
-        } else {
-            uniqueNumbersArray = []
-        }
-    }
-}
 
 // Todo List App
 
