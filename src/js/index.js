@@ -571,7 +571,7 @@ function shareQuote(quote) {
     //facebookBtn.setAttribute('href', `http://www.facebook.com/sharer/sharer.php?s=100&p[title]=${postTitle}`)
      facebookBtn.addEventListener('click', () => {
         var body = 'Reading JS SDK documentation';
-        FB.api('/me/feed', 'post', { message: body }, function(response) {
+        FB.api('/me/feed', 'post', { post: postUrl }, function(response) {
           if (!response || response.error) {
             alert('Error occured');
           } else {
