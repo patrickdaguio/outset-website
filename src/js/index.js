@@ -41,6 +41,7 @@ window.addEventListener("load", () => {
     dateToday();
     setIntention()
     changeDate();
+    getQuote()
 })
 
 function setQuery(e) {
@@ -494,6 +495,8 @@ const closeArchiveBtn = document.querySelector('.closeArchive')
 const archiveContainer = document.querySelector('.archive')
 const saveQuoteBtn = document.querySelector('.saveQuote')
 const archiveQuotesContainer = document.querySelector('.archive-quotes-container')
+const addQuoteBtn = document.querySelector('.addQuoteBtn')
+const archiveSearch = document.querySelector('.archive-search-box')
 
 changeBackground.addEventListener('click', generateBackground)
 changeQuote.addEventListener('click', generateQuote);
@@ -505,6 +508,8 @@ shareBtn.addEventListener('click', openQuoteBox)
 archiveBtn.addEventListener('click', openArchiveBox)
 closeArchiveBtn.addEventListener('click', closeArchiveBox)
 saveQuoteBtn.addEventListener('click', archiveQuote)
+addQuoteBtn.addEventListener('click', addQuote)
+archiveSearch.addEventListener('keyup', searchArhive)
 
 function reset_animation(element) {
     
@@ -520,7 +525,7 @@ function generateQuote() {
     }).then(function(data) {
         let index = Math.floor(Math.random() * data.length);
         reset_animation(inspirationalQuote)
-        inspirationalQuote.textContent = `${data[index].text}`;
+        inspirationalQuote.textContent = `${data[index].text}`; 
         shareQuote(`${data[index].text} - ${data[index].author}`)
         if (data[index].author === null) {
             reset_animation(quoteOrigin)
@@ -530,6 +535,7 @@ function generateQuote() {
             reset_animation(quoteOrigin)
             quoteOrigin.textContent = `${data[index].author}`;
         }
+        checkQuote(inspirationalQuote.textContent)
     });
 }
 
@@ -565,81 +571,142 @@ function shareQuote(quote) {
       });
 }
 
+function generateQuoteElements(quote, origin) {
+
+    const quoteInfoDiv = document.createElement('div');
+    quoteInfoDiv.classList.add("archive-quote-info");
+
+    const archiveQuote = document.createElement('p');
+    archiveQuote.textContent = quote;
+    archiveQuote.classList.add('archive-quote');
+    quoteInfoDiv.appendChild(archiveQuote);
+
+    const archiveOrigin = document.createElement('p');
+    archiveOrigin.textContent = origin;
+    archiveOrigin.classList.add('archive-origin');
+    quoteInfoDiv.appendChild(archiveOrigin);
+
+    const archiveCtaDiv = document.createElement('div');
+    archiveCtaDiv.classList.add("archive-cta");
+
+    const copyPopup = document.createElement('span')
+    copyPopup.classList.add('copyQuote')
+    copyPopup.textContent = 'Copy'
+
+    const archiveCopyIcon = document.createElement('i')
+    archiveCopyIcon.classList.add('fas', 'fa-quote-left', 'copyArchiveBtn');
+
+    const archiveCopyBtn = document.createElement('p');
+    archiveCopyBtn.appendChild(archiveCopyIcon);
+    archiveCopyBtn.appendChild(copyPopup)
+    archiveCopyBtn.classList.add('archive-icons');
+    archiveCtaDiv.appendChild(archiveCopyBtn);
+
+    const archiveTrashIcon = document.createElement('i')
+    archiveTrashIcon.classList.add('fas', 'fa-trash', 'deleteQuote');
+
+    const archiveTrashBtn = document.createElement('p');
+    archiveTrashBtn.appendChild(archiveTrashIcon);
+    archiveTrashBtn.classList.add('archive-icons');
+    archiveCtaDiv.appendChild(archiveTrashBtn);
+
+    quoteInfoDiv.appendChild(archiveCtaDiv);
+
+    archiveQuotesContainer.appendChild(quoteInfoDiv);
+
+    const deleteQuoteBtn = document.querySelectorAll('.deleteQuote')
+    deleteQuoteBtn.forEach(btn => btn.addEventListener('click', deleteQuote))
+
+    const copyQuoteBtn = document.querySelectorAll('.copyArchiveBtn')
+    copyQuoteBtn.forEach(btn => btn.addEventListener('click', copyArchiveQuote))
+}
+
 function openArchiveBox() {
+    archiveContainer.style.opacity = '1'
+    archiveContainer.style.display = 'flex'
+}
+
+function getQuote() {
     let quotes; 
     if (localStorage.getItem('quotes') === null) quotes = []
     else quotes = JSON.parse(localStorage.getItem('quotes'));
 
-    archiveContainer.style.opacity = '1'
-    archiveContainer.style.display = 'flex'
-
-    archiveQuotesContainer.innerHTML = ''
-
-    quotes.forEach(quote => {
-
-        const quoteInfoDiv = document.createElement('div');
-        quoteInfoDiv.classList.add("archive-quote-info");
-    
-        const archiveQuote = document.createElement('p');
-        archiveQuote.textContent = quote.quote;
-        archiveQuote.classList.add('archive-quote');
-        quoteInfoDiv.appendChild(archiveQuote);
-    
-        const archiveOrigin = document.createElement('p');
-        archiveOrigin.textContent = quote.origin;
-        archiveOrigin.classList.add('archive-origin');
-        quoteInfoDiv.appendChild(archiveOrigin);
-    
-        const archiveCtaDiv = document.createElement('div');
-        archiveCtaDiv.classList.add("archive-cta");
-    
-        const archiveCopyIcon = document.createElement('i')
-        archiveCopyIcon.classList.add('fas', 'fa-share-square');
-    
-        const archiveCopyBtn = document.createElement('p');
-        archiveCopyBtn.appendChild(archiveCopyIcon);
-        archiveCopyBtn.classList.add('archive-icons');
-        archiveCtaDiv.appendChild(archiveCopyBtn);
-    
-        const archiveTrashIcon = document.createElement('i')
-        archiveTrashIcon.classList.add('fas', 'fa-trash');
-    
-        const archiveTrashBtn = document.createElement('p');
-        archiveTrashBtn.appendChild(archiveTrashIcon);
-        archiveTrashBtn.classList.add('archive-icons');
-        archiveCtaDiv.appendChild(archiveTrashBtn);
-    
-        quoteInfoDiv.appendChild(archiveCtaDiv);
-    
-        archiveQuotesContainer.appendChild(quoteInfoDiv);
-    })
-
+    quotes.forEach(quote => generateQuoteElements(quote.quote, quote.origin))
 }
 
-/*     linksList.innerHTML = ''
-    let loadedUrl
-    linksObject.urls.forEach((url, i) => {
-        loadedUrl = `               
-        <li class="link">
-            <div class="link-wrapper">
-                <a href="#" class="link-url">
-                    <img src="${url.img}" class="link-favicon">
-                    <span class="link-text">${url.name}</span>
-                </a>
-            </div>
-            <div class="link-options">
-                <div class="ellipsis-wrapper">
-                    <i class="fas fa-ellipsis-h"></i>
-                </div>
-                <div class="link-dropdown">
-                    <ul class="dropdown-list">
-                        <li class="edit-link">Edit</li>
-                        <li class="delete-link">Delete</li>
-                    </ul>
-                </div>
-            </div>
-        </li>`
-        linksList.insertAdjacentHTML('beforeend', loadedUrl) */
+function searchArhive(e) {
+    const arhiveInfo = document.querySelectorAll('.archive-quote-info')
+    let text = e.target.value.toLowerCase()
+    Array.from(arhiveInfo).forEach(item => {
+        let itemQuote = item.firstChild.textContent
+        let itemOrigin = item.children[1].textContent
+        if (itemQuote.toLowerCase().indexOf(text) != -1 || itemOrigin.toLowerCase().indexOf(text) != -1) {
+            item.style.display = 'grid'
+        } else {
+            item.style.display = 'none'
+        }
+    })
+    
+}
+
+function checkQuote(inspiredQuote) {
+    let quotes; 
+    if (localStorage.getItem('quotes') === null) quotes = []
+    else quotes = JSON.parse(localStorage.getItem('quotes'));
+
+    quotes.forEach(quote => quote.quote === inspiredQuote ? saveQuoteBtn.classList.replace('far', 'fas')
+    : saveQuoteBtn.classList.replace('fas', 'far'))
+}
+
+function addQuote() {
+    let quotes; 
+    if (localStorage.getItem('quotes') === null) quotes = []
+    else quotes = JSON.parse(localStorage.getItem('quotes'));
+
+    const addedQuoteText = document.querySelector('.archive-add-quote')
+    const addedQuoteOrigin = document.querySelector('.archive-add-origin')
+
+    if (addedQuoteText.value !== '' && addedQuoteOrigin.value === '') {
+        generateQuoteElements(addedQuoteText.value, 'Unknown')
+        quotes.push({quote: addedQuoteText.value, origin: 'Unknown'})
+    } else if (addedQuoteText.value !== '') {
+        generateQuoteElements(addedQuoteText.value, addedQuoteOrigin.value)
+        quotes.push({quote: addedQuoteText.value, origin: addedQuoteOrigin.value})
+    }
+
+    localStorage.setItem('quotes', JSON.stringify(quotes));
+}
+
+function deleteQuote(e) {
+    let quotes; 
+    if (localStorage.getItem('quotes') === null) quotes = []
+    else quotes = JSON.parse(localStorage.getItem('quotes'));
+
+    const quoteInfoDiv = document.querySelectorAll('.archive-quote-info')
+    const quoteInfoDivNodes = Array.prototype.slice.call(quoteInfoDiv)
+    quoteInfoDivNodes.forEach((div, i) => {
+        if (div.contains(e.target)) {
+            quotes.splice(i, 1)
+            quoteInfoDivNodes.splice(i, 1)
+            div.remove()
+            localStorage.setItem('quotes', JSON.stringify(quotes));
+        }
+    })
+}
+
+async function copyArchiveQuote(e) {
+    let quote = e.target.parentElement.parentElement.parentElement.firstElementChild.textContent
+    let origin = e.target.parentElement.parentElement.parentElement.children[1].textContent
+    let copiedQuote = `${quote} - ${origin}`
+    const copyPopup = document.querySelectorAll('.copyQuote')
+    try {
+        await navigator.clipboard.writeText(copiedQuote);
+        copyPopup.forEach(popup => popup.textContent = 'Copy')
+        e.target.nextElementSibling.textContent = 'Copied!'
+    } catch (err) {
+        e.target.nextElementSibling.textContent = 'Copy Failed'
+    } 
+}
 
 function closeArchiveBox() {
     archiveContainer.style.opacity = '0'
@@ -653,11 +720,42 @@ function archiveQuote() {
     if (localStorage.getItem('quotes') === null) quotes = []
     else quotes = JSON.parse(localStorage.getItem('quotes'));
 
-    saveQuoteBtn.classList.replace('far', 'fas')
+    if (saveQuoteBtn.classList.contains('fas')) {
+        const quoteInfoDiv = document.querySelectorAll('.archive-quote-info')
+        saveQuoteBtn.classList.replace('fas', 'far')
+        quotes.forEach((quote, i) => {
+            if (quote.quote === inspirationalQuote.textContent) {
+                quotes.splice(i, 1)
+                quoteInfoDiv[i].remove()
+            }
+        })
+    } else if (saveQuoteBtn.classList.contains('far')) {
+        saveQuoteBtn.classList.replace('far', 'fas')
+        quotes.push({quote: inspirationalQuote.textContent, origin: quoteOrigin.textContent})
+        generateQuoteElements(inspirationalQuote.textContent, quoteOrigin.textContent)
+    }
 
-    quotes.push({quote: inspirationalQuote.textContent, origin: quoteOrigin.textContent})
     localStorage.setItem('quotes', JSON.stringify(quotes));
 }
+
+new Sortable(archiveQuotesContainer, {
+    animation: 150,
+    onUpdate: function(e) {
+        let quotes; 
+        if (localStorage.getItem('quotes') === null) quotes = []
+        else quotes = JSON.parse(localStorage.getItem('quotes'));
+
+        function array_move(arr, old_index, new_index) {
+            arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+            return arr; 
+        };
+
+        array_move(quotes, e.oldIndex, e.newIndex)
+
+        localStorage.setItem('quotes', JSON.stringify(quotes));
+
+    }
+});
 
 async function generateBackground() {
     const response = await fetch(`https://api.unsplash.com/collections/GsNw3bdVLPM/photos/?client_id=${api.keyTwo}&per_page=30`)

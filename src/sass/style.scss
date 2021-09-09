@@ -1013,7 +1013,6 @@ main {
     .archive-search-bar {
       display: flex;
       align-items: center;
-      margin-bottom: 1em;
       padding-bottom: 1em;
       border-bottom: 1px solid rgba(80, 69, 69, 0.8);
       input {
@@ -1036,12 +1035,9 @@ main {
         margin: 1em 0em;
         border-bottom: 1px solid rgba(80, 69, 69, 0.8);
         gap: 0.75em;
-        &:first-child {
-          margin-top: 0em;
-        }
+        cursor: pointer;
         &:last-child {
           border: none;
-          margin-bottom: 0em;
           padding-bottom: 0em;
         }
         p {
@@ -1053,6 +1049,40 @@ main {
         .archive-cta {
           display: flex;
           justify-content: space-between;
+          .archive-icons {
+            position: relative;
+            .copyQuote {
+              background-color: rgba(80, 69, 69, 0.8);
+              position: absolute;
+              top: -25px;
+              left: -22.5px;
+              padding: 0.25em 0.25em;
+              color: white;
+              font-size: 0.8em;
+              visibility: hidden;
+              opacity: 0;
+              text-align: center;
+              display: inline-block;
+              width: 60px;
+              border-radius: 0.25em;
+              transition: 0.3s;
+              &::after {
+                content: "";
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                margin-left: -5px;
+                border-width: 5px;
+                border-style: solid;
+                border-color: rgba(80, 69, 69, 0.8) transparent transparent
+                  transparent;
+              }
+            }
+            &:hover span {
+              visibility: visible;
+              opacity: 1;
+            }
+          }
         }
       }
     }
@@ -1060,7 +1090,6 @@ main {
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
-      margin-top: 1em;
       flex: 0 0 40px;
       border-top: 1px solid rgba(80, 69, 69, 0.8);
       /*       position: absolute;

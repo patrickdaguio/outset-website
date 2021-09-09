@@ -1049,7 +1049,6 @@ main .todo-app .add-task form .add-btn:hover {
 .archive .archive-container .archive-search-bar {
   display: flex;
   align-items: center;
-  margin-bottom: 1em;
   padding-bottom: 1em;
   border-bottom: 1px solid rgba(80, 69, 69, 0.8);
 }
@@ -1073,13 +1072,10 @@ main .todo-app .add-task form .add-btn:hover {
   margin: 1em 0em;
   border-bottom: 1px solid rgba(80, 69, 69, 0.8);
   gap: 0.75em;
-}
-.archive .archive-container .archive-quotes-container .archive-quote-info:first-child {
-  margin-top: 0em;
+  cursor: pointer;
 }
 .archive .archive-container .archive-quotes-container .archive-quote-info:last-child {
   border: none;
-  margin-bottom: 0em;
   padding-bottom: 0em;
 }
 .archive .archive-container .archive-quotes-container .archive-quote-info p {
@@ -1092,11 +1088,43 @@ main .todo-app .add-task form .add-btn:hover {
   display: flex;
   justify-content: space-between;
 }
+.archive .archive-container .archive-quotes-container .archive-quote-info .archive-cta .archive-icons {
+  position: relative;
+}
+.archive .archive-container .archive-quotes-container .archive-quote-info .archive-cta .archive-icons .copyQuote {
+  background-color: rgba(80, 69, 69, 0.8);
+  position: absolute;
+  top: -25px;
+  left: -22.5px;
+  padding: 0.25em 0.25em;
+  color: white;
+  font-size: 0.8em;
+  visibility: hidden;
+  opacity: 0;
+  text-align: center;
+  display: inline-block;
+  width: 60px;
+  border-radius: 0.25em;
+  transition: 0.3s;
+}
+.archive .archive-container .archive-quotes-container .archive-quote-info .archive-cta .archive-icons .copyQuote::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(80, 69, 69, 0.8) transparent transparent transparent;
+}
+.archive .archive-container .archive-quotes-container .archive-quote-info .archive-cta .archive-icons:hover span {
+  visibility: visible;
+  opacity: 1;
+}
 .archive .archive-container .archive-add-container {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  margin-top: 1em;
   flex: 0 0 40px;
   border-top: 1px solid rgba(80, 69, 69, 0.8);
   /*       position: absolute;
