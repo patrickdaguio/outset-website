@@ -487,7 +487,7 @@ const shareBox = document.querySelector('.share-box')
 
 const facebookBtn = document.querySelector('.social-facebook')
 const twitterBtn = document.querySelector('.social-twitter')
-const linkedBtn = document.querySelector('.social-linked')
+const redditBtn = document.querySelector('.social-linked')
 const whatsappBtn = document.querySelector('.social-whatsapp')
 const quoteBtn = document.querySelector('.social-quote')
 const archiveBtn = document.querySelector('.fa-archive')
@@ -567,20 +567,23 @@ function openQuoteBox() {
 function shareQuote(quote) {
     let postUrl = encodeURI(document.location.href)
     let postTitle = encodeURI(quote)
+    let hostedUrl = `https://outset-website.vercel.app/`
+    let encodedHostedUrl = encodeURI(hostedUrl)
 
-    //facebookBtn.setAttribute('href', `http://www.facebook.com/sharer/sharer.php?s=100&p[title]=${postTitle}`)
-     facebookBtn.addEventListener('click', () => {
-        var body = 'Reading JS SDK documentation';
-        FB.api('/me/feed', 'post', { post: postUrl }, function(response) {
-          if (!response || response.error) {
-            alert('Error occured');
-          } else {
-            alert('Post ID: ' + response.id);
-          }
-        });
-        }) 
+    facebookBtn.setAttribute('href', `https://www.facebook.com/sharer/sharer.php?u=https://outset-website.vercel.app/&quote=${postTitle}`)
+/*     facebookBtn.setAttribute('href', `http://www.facebook.com/dialog/feed?  
+    app_id=521968462396867&  
+    link=https://outset-website.vercel.app&
+    picture=https://ibb.co/C1pBNdd&  
+    name=Outset Website&  
+    quote=${postTitle}& 
+    description=Best website in the world!&`) */
     twitterBtn.setAttribute('href', `https://twitter.com/share?&text=${postTitle}`)
-    linkedBtn.setAttribute('href', `https://www.linkedin.com/sharing/share-offsite/?url=${postUrl}`)
+    redditBtn.setAttribute('href', `https://www.linkedin.com/sharing/share-offsite/?url=${encodedHostedUrl}`)
+    // redditBtn.setAttribute('href', `https://www.linkedin.com/shareArticle?mini=true&url=${encodedHostedUrl}&title=${postTitle}=summary${postTitle}&source=Outset`)
+    // redditBtn.setAttribute('href', `https://www.linkedin.com/shareArticle?mini=true&url=${encodedHostedUrl}&title=${postTitle}`)
+
+    //redditBtn.setAttribute('href', `https://reddit.com/submit?url=https://outset-website.vercel.app/&title=${postTitle}`)
     whatsappBtn.setAttribute('href', `https://api.whatsapp.com/send?text=${postTitle}`)
     quoteBtn.addEventListener('click', async function copyQuote() {
         try {
