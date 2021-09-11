@@ -1040,14 +1040,16 @@ main {
           padding-bottom: 0em;
         }
         p {
-          display: flex;
-          align-items: center;
           font-size: 0.9em;
           .fa-arrows-alt {
             display: block;
             cursor: pointer;
             margin-right: 1em;
           }
+        }
+        .archive-quote {
+          display: flex;
+          align-items: center;
         }
         .archive-origin {
           text-align: center;
@@ -1212,15 +1214,15 @@ footer {
     transform: scale(0) translateY(-30px);
     opacity: 0;
     position: absolute;
-    bottom: 24px;
-    left: -89px;
+    bottom: 25px;
+    left: -108px;
     transition: 0.5s;
     ul {
       position: relative;
       display: flex;
       color: #fff;
       height: 34px;
-      width: 192px;
+      width: 228px;
       background: white;
       border-radius: 0.4em;
       align-items: center;

@@ -487,8 +487,9 @@ const shareBox = document.querySelector('.share-box')
 
 const facebookBtn = document.querySelector('.social-facebook')
 const twitterBtn = document.querySelector('.social-twitter')
-const redditBtn = document.querySelector('.social-linked')
+const linkedBtn = document.querySelector('.social-linked')
 const whatsappBtn = document.querySelector('.social-whatsapp')
+const redditBtn = document.querySelector('.social-reddit')
 const quoteBtn = document.querySelector('.social-quote')
 const archiveBtn = document.querySelector('.fa-archive')
 const closeArchiveBtn = document.querySelector('.closeArchive')
@@ -568,34 +569,11 @@ function shareQuote(quote) {
     let postTitle = encodeURI(quote)
     let hostedUrl = `https://outset-website.vercel.app/`
     let encodedHostedUrl = encodeURI(hostedUrl)
-/* 
-    FB.ui(
-        {
-          method: 'feed',
-          name: 'Outset',
-          title: 'Outset Website',
-          description: 'Hello World',
-          link: hostedUrl,
-          picture: 'https://ibb.co/BjCGZZL',
-          caption: 'Outset is a peaceful start page that keeps you focused on what"s most important.',
-          quote: quote
-        }
-      ); */
 
     facebookBtn.setAttribute('href', `https://www.facebook.com/sharer/sharer.php?u=${encodedHostedUrl}&quote=${postTitle}`)
-/*     facebookBtn.setAttribute('href', `http://www.facebook.com/dialog/feed?  
-    app_id=521968462396867&  
-    link=https://outset-website.vercel.app&
-    picture=https://ibb.co/C1pBNdd&  
-    name=Outset Website&  
-    quote=${postTitle}& 
-    description=Best website in the world!&`) */
     twitterBtn.setAttribute('href', `https://twitter.com/share?&text=${postTitle}`)
-    // redditBtn.setAttribute('href', `https://www.linkedin.com/sharing/share-offsite/?url=${encodedHostedUrl}`)
-    // redditBtn.setAttribute('href', `https://www.linkedin.com/shareArticle?mini=true&url=${encodedHostedUrl}&title=${postTitle}=summary${postTitle}&source=Outset`)
-    redditBtn.setAttribute('href', `https://www.linkedin.com/shareArticle?mini=true&url=${encodedHostedUrl}&title=${postTitle}`)
-
-    //redditBtn.setAttribute('href', `https://reddit.com/submit?url=https://outset-website.vercel.app/&title=${postTitle}`)
+    linkedBtn.setAttribute('href', `https://www.linkedin.com/shareArticle?mini=true&url=${encodedHostedUrl}&title=${postTitle}`)
+    redditBtn.setAttribute('href', `https://reddit.com/submit?url=https://outset-website.vercel.app/&title=${postTitle}`)
     whatsappBtn.setAttribute('href', `https://api.whatsapp.com/send?text=${postTitle}`)
     quoteBtn.addEventListener('click', async function copyQuote() {
         try {
@@ -606,8 +584,6 @@ function shareQuote(quote) {
         }
       });
 }
-
-
 
 function generateQuoteElements(quote, origin) {
 
