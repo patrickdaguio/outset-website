@@ -147,7 +147,26 @@
         <main>
             <div class="time-app">
                 <time class="time">00:00</time>
-                <h1 class="greeting"></h1>
+                <div class="greeting-container">
+                    <div class="greeting-left"></div>
+                    <div class="greeting-middle">
+                     <span class="greeting"></span><span class="greeting-name"></span>
+                     <div class="input-container"></div>
+                     <span class="punctuation">.</span>
+                    </div>
+                    <div class="greeting-right">
+                        <div class="greeting-ellipsis-wrapper">
+                            <i class="fas fa-ellipsis-h greetingEllipsis"></i>
+                            <div class="ellipsis-dropdown">
+                                <ul class="ellipsis-options">
+                                    <li class="ellipsis-mantra showMantra">Show today's mantra</li>
+                                    <li class="line"></li>
+                                    <li class="ellipsis-name editName">Edit your name</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="intention">
                     <div class="intention-question-container">
                         <h3 class="intention-question">What is your intention for today?</h3>
@@ -157,8 +176,60 @@
                         <h3 class="intention-today">Today</h3>
                         <div class="intention-cta">
                             <h3 class="intention-answer">Intention Answer</h3>
-                            <p class="intention-icons"><i class="fas fa-pen"></i></p>
-                            <p class="intention-icons"><i class="fas fa-times"></i></p>
+                            <p class="intention-icons" title="Edit"><i class="fas fa-pen"></i></p>
+                            <p class="intention-icons" title="Clear"><i class="fas fa-times"></i></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pomodoro-app">
+                <div class="pomodoro-time-container">
+                    <time class="pomodoro-time">00:00</time>
+                    <h1 class="pomodoro-message">Time to focus.</h1>
+                </div>
+                <div class="pomodoro-settings-container">
+                    <div class="pomodoro-settings">
+                        <div class="pomodoro-settings-heading">
+                            <h1>Settings</h1>
+                            <i class="fas fa-times closePomodoro"></i>
+                        </div>
+                        <div class="pomodoro-settings-main">
+                            <h3>Time (Minutes)</h3>
+                            <div class="pomodoro-options">
+                                <div class="pomodoro-option-one">
+                                    <span>Pomodoro</span>
+                                    <input type="number" step="5" value="25">
+                                </div>
+                                <div class="pomodoro-option-two">
+                                    <span>Short break</span>
+                                    <input type="number" step="1" value="5">
+                                </div>
+                                <div class="pomodoro-option-three">
+                                    <span>Long break</span>
+                                    <input type="number" step="5" value="15">
+                                </div>
+                                <div class="pomodoro-option-four">
+                                    <i class="fab fa-gripfire" title="Deep mode"></i>
+                                    <label class="switch">
+                                        <input type="checkbox" unchecked="">
+                                        <span class="slider round"></span>
+                                      </label>
+                                </div>
+                                <div class="pomodoro-option-five">
+                                    <i class="fas fa-sync-alt" title="Repeat"></i>
+                                    <label class="switch">
+                                        <input type="checkbox" unchecked="">
+                                        <span class="slider round"></span>
+                                      </label>
+                                </div>
+                                <div class="pomodoro-option-six">
+                                    <i class="fas fa-clipboard"></i>
+                                    <p>History</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pomodoro-settings-footer">
+                            <button class="pomodoro-btn">Start timer</button>
                         </div>
                     </div>
                 </div>
@@ -213,18 +284,18 @@
                     <a href="https://unsplash.com/@luckybeanz" target="_blank" class="background-user-link">
                         <p class="background-user">Mark Harpur</p>
                     </a>
-                    <p class="background-icon"><i class="fas fa-redo changeBackground"></i></p>
-                    <a href="https://unsplash.com/photos/HUOvKWXEdFY" target="_blank" class="background-photo"><p class="background-icon"><i class="fas fa-heart"></i></p></a>
+                    <p class="background-icon" title="Skip Photo"><i class="fas fa-redo changeBackground"></i></p>
+                    <a href="https://unsplash.com/photos/HUOvKWXEdFY" target="_blank" class="background-photo"><p class="background-icon" title="Like"><i class="fas fa-heart"></i></p></a>
                 </div>
             </div>
             <div class="quotes-info">
                 <p class="quote">The journey of a 1000miles begins with one step</p>
                 <div class="quote-details">
                     <p class="quote-origin">Lao Tzu</p>
-                    <p class="quote-icon"><i class="fas fa-redo changeQuote"></i></p>
-                    <p class="quote-icon"><i class="far fa-heart saveQuote"></i></p>
+                    <p class="quote-icon" title="Skip Quote"><i class="fas fa-redo changeQuote"></i></p>
+                    <p class="quote-icon" title="Favourite"><i class="far fa-heart saveQuote"></i></p>
                     <div class="share">
-                        <p class="quote-icon shareBtn"><i class="fas fa-share-square"></i></p>
+                        <p class="quote-icon shareBtn" title="Share"><i class="fas fa-share-square"></i></p>
                         <div class="share-box">
                             <ul>
                                 <a href="#" target="_blank" class="social-facebook"><i class="fab fa-facebook-square"></i><span>Share to Facebook</span></a>
@@ -236,7 +307,7 @@
                             </ul>
                         </div>
                     </div>
-                    <p class="quote-icon"><i class="fas fa-archive"></i></p>
+                    <p class="quote-icon" title="Archive"><i class="fas fa-archive"></i></p>
                 </div>
             </div>
             <div class="footer-space"></div>

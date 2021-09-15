@@ -268,8 +268,6 @@ const linksObject = {
     }
 }
 
-
-
 if (localStorage.getItem('urls') === null) linksObject.urls = []
 else linksObject.urls = JSON.parse(localStorage.getItem('urls'));
 
@@ -318,6 +316,25 @@ document.addEventListener('click', (e) => {
             list.children[1].classList.remove('visibility')
         }
     })
+    if(!greetingsEllipsis.contains(e.target)) {
+        greetingsOption.classList.remove('share-open')
+        greetingsEllipsisIcon.style.opacity = '0'
+    }
+    if (!inputContainer.contains(e.target) && !e.target.classList.contains('editName')) {
+        greetingName.style.display = 'inline'
+       if (inputContainer.children.length >= 1) {
+            let userName = JSON.parse(localStorage.getItem('username'))
+            userName[0] = inputContainer.children[0].value
+            greetingName.textContent = inputContainer.children[0].value
+            greetingName.classList.add('important')  
+            greetingName.addEventListener('animationend', function() {
+                greetingName.classList.remove('important')  
+            });
+            localStorage.setItem('username', JSON.stringify(userName))
+        }
+        inputContainer.innerHTML = ''
+
+    }
 })
 
 // Greeting App
@@ -325,8 +342,16 @@ document.addEventListener('click', (e) => {
 // HTML Tags
 
 const time = document.querySelector('.time');
+const greetingContainer = document.querySelector('.greeting-container')
 const greeting = document.querySelector('.greeting');
+const greetingName = document.querySelector('.greeting-name')
 const todayDate = document.querySelector('.today-date');
+const greetingsEllipsis = document.querySelector('.greeting-ellipsis-wrapper')
+const greetingsOption = document.querySelector('.ellipsis-dropdown')
+const greetingsEllipsisIcon = document.querySelector('.greetingEllipsis')
+const editNameBtn = document.querySelector('.editName')
+const showMantraBtn = document.querySelector('.showMantra')
+const inputContainer = document.querySelector('.input-container')
 
 function greetings() {
     let userName 
@@ -344,17 +369,73 @@ function greetings() {
     setTimeout(greetings, 1000);
     
     if (hours >= 12 && hours < 18) {
-        greeting.textContent = `Good afternoon, ${userName[0]}`;
-    } else if (hours >= 18 && hours !== 4) {
-        greeting.textContent = `Good evening, ${userName[0]}`;
+        greeting.textContent = `Good afternoon, `
+        greetingName.textContent = userName[0]
+    } else if (hours >= 18 && hours !== 4) { 
+        greeting.textContent = `Good evening, `;
+        greetingName.textContent = userName[0]
     } else if (hours >= 4 && hours < 12) {
-        greeting.textContent = `Good morning, ${userName[0]}`;
+        greeting.textContent = 'Good morning, ';
+        greetingName.textContent = userName[0]
     }
 }
 
 function addZero(num) {
     return num < 10 ? `0${num}` : num;
 }
+
+function openGreetingsOptions() {
+    greetingsOption.classList.toggle('share-open')
+    if (greetingsOption.classList.contains('share-open')) greetingsEllipsisIcon.style.opacity = '1'
+    else greetingsEllipsisIcon.style.opacity = '0'
+}
+
+function editName() {
+    let userName 
+    if (localStorage.getItem('username') === null) userName = ''
+    else userName = JSON.parse(localStorage.getItem('username'))
+
+    const nameInput = document.createElement('input')
+    nameInput.classList.add('greeting-input')
+    nameInput.value = userName[0]
+    inputContainer.appendChild(nameInput)
+    nameInput.classList.add('important') 
+    nameInput.focus()
+    nameInput.addEventListener('animationend', function() {
+        nameInput.classList.remove('important')  
+    });
+    nameInput.addEventListener('input', resizeInput)
+    resizeInput.call(nameInput) 
+    greetingsOption.classList.remove('share-open')
+    greetingName.style.display = 'none'
+
+    nameInput.addEventListener('keypress', (e) => {
+        if (e.keyCode === 13) {
+            userName[0] = nameInput.value
+            localStorage.setItem('username', JSON.stringify(userName))
+            greetingName.style.display = 'inline'
+            greetingName.classList.add('important')  
+            greetingName.addEventListener('animationend', function() {
+                greetingName.classList.remove('important')  
+            });
+            greetingName.textContent = nameInput.value
+            nameInput.remove()
+        }
+    })
+}
+
+function resizeInput() {
+    this.style.width = this.value.length + 'ch' 
+}
+
+function showMantra() {
+    console.log('hello')
+}
+
+greetingsEllipsisIcon.addEventListener('click', openGreetingsOptions)
+editNameBtn.addEventListener('click', editName)
+greetingName.addEventListener('dblclick', editName)
+showMantraBtn.addEventListener('click', showMantra)
 
 // Intention
 
@@ -448,13 +529,13 @@ const inactivityTime = function () {
     document.onkeydown = resetTimer;
 
     function logout() {
-        greeting.style.opacity = '0'
+        greetingContainer.style.opacity = '0'
         document.querySelector('.intention').style.opacity = '0'
         document.body.style.cursor = "none";
     }
 
     function resetTimer() {
-        greeting.style.opacity = '1'
+        greetingContainer.style.opacity = '1'
         document.querySelector('.intention').style.opacity = '1'
         document.body.style.cursor = "default";
         clearTimeout(time);
