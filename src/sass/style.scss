@@ -711,19 +711,131 @@ main {
   text-align: center;
   padding: 3em 3em;
   padding-top: 0em;
-  position: relative;
   animation: opacity 1s ease-in-out;
   .pomodoro-app {
+    display: none;
     color: white;
     letter-spacing: 0.05em;
     width: 100%;
+    opacity: 0;
+    transition: opacity 1s;
     .pomodoro-time-container {
-      .pomodoro-time {
-        @include textStyle(11em, 500, none, 0em);
+      display: none;
+      opacity: 0;
+      position: absolute;
+      height: 100vh;
+      right: 0;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      background-color: rgb(241, 241, 241);
+      z-index: 499;
+      color: rgb(87, 82, 85);
+      transition: opacity 1s;
+      .pomodoro-start {
+        position: relative;
+        transition: 1s opacity;
+        &:hover {
+          .showBtn-container .showPomodoroCta,
+          .pomodoro-cycle {
+            opacity: 1 !important;
+            visibility: visible;
+          }
+        }
+        .pomodoro-cycle {
+          opacity: 0;
+          transition: 0.3s;
+        }
+        .pomodoro-time {
+          @include textStyle(11em, 500, none, 0em);
+          display: flex;
+          justify-content: center;
+        }
+        .pomodoro-message {
+          @include textStyle(4.1em, 500, none, 0em);
+        }
+        .showBtn-container {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 100%;
+          .showPomodoroCta {
+            cursor: pointer;
+            font-size: 1.5em;
+            opacity: 0;
+            visibility: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            transition: 0.5s;
+            &::after {
+              position: absolute;
+              content: "";
+              width: 42px;
+              height: 42px;
+              opacity: 0;
+              background-color: rgba(80, 69, 69, 0.6);
+              border-radius: 50%;
+              z-index: -1;
+              transition: 0.5s;
+            }
+            &:hover {
+              color: white;
+              &::after {
+                opacity: 1;
+              }
+            }
+          }
+        }
+
+        .pomodoro-ctas {
+          position: absolute;
+          transition: 0.5s all ease-in-out;
+          width: 100%;
+          bottom: -95px;
+          height: 0;
+          overflow: hidden;
+          .cta-container {
+            display: flex;
+            justify-content: space-evenly;
+            width: 100%;
+            .pomodoro-cta {
+              color: white;
+              border-radius: 0.25em;
+              border: none;
+              outline: none;
+              padding: 0.25em 0.5em;
+              cursor: pointer;
+              font-size: 1.5em;
+              background-color: rgb(87, 82, 85);
+              transition: 0.3s;
+              &--reset {
+                &:hover {
+                  background-color: rgb(80, 63, 175);
+                }
+              }
+              &--stop {
+                &:hover {
+                  background-color: rgb(126, 43, 43);
+                }
+              }
+              &--pause {
+                &:hover {
+                  background-color: rgb(90, 173, 79);
+                }
+              }
+            }
+          }
+        }
       }
     }
     .pomodoro-settings-container {
-      display: none;
       position: absolute;
       color: rgba(87, 82, 85, 0.8);
       background-color: white;
@@ -734,7 +846,10 @@ main {
       top: 50%;
       right: 0;
       left: 0;
+      box-shadow: 8px 8px 30px rgba(87, 82, 85, 0.5);
       transform: translate(0%, -50%);
+      z-index: 500;
+      transition: opacity 1s;
       .pomodoro-settings-heading {
         padding: 1em 2em 1em 2em;
         display: flex;
@@ -774,7 +889,7 @@ main {
             width: 100px;
             border-radius: 0.25em;
             border: none;
-            background-color: rgba(87, 82, 85, 0.3);
+            background-color: rgba(87, 82, 85, 0.15);
             padding: 0.6em 1em;
             outline: none;
             color: rgb(87, 82, 85);
@@ -880,9 +995,61 @@ main {
     color: white;
     letter-spacing: 0.05em;
     width: 100%;
-    display: none;
-    .time {
-      @include textStyle(11em, 500, none, 0em);
+    transition: opacity 1s;
+    .time-container {
+      display: flex;
+      &:hover {
+        .pomodoro {
+          opacity: 1 !important;
+        }
+      }
+      .time-container-left {
+        display: inline-flex;
+        flex: 1 0 50px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        .pomodoro-icon {
+          margin-right: 1.5em;
+          margin-top: 1em;
+          .pomodoro {
+            cursor: pointer;
+            font-size: 1.5em;
+            opacity: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            &::after {
+              position: absolute;
+              content: "";
+              width: 42px;
+              height: 42px;
+              opacity: 0;
+              background-color: rgba(80, 69, 69, 0.6);
+              border-radius: 50%;
+              z-index: -1;
+            }
+            &:hover {
+              &::after {
+                opacity: 1;
+              }
+            }
+          }
+        }
+      }
+      .time-container-right {
+        display: inline-flex;
+        flex: 1 0 50px;
+      }
+      .time-container-middle {
+        .time {
+          @include textStyle(11em, 500, none, 0em);
+        }
+      }
     }
     .greeting-container {
       display: flex;
@@ -1709,6 +1876,15 @@ footer {
   100% {
     opacity: 0;
     transform: scale(1.1);
+  }
+}
+
+@keyframes swipeIn {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(50%);
   }
 }
 

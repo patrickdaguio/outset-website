@@ -146,7 +146,17 @@
         </header>
         <main>
             <div class="time-app">
-                <time class="time">00:00</time>
+                <div class="time-container">
+                    <div class="time-container-left">
+                        <div class="pomodoro-icon" title="Pomodoro">
+                            <i class="far fa-clock pomodoro"></i>
+                        </div>
+                    </div>
+                    <div class="time-container-middle">
+                        <time class="time">00:00</time>
+                    </div>
+                    <div class="time-container-right"></div>
+                </div>
                 <div class="greeting-container">
                     <div class="greeting-left"></div>
                     <div class="greeting-middle">
@@ -184,13 +194,30 @@
             </div>
             <div class="pomodoro-app">
                 <div class="pomodoro-time-container">
-                    <time class="pomodoro-time">00:00</time>
-                    <h1 class="pomodoro-message">Time to focus.</h1>
+                    <div class="pomodoro-start">
+                        <h1 class="pomodoro-cycle">Cycle: <span class="pomodoro-counter">0</span></h1>
+                        <div class="pomodoro-time">
+                            <p class="pomodoro-mins">00</p>
+                            <p class="pomodoro-semicolon">:</p>
+                            <p class="pomodoro-secs">00</p>
+                        </div>
+                        <h1 class="pomodoro-message">Time to focus.</h1>
+                        <div class="showBtn-container">
+                            <i class="fas fa-arrow-up showPomodoroCta"></i>
+                        </div>
+                        <div class="pomodoro-ctas">
+                            <div class="cta-container">
+                                <button class="pomodoro-cta pomodoro-cta--reset">Reset</button>
+                                <button class="pomodoro-cta pomodoro-cta--stop">Give up</button>
+                                <button class="pomodoro-cta pomodoro-cta--pause">Pause</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="pomodoro-settings-container">
                     <div class="pomodoro-settings">
                         <div class="pomodoro-settings-heading">
-                            <h1>Settings</h1>
+                            <h1>Pomodoro settings</h1>
                             <i class="fas fa-times closePomodoro"></i>
                         </div>
                         <div class="pomodoro-settings-main">
@@ -198,33 +225,33 @@
                             <div class="pomodoro-options">
                                 <div class="pomodoro-option-one">
                                     <span>Pomodoro</span>
-                                    <input type="number" step="5" value="25">
+                                    <input type="number" step="5" value="25" class="pomodoroTime">
                                 </div>
                                 <div class="pomodoro-option-two">
                                     <span>Short break</span>
-                                    <input type="number" step="1" value="5">
+                                    <input type="number" step="1" value="5" class="pomodoroShortBreak">
                                 </div>
                                 <div class="pomodoro-option-three">
                                     <span>Long break</span>
-                                    <input type="number" step="5" value="15">
+                                    <input type="number" step="5" value="15" class="pomodoroLongBreak">
                                 </div>
                                 <div class="pomodoro-option-four">
                                     <i class="fab fa-gripfire" title="Deep mode"></i>
                                     <label class="switch">
-                                        <input type="checkbox" unchecked="">
+                                        <input type="checkbox" class="deepMode" unchecked="">
                                         <span class="slider round"></span>
                                       </label>
                                 </div>
                                 <div class="pomodoro-option-five">
                                     <i class="fas fa-sync-alt" title="Repeat"></i>
                                     <label class="switch">
-                                        <input type="checkbox" unchecked="">
+                                        <input type="checkbox" class="repeatMode" unchecked="">
                                         <span class="slider round"></span>
                                       </label>
                                 </div>
                                 <div class="pomodoro-option-six">
-                                    <i class="fas fa-clipboard"></i>
-                                    <p>History</p>
+                                    <i class="fas fa-clipboard "></i>
+                                    <p class="pomodoroHistory">History</p>
                                 </div>
                             </div>
                         </div>

@@ -341,6 +341,7 @@ document.addEventListener('click', (e) => {
 
 // HTML Tags
 
+const timeAppContainer = document.querySelector('.time-app')
 const time = document.querySelector('.time');
 const greetingContainer = document.querySelector('.greeting-container')
 const greeting = document.querySelector('.greeting');
@@ -432,6 +433,261 @@ function showMantra() {
     console.log('hello')
 }
 
+// Pomodoro App
+
+const pomodoroIcon = document.querySelector('.pomodoro')
+const pomodoroAppContainer = document.querySelector('.pomodoro-app')
+const closePomodoroBtn = document.querySelector('.closePomodoro')
+const startPomodoroBtn = document.querySelector('.pomodoro-btn')
+const pomodoroTimeContainer = document.querySelector('.pomodoro-time-container')
+const pomodoroSettingsContainer = document.querySelector('.pomodoro-settings-container')
+const showPomodoroCta = document.querySelector('.showPomodoroCta')
+const pomodoroCtaContainer = document.querySelector('.pomodoro-ctas')
+const pomodoroTimeInput = document.querySelector('.pomodoroTime')
+const pomodoroShortBreak = document.querySelector('.pomodoroShortBreak')
+const pomodoroLongBreak = document.querySelector('.pomodoroLongBreak')
+const pomodoroMins = document.querySelector('.pomodoro-mins')
+const pomodoroSecs = document.querySelector('.pomodoro-secs')
+const pomodoroMsg = document.querySelector('.pomodoro-message')
+const pomodoroStartContainer = document.querySelector('.pomodoro-start')
+const repeatModeBtn = document.querySelector('.repeatMode')
+const deepModeBtn = document.querySelector('.deepMode')
+const pomodoroCycleMsg = document.querySelector('.pomodoro-cycle')
+const pomodoroCounter = document.querySelector('.pomodoro-counter')
+const pomodoroResetBtn = document.querySelector('.pomodoro-cta--reset')
+const pomodoroPauseBtn = document.querySelector('.pomodoro-cta--pause')
+const pomodoroStopBtn = document.querySelector('.pomodoro-cta--stop')
+const pomodoroHistory = document.querySelector('.pomodoroHistory')
+
+const pomodoroApp = {
+    minutes: pomodoroTimeInput.value,
+    seconds: 2,
+    minutesInverval: null,
+    secondsInterval: null,
+    shortBreakInterval: null,
+    longBreakInterval: null,
+
+
+    openPomodoroApp: function() {
+        pomodoroAppContainer.style.display = 'block'
+        timeAppContainer.style.opacity = '0'
+        setTimeout(() => {
+            pomodoroAppContainer.style.opacity ='1'
+            timeAppContainer.style.display ='none'
+        }, 1000) 
+    }, 
+
+    closePomodoroApp: function() {
+        pomodoroAppContainer.style.opacity = '0'
+        timeAppContainer.style.display ='block'
+        setTimeout(() => {
+            timeAppContainer.style.opacity ='1'
+            pomodoroAppContainer.style.display = 'none'
+        }, 1000) 
+    },
+
+    startPomodoro: function() {
+        let pomodoroCount = 0
+        let cycleCount = 0
+        if (!repeatModeBtn.checked) pomodoroCycleMsg.style.display = 'none'
+        else pomodoroCycleMsg.style.display = 'block'
+        if (deepModeBtn.checked) pomodoroPauseBtn.style.display = 'none'
+    
+        if (pomodoroTimeContainer.style.display == 'flex') {
+            pomodoroSettingsContainer.style.opacity = '0'
+            setTimeout(() => {
+                pomodoroStartContainer.style.opacity ='1'
+                pomodoroSettingsContainer.style.display = 'none'
+            }, 1000) 
+        }
+        else {
+            pomodoroSettingsContainer.style.opacity = '0'
+            pomodoroTimeContainer.style.display ='flex'
+            setTimeout(() => {
+                pomodoroTimeContainer.style.opacity ='1'
+                pomodoroSettingsContainer.style.display = 'none'
+            }, 1000) 
+        }
+
+
+        pomodoroApp.minutes = parseInt(pomodoroTimeInput.value) - 1
+        pomodoroMins.innerText = pomodoroApp.minutes
+        if (pomodoroApp.minutes < 10) pomodoroMins.innerText = '0' + pomodoroApp.minutes
+        else pomodoroMins.innerText = pomodoroApp.minutes  
+
+        pomodoroApp.secondsInterval = setInterval(secondsTimer, 1000)
+        setTimeout(() => pomodoroApp.minutesInverval = setInterval(minutesTimer, 2000), 1000)
+
+        function minutesTimer() {
+            if (pomodoroApp.seconds >= 0) {
+                pomodoroApp.minutes = pomodoroApp.minutes - 1
+                pomodoroMins.innerText = pomodoroApp.minutes
+            }
+            if (pomodoroApp.minutes < 10 && pomodoroApp.minutes >= 0) pomodoroMins.innerText = '0' + pomodoroApp.minutes
+            else pomodoroMins.innerText = pomodoroApp.minutes  
+        }
+    
+        function secondsTimer() {
+            pomodoroApp.seconds = pomodoroApp.seconds - 1
+            if (pomodoroApp.seconds < 10 && pomodoroApp.seconds >= 0) pomodoroSecs.innerText = '0' + pomodoroApp.seconds
+            else pomodoroSecs.innerText = pomodoroApp.seconds 
+            if (pomodoroApp.seconds <= 0) {
+                pomodoroApp.seconds = 2
+                if (pomodoroApp.minutes <= 0) {
+                    pomodoroStartContainer.style.opacity = '0'
+                    setTimeout(() => {
+                        pomodoroStartContainer.style.opacity ='1'
+
+                        if (pomodoroMsg.textContent == 'Time to focus.') {
+                            if (pomodoroCount === 3) {
+                                clearInterval(pomodoroApp.minutesInverval)
+                                pomodoroApp.minutes = parseInt(pomodoroLongBreak.value) - 1
+                                pomodoroMins.innerText = pomodoroApp.minutes
+                                cycleCount++
+                                pomodoroCounter.textContent = cycleCount
+                                if (pomodoroApp.minutes < 10 && pomodoroApp.minutes >= 0) pomodoroMins.innerText = '0' + pomodoroApp.minutes
+                                else pomodoroMins.innerText = pomodoroApp.minutes                              
+                                pomodoroMsg.textContent = 'Time for a long break.'
+                                pomodoroApp.longBreakInterval = setInterval(longTimer, 2000)
+                            } else {
+                                clearInterval(pomodoroApp.minutesInverval)
+                                pomodoroApp.minutes = parseInt(pomodoroShortBreak.value) - 1
+                                pomodoroMins.innerText = pomodoroApp.minutes
+                                if (pomodoroApp.minutes < 10 && pomodoroApp.minutes >= 0) pomodoroMins.innerText = '0' + pomodoroApp.minutes
+                                else pomodoroMins.innerText = pomodoroApp.minutes                              
+                                pomodoroMsg.textContent = 'Time for a short break.'
+                                if (repeatModeBtn.checked) {
+                                    pomodoroCount++
+                                    cycleCount++
+                                    pomodoroCounter.textContent = cycleCount
+                                }
+                                pomodoroApp.shortBreakInterval = setInterval(shortTimer, 2000)
+                            }
+                        } else if (pomodoroMsg.textContent == 'Time for a short break.') {
+                            if (!repeatModeBtn.checked) {
+                                clearInterval(pomodoroApp.secondsInterval)
+                                clearInterval(pomodoroApp.shortBreakInterval)
+                                clearInterval(pomodoroApp.minutesInverval)
+                                pomodoroApp.minutes = 0
+                                pomodoroApp.seconds = 2
+                                pomodoroStartContainer.style.opacity = '0'
+                                pomodoroSettingsContainer.style.display = 'block'
+                                pomodoroMsg.textContent = 'Time to focus.'
+                                setTimeout(() => {
+                                    pomodoroSettingsContainer.style.opacity = '1'
+                                }, 100) 
+                            } else if (repeatModeBtn.checked) {
+                                clearInterval(pomodoroApp.shortBreakInterval)
+                                pomodoroApp.minutes = parseInt(pomodoroTimeInput.value) - 1
+                                pomodoroMins.innerText = pomodoroApp.minutes
+                                if (pomodoroApp.minutes < 10 && pomodoroApp.minutes >= 0) pomodoroMins.innerText = '0' + pomodoroApp.minutes
+                                else pomodoroMins.innerText = pomodoroApp.minutes                              
+                                pomodoroMsg.textContent = 'Time to focus.'
+                                pomodoroApp.minutesInverval = setInterval(minutesTimer, 2000)
+                            }
+                        } else if (pomodoroMsg.textContent == 'Time for a long break.') {
+                            clearInterval(pomodoroApp.longBreakInterval)
+                            pomodoroCount = 0
+                            pomodoroApp.minutes = parseInt(pomodoroTimeInput.value) - 1
+                            pomodoroMins.innerText = pomodoroApp.minutes
+                            if (pomodoroApp.minutes < 10 && pomodoroApp.minutes >= 0) pomodoroMins.innerText = '0' + pomodoroApp.minutes
+                            else pomodoroMins.innerText = pomodoroApp.minutes                              
+                            pomodoroMsg.textContent = 'Time to focus.'
+                            pomodoroApp.minutesInverval = setInterval(minutesTimer, 2000)
+                        }
+                    }, 1000) 
+
+                }
+            }
+        }
+
+        function shortTimer() {  
+            if (pomodoroApp.seconds > 0) {
+                pomodoroApp.minutes = pomodoroApp.minutes - 1
+                pomodoroMins.innerText = pomodoroApp.minutes
+            }
+
+            if (pomodoroApp.minutes < 10 && pomodoroApp.minutes >= 0) pomodoroMins.innerText = '0' + pomodoroApp.minutes
+            else pomodoroMins.innerText = pomodoroApp.minutes     
+        } 
+
+        function longTimer() {
+            if (pomodoroApp.seconds > 0) {
+                pomodoroApp.minutes = pomodoroApp.minutes - 1
+                pomodoroMins.innerText = pomodoroApp.minutes
+            }
+            if (pomodoroApp.minutes < 10 && pomodoroApp.minutes >= 0) pomodoroMins.innerText = '0' + pomodoroApp.minutes
+            else pomodoroMins.innerText = pomodoroApp.minutes        
+        } 
+    },
+
+    showPomodoroBtns: function() {
+        if (showPomodoroCta.classList.contains('fa-arrow-up')) {
+            showPomodoroCta.classList.replace('fa-arrow-up', 'fa-arrow-down')
+            pomodoroCtaContainer.style.height = '40px'
+        } else {
+            showPomodoroCta.classList.replace('fa-arrow-down', 'fa-arrow-up')
+            pomodoroCtaContainer.style.height = '0'
+        }
+    },
+
+    pausePomodoroTimer: function(e) {
+        if (e.target.textContent == 'Pause') {
+            e.target.textContent = 'Play'
+            clearInterval(pomodoroApp.secondsInterval)
+            if (pomodoroMsg.textContent == 'Time for a long break.') {
+                clearInterval(pomodoroApp.longBreakInterval)
+                console.log('long')
+            } else if (pomodoroMsg.textContent == 'Time for a short break.') {
+                clearInterval(pomodoroApp.shortBreakInterval)
+                console.log('short') 
+            } else if (pomodoroMsg.textContent == 'Time to focus.') {
+                clearInterval(pomodoroApp.minutesInverval)
+                console.log('focus')
+            }
+        }
+        else if (e.target.textContent == 'Play') {
+            e.target.textContent = 'Pause'
+            pomodoroApp.secondsInterval = setInterval(secondsTimer, 1000)
+            if (pomodoroMsg.textContent == 'Time for a long break.') {
+                pomodoroApp.longBreakInterval = setInterval(longTimer, 2000)
+                console.log('play long')
+            } else if (pomodoroMsg.textContent == 'Time for a short break.') {
+                pomodoroApp.shortBreakInterval = setInterval(shortTimer, 2000)
+                console.log(pomodoroApp.minutes)
+                console.log(pomodoroApp.seconds)
+                console.log('play short') 
+            } else if (pomodoroMsg.textContent == 'Time to focus.') {
+                pomodoroApp.minutesInverval = setInterval(minutesTimer, 2000)
+                console.log('play focus')
+            }
+        }
+    },
+
+    resetPomodoroTimer: function() {
+        console.log('do this next')
+    },
+
+    stopPomodoroTimer: function() {
+        console.log('do this last')
+    },
+
+    showPomdoroHistory: function() {
+        console.log('do this last last')
+    }
+}
+
+
+
+
+pomodoroIcon.addEventListener('click', pomodoroApp.openPomodoroApp)
+closePomodoroBtn.addEventListener('click', pomodoroApp.closePomodoroApp)
+startPomodoroBtn.addEventListener('click', pomodoroApp.startPomodoro)
+showPomodoroCta.addEventListener('click', pomodoroApp.showPomodoroBtns)
+pomodoroResetBtn.addEventListener('click', pomodoroApp.resetPomodoroTimer)
+pomodoroStopBtn.addEventListener('click', pomodoroApp.stopPomodoroTimer)
+pomodoroPauseBtn.addEventListener('click', pomodoroApp.pausePomodoroTimer)
+pomodoroHistory.addEventListener('click', pomodoroApp.showPomdoroHistory)
 greetingsEllipsisIcon.addEventListener('click', openGreetingsOptions)
 editNameBtn.addEventListener('click', editName)
 greetingName.addEventListener('dblclick', editName)

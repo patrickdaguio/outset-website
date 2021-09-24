@@ -700,22 +700,130 @@ main {
   text-align: center;
   padding: 3em 3em;
   padding-top: 0em;
-  position: relative;
   animation: opacity 1s ease-in-out;
 }
 main .pomodoro-app {
+  display: none;
   color: white;
   letter-spacing: 0.05em;
   width: 100%;
+  opacity: 0;
+  transition: opacity 1s;
 }
-main .pomodoro-app .pomodoro-time-container .pomodoro-time {
+main .pomodoro-app .pomodoro-time-container {
+  display: none;
+  opacity: 0;
+  position: absolute;
+  height: 100vh;
+  right: 0;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #f1f1f1;
+  z-index: 499;
+  color: #575255;
+  transition: opacity 1s;
+}
+main .pomodoro-app .pomodoro-time-container .pomodoro-start {
+  position: relative;
+  transition: 1s opacity;
+}
+main .pomodoro-app .pomodoro-time-container .pomodoro-start:hover .showBtn-container .showPomodoroCta,
+main .pomodoro-app .pomodoro-time-container .pomodoro-start:hover .pomodoro-cycle {
+  opacity: 1 !important;
+  visibility: visible;
+}
+main .pomodoro-app .pomodoro-time-container .pomodoro-start .pomodoro-cycle {
+  opacity: 0;
+  transition: 0.3s;
+}
+main .pomodoro-app .pomodoro-time-container .pomodoro-start .pomodoro-time {
   font-size: 11em;
   font-weight: 500;
   text-shadow: none;
   margin-bottom: 0em;
+  display: flex;
+  justify-content: center;
+}
+main .pomodoro-app .pomodoro-time-container .pomodoro-start .pomodoro-message {
+  font-size: 4.1em;
+  font-weight: 500;
+  text-shadow: none;
+  margin-bottom: 0em;
+}
+main .pomodoro-app .pomodoro-time-container .pomodoro-start .showBtn-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+}
+main .pomodoro-app .pomodoro-time-container .pomodoro-start .showBtn-container .showPomodoroCta {
+  cursor: pointer;
+  font-size: 1.5em;
+  opacity: 0;
+  visibility: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  transition: 0.5s;
+}
+main .pomodoro-app .pomodoro-time-container .pomodoro-start .showBtn-container .showPomodoroCta::after {
+  position: absolute;
+  content: "";
+  width: 42px;
+  height: 42px;
+  opacity: 0;
+  background-color: rgba(80, 69, 69, 0.6);
+  border-radius: 50%;
+  z-index: -1;
+  transition: 0.5s;
+}
+main .pomodoro-app .pomodoro-time-container .pomodoro-start .showBtn-container .showPomodoroCta:hover {
+  color: white;
+}
+main .pomodoro-app .pomodoro-time-container .pomodoro-start .showBtn-container .showPomodoroCta:hover::after {
+  opacity: 1;
+}
+main .pomodoro-app .pomodoro-time-container .pomodoro-start .pomodoro-ctas {
+  position: absolute;
+  transition: 0.5s all ease-in-out;
+  width: 100%;
+  bottom: -95px;
+  height: 0;
+  overflow: hidden;
+}
+main .pomodoro-app .pomodoro-time-container .pomodoro-start .pomodoro-ctas .cta-container {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+}
+main .pomodoro-app .pomodoro-time-container .pomodoro-start .pomodoro-ctas .cta-container .pomodoro-cta {
+  color: white;
+  border-radius: 0.25em;
+  border: none;
+  outline: none;
+  padding: 0.25em 0.5em;
+  cursor: pointer;
+  font-size: 1.5em;
+  background-color: #575255;
+  transition: 0.3s;
+}
+main .pomodoro-app .pomodoro-time-container .pomodoro-start .pomodoro-ctas .cta-container .pomodoro-cta--reset:hover {
+  background-color: #503faf;
+}
+main .pomodoro-app .pomodoro-time-container .pomodoro-start .pomodoro-ctas .cta-container .pomodoro-cta--stop:hover {
+  background-color: #7e2b2b;
+}
+main .pomodoro-app .pomodoro-time-container .pomodoro-start .pomodoro-ctas .cta-container .pomodoro-cta--pause:hover {
+  background-color: #5aad4f;
 }
 main .pomodoro-app .pomodoro-settings-container {
-  display: none;
   position: absolute;
   color: rgba(87, 82, 85, 0.8);
   background-color: white;
@@ -726,7 +834,10 @@ main .pomodoro-app .pomodoro-settings-container {
   top: 50%;
   right: 0;
   left: 0;
+  box-shadow: 8px 8px 30px rgba(87, 82, 85, 0.5);
   transform: translate(0%, -50%);
+  z-index: 500;
+  transition: opacity 1s;
 }
 main .pomodoro-app .pomodoro-settings-container .pomodoro-settings-heading {
   padding: 1em 2em 1em 2em;
@@ -770,7 +881,7 @@ main .pomodoro-app .pomodoro-settings-container .pomodoro-settings-main .pomodor
   width: 100px;
   border-radius: 0.25em;
   border: none;
-  background-color: rgba(87, 82, 85, 0.3);
+  background-color: rgba(87, 82, 85, 0.15);
   padding: 0.6em 1em;
   outline: none;
   color: #575255;
@@ -868,9 +979,55 @@ main .time-app {
   color: white;
   letter-spacing: 0.05em;
   width: 100%;
-  display: none;
+  transition: opacity 1s;
 }
-main .time-app .time {
+main .time-app .time-container {
+  display: flex;
+}
+main .time-app .time-container:hover .pomodoro {
+  opacity: 1 !important;
+}
+main .time-app .time-container .time-container-left {
+  display: inline-flex;
+  flex: 1 0 50px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+main .time-app .time-container .time-container-left .pomodoro-icon {
+  margin-right: 1.5em;
+  margin-top: 1em;
+}
+main .time-app .time-container .time-container-left .pomodoro-icon .pomodoro {
+  cursor: pointer;
+  font-size: 1.5em;
+  opacity: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+}
+main .time-app .time-container .time-container-left .pomodoro-icon .pomodoro::after {
+  position: absolute;
+  content: "";
+  width: 42px;
+  height: 42px;
+  opacity: 0;
+  background-color: rgba(80, 69, 69, 0.6);
+  border-radius: 50%;
+  z-index: -1;
+}
+main .time-app .time-container .time-container-left .pomodoro-icon .pomodoro:hover::after {
+  opacity: 1;
+}
+main .time-app .time-container .time-container-right {
+  display: inline-flex;
+  flex: 1 0 50px;
+}
+main .time-app .time-container .time-container-middle .time {
   font-size: 11em;
   font-weight: 500;
   text-shadow: none;
@@ -1750,6 +1907,14 @@ footer .footer-space {
   100% {
     opacity: 0;
     transform: scale(1.1);
+  }
+}
+@keyframes swipeIn {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(50%);
   }
 }
 @keyframes zoomIn {
