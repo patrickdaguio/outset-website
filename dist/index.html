@@ -208,8 +208,17 @@
                         <div class="pomodoro-ctas">
                             <div class="cta-container">
                                 <button class="pomodoro-cta pomodoro-cta--reset">Reset</button>
-                                <button class="pomodoro-cta pomodoro-cta--stop">Give up</button>
                                 <button class="pomodoro-cta pomodoro-cta--pause">Pause</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pomodoro-warning">
+                        <div class="pomodoro-warning-container">
+                            <p>Are you sure you want to reset?</p>
+                            <p>(Study time will not be counted if not on break)</p>
+                            <div class="pomodoro-warning-ctas">
+                                <button class="pomodoro-warning-cta pomodoro-warning-cta--no">No</button>
+                                <button class="pomodoro-warning-cta pomodoro-warning-cta--giveup">Give up</button>
                             </div>
                         </div>
                     </div>
@@ -225,15 +234,15 @@
                             <div class="pomodoro-options">
                                 <div class="pomodoro-option-one">
                                     <span>Pomodoro</span>
-                                    <input type="number" step="5" value="25" class="pomodoroTime">
+                                    <input type="number" step="5" min="1" max="240" value="25" class="pomodoroTime">
                                 </div>
                                 <div class="pomodoro-option-two">
                                     <span>Short break</span>
-                                    <input type="number" step="1" value="5" class="pomodoroShortBreak">
+                                    <input type="number" step="1" min="1" max="240" value="5" class="pomodoroShortBreak">
                                 </div>
                                 <div class="pomodoro-option-three">
                                     <span>Long break</span>
-                                    <input type="number" step="5" value="15" class="pomodoroLongBreak">
+                                    <input type="number" step="5" min="1" max="240" value="15" class="pomodoroLongBreak">
                                 </div>
                                 <div class="pomodoro-option-four">
                                     <i class="fab fa-gripfire" title="Deep mode"></i>
@@ -258,6 +267,35 @@
                         <div class="pomodoro-settings-footer">
                             <button class="pomodoro-btn">Start timer</button>
                         </div>
+                    </div>
+                </div>
+                <div class="pomodoro-history-container">
+                    <div class="pomodoro-history-top">
+                        <p>Date</p>
+                        <p>Mins</p>
+                    </div>
+                    <div class="pomodoro-history-main">
+                        <ul class="pomodoro-history-dates">
+                            <li class="pomodoro-history-date">27/09/21</li>
+                            <li class="pomodoro-history-date">Monday</li>
+                            <li class="pomodoro-history-date">Monday</li>
+                            <li class="pomodoro-history-date">Monday</li>
+                            <li class="pomodoro-history-date">Monday</li>
+                        </ul>
+                        <ul class="pomodoro-history-time">
+                            <li class="pomodoro-history-minutes">20</li>
+                            <li class="pomodoro-history-minutes">20</li>
+                            <li class="pomodoro-history-minutes">20</li>
+                            <li class="pomodoro-history-minutes">20</li>
+                            <li class="pomodoro-history-minutes">20</li>
+                        </ul>
+                    </div>
+                    <div class="pomodoro-history-footer">
+                        <div class="pomodoro-history-total">
+                            <p>Total</p>
+                            <p class="pomodoro-history-totalminutes">120</p>
+                        </div>
+                        <button class="pomodoro-history-reset">Reset</button>
                     </div>
                 </div>
             </div>

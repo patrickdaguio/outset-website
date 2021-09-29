@@ -130,6 +130,8 @@ const config = {
 };
 var _default = config;
 exports.default = _default;
+},{}],"src/images/pomodoro.mp3":[function(require,module,exports) {
+module.exports = "/pomodoro.93003833.mp3";
 },{}],"src/images/weather/storming.png":[function(require,module,exports) {
 module.exports = "/storming.c455c261.png";
 },{}],"src/images/weather/sunny.png":[function(require,module,exports) {
@@ -174,6 +176,8 @@ module.exports = "/mantra.b7a8c186.svg";
 "use strict";
 
 var _config = _interopRequireDefault(require("./config"));
+
+var _pomodoro = _interopRequireDefault(require("../images/pomodoro.mp3"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -445,7 +449,7 @@ const linksObject = {
   }
 };
 if (localStorage.getItem('urls') === null) linksObject.urls = [];else linksObject.urls = JSON.parse(localStorage.getItem('urls'));
-chromeTab.addEventListener('click', () => window.open('chrome://newtab'));
+chromeTab.addEventListener('click', () => window.open('chrome://newtab', '_blank'));
 linkIcon.addEventListener('click', () => {
   linksObject.resetInputs();
   linksObject.loadUrls();
@@ -516,6 +520,10 @@ document.addEventListener('click', e => {
     }
 
     inputContainer.innerHTML = '';
+  }
+
+  if (!pomodoroAppContainer.contains(e.target)) {
+    pomodoroHistoryContainer.classList.remove('openHistoryContainer');
   }
 }); // Greeting App
 // HTML Tags
@@ -626,15 +634,127 @@ const pomodoroCycleMsg = document.querySelector('.pomodoro-cycle');
 const pomodoroCounter = document.querySelector('.pomodoro-counter');
 const pomodoroResetBtn = document.querySelector('.pomodoro-cta--reset');
 const pomodoroPauseBtn = document.querySelector('.pomodoro-cta--pause');
-const pomodoroStopBtn = document.querySelector('.pomodoro-cta--stop');
-const pomodoroHistory = document.querySelector('.pomodoroHistory');
+const pomodoroHistoryBtn = document.querySelector('.pomodoroHistory');
+const pomodoroWarning = document.querySelector('.pomodoro-warning');
+const pomodoroCancelBtn = document.querySelector('.pomodoro-warning-cta--no');
+const pomodoroStopBtn = document.querySelector('.pomodoro-warning-cta--giveup');
+const pomodoroHistoryContainer = document.querySelector('.pomodoro-history-container');
+const pomodoroHistoryReset = document.querySelector('.pomodoro-history-reset');
+const historyDatesList = document.querySelector('.pomodoro-history-dates');
+const historyMinsList = document.querySelector('.pomodoro-history-time');
+const historyTotalMins = document.querySelector('.pomodoro-history-totalminutes');
+const pomodoroAudioHello = new Audio(_pomodoro.default);
 const pomodoroApp = {
   minutes: pomodoroTimeInput.value,
-  seconds: 2,
-  minutesInverval: null,
-  secondsInterval: null,
-  shortBreakInterval: null,
-  longBreakInterval: null,
+  seconds: 5,
+  pomodoroCount: 0,
+  cycleCount: 0,
+  paused: false,
+  //pomodoroAudio: new Audio('pomodoro.mp3'),
+  pomodoroDate: new Date(),
+  historyScores: localStorage.getItem('historyScores') === null ? [] : JSON.parse(localStorage.getItem('historyScores')),
+  secondsTimer: function () {
+    pomodoroApp.seconds = pomodoroApp.seconds - 1;
+    if (pomodoroApp.seconds < 10 && pomodoroApp.seconds >= 0) pomodoroSecs.innerText = '0' + pomodoroApp.seconds;else pomodoroSecs.innerText = pomodoroApp.seconds;
+    if (pomodoroApp.minutes < 10 && pomodoroApp.minutes >= 0) pomodoroMins.innerText = '0' + pomodoroApp.minutes;else pomodoroMins.innerText = pomodoroApp.minutes;
+
+    if (pomodoroApp.minutes < 0) {
+      if (pomodoroMsg.textContent == 'Time to focus.') document.title = `Focus - 00:00`;else document.title = `Break - 00:00`;
+    } else {
+      if (pomodoroMsg.textContent == 'Time to focus.') {
+        document.title = `Focus - ${pomodoroMins.innerText}:${pomodoroSecs.innerText}`;
+      } else {
+        document.title = `Break - ${pomodoroMins.innerText}:${pomodoroSecs.innerText}`;
+      }
+    }
+
+    if (pomodoroApp.seconds <= 0) {
+      pomodoroApp.minutes = pomodoroApp.minutes - 1;
+      pomodoroApp.seconds = 5;
+
+      if (pomodoroApp.minutes < 0) {
+        pomodoroAudioHello.play();
+        pomodoroStartContainer.style.opacity = '0';
+        setTimeout(() => {
+          pomodoroStartContainer.style.opacity = '1';
+
+          if (pomodoroMsg.textContent == 'Time to focus.') {
+            const sameDay = pomodoroApp.historyScores.findIndex(score => score.date === `${pomodoroApp.pomodoroDate.getDate()}/${pomodoroApp.pomodoroDate.getMonth() + 1}/${pomodoroApp.pomodoroDate.getFullYear()}`);
+
+            if (sameDay >= 0) {
+              pomodoroApp.historyScores[sameDay].minutes += parseInt(pomodoroTimeInput.value);
+            } else {
+              pomodoroApp.historyScores.push({
+                date: `${pomodoroApp.pomodoroDate.getDate()}/${pomodoroApp.pomodoroDate.getMonth() + 1}/${pomodoroApp.pomodoroDate.getFullYear()}`,
+                minutes: parseInt(pomodoroTimeInput.value)
+              });
+            }
+
+            localStorage.setItem('historyScores', JSON.stringify(pomodoroApp.historyScores));
+
+            if (pomodoroApp.pomodoroCount === 3) {
+              clearInterval(pomodoroApp.secondsInterval);
+              pomodoroApp.minutes = parseInt(pomodoroLongBreak.value) - 1;
+              pomodoroMins.innerText = pomodoroApp.minutes;
+              pomodoroApp.cycleCount++;
+              pomodoroCounter.textContent = pomodoroApp.cycleCount;
+              if (pomodoroApp.minutes < 10 && pomodoroApp.minutes >= 0) pomodoroMins.innerText = '0' + pomodoroApp.minutes;else pomodoroMins.innerText = pomodoroApp.minutes;
+              pomodoroMsg.textContent = 'Time for a long break.';
+              pomodoroResetBtn.textContent = 'End';
+              pomodoroApp.secondsInterval = setInterval(pomodoroApp.secondsTimer, 1000);
+            } else {
+              clearInterval(pomodoroApp.secondsInterval);
+              pomodoroApp.minutes = parseInt(pomodoroShortBreak.value) - 1;
+              pomodoroMins.innerText = pomodoroApp.minutes;
+              if (pomodoroApp.minutes < 10 && pomodoroApp.minutes >= 0) pomodoroMins.innerText = '0' + pomodoroApp.minutes;else pomodoroMins.innerText = pomodoroApp.minutes;
+              pomodoroMsg.textContent = 'Time for a short break.';
+              pomodoroResetBtn.textContent = 'End';
+
+              if (repeatModeBtn.checked) {
+                pomodoroApp.pomodoroCount++;
+                pomodoroApp.cycleCount++;
+                pomodoroCounter.textContent = pomodoroApp.cycleCount;
+              }
+
+              pomodoroApp.secondsInterval = setInterval(pomodoroApp.secondsTimer, 1000);
+            }
+          } else if (pomodoroMsg.textContent == 'Time for a short break.') {
+            if (!repeatModeBtn.checked) {
+              clearInterval(pomodoroApp.secondsInterval);
+              pomodoroApp.minutes = 0;
+              pomodoroApp.seconds = 5;
+              pomodoroStartContainer.style.opacity = '0';
+              pomodoroStartContainer.style.visibility = 'hidden';
+              pomodoroSettingsContainer.style.display = 'block';
+              pomodoroMsg.textContent = 'Time to focus.';
+              pomodoroResetBtn.textContent = 'Reset';
+              setTimeout(() => {
+                pomodoroSettingsContainer.style.opacity = '1';
+              }, 100);
+              document.title = 'Outset';
+            } else if (repeatModeBtn.checked) {
+              clearInterval(pomodoroApp.secondsInterval);
+              pomodoroApp.minutes = parseInt(pomodoroTimeInput.value) - 1;
+              pomodoroMins.innerText = pomodoroApp.minutes;
+              if (pomodoroApp.minutes < 10 && pomodoroApp.minutes >= 0) pomodoroMins.innerText = '0' + pomodoroApp.minutes;else pomodoroMins.innerText = pomodoroApp.minutes;
+              pomodoroMsg.textContent = 'Time to focus.';
+              pomodoroResetBtn.textContent = 'Reset';
+              pomodoroApp.secondsInterval = setInterval(pomodoroApp.secondsTimer, 1000);
+            }
+          } else if (pomodoroMsg.textContent == 'Time for a long break.') {
+            clearInterval(pomodoroApp.secondsInterval);
+            pomodoroApp.pomodoroCount = 0;
+            pomodoroApp.minutes = parseInt(pomodoroTimeInput.value) - 1;
+            pomodoroMins.innerText = pomodoroApp.minutes;
+            if (pomodoroApp.minutes < 10 && pomodoroApp.minutes >= 0) pomodoroMins.innerText = '0' + pomodoroApp.minutes;else pomodoroMins.innerText = pomodoroApp.minutes;
+            pomodoroMsg.textContent = 'Time to focus.';
+            pomodoroResetBtn.textContent = 'Reset';
+            pomodoroApp.secondsInterval = setInterval(pomodoroApp.secondsTimer, 1000);
+          }
+        }, 1000);
+      }
+    }
+  },
   openPomodoroApp: function () {
     pomodoroAppContainer.style.display = 'block';
     timeAppContainer.style.opacity = '0';
@@ -644,6 +764,7 @@ const pomodoroApp = {
     }, 1000);
   },
   closePomodoroApp: function () {
+    pomodoroHistoryContainer.classList.remove('openHistoryContainer');
     pomodoroAppContainer.style.opacity = '0';
     timeAppContainer.style.display = 'block';
     setTimeout(() => {
@@ -652,129 +773,38 @@ const pomodoroApp = {
     }, 1000);
   },
   startPomodoro: function () {
-    let pomodoroCount = 0;
-    let cycleCount = 0;
-    if (!repeatModeBtn.checked) pomodoroCycleMsg.style.display = 'none';else pomodoroCycleMsg.style.display = 'block';
-    if (deepModeBtn.checked) pomodoroPauseBtn.style.display = 'none';
+    if (pomodoroTimeInput.value > 0 && pomodoroShortBreak.value > 0 && pomodoroLongBreak.value > 0) {
+      pomodoroHistoryContainer.classList.remove('openHistoryContainer');
+      showPomodoroCta.classList.replace('fa-arrow-down', 'fa-arrow-up');
+      pomodoroCtaContainer.style.height = '0';
+      pomodoroPauseBtn.textContent = 'Pause';
+      pomodoroResetBtn.textContent = 'Reset';
+      if (!repeatModeBtn.checked) pomodoroCycleMsg.style.display = 'none';else pomodoroCycleMsg.style.display = 'block';
+      if (deepModeBtn.checked) pomodoroPauseBtn.style.display = 'none';else pomodoroPauseBtn.style.display = 'block';
 
-    if (pomodoroTimeContainer.style.display == 'flex') {
-      pomodoroSettingsContainer.style.opacity = '0';
-      setTimeout(() => {
-        pomodoroStartContainer.style.opacity = '1';
-        pomodoroSettingsContainer.style.display = 'none';
-      }, 1000);
-    } else {
-      pomodoroSettingsContainer.style.opacity = '0';
-      pomodoroTimeContainer.style.display = 'flex';
-      setTimeout(() => {
-        pomodoroTimeContainer.style.opacity = '1';
-        pomodoroSettingsContainer.style.display = 'none';
-      }, 1000);
-    }
-
-    pomodoroApp.minutes = parseInt(pomodoroTimeInput.value) - 1;
-    pomodoroMins.innerText = pomodoroApp.minutes;
-    if (pomodoroApp.minutes < 10) pomodoroMins.innerText = '0' + pomodoroApp.minutes;else pomodoroMins.innerText = pomodoroApp.minutes;
-    pomodoroApp.secondsInterval = setInterval(secondsTimer, 1000);
-    setTimeout(() => pomodoroApp.minutesInverval = setInterval(minutesTimer, 2000), 1000);
-
-    function minutesTimer() {
-      if (pomodoroApp.seconds >= 0) {
-        pomodoroApp.minutes = pomodoroApp.minutes - 1;
-        pomodoroMins.innerText = pomodoroApp.minutes;
+      if (pomodoroTimeContainer.style.display == 'flex') {
+        pomodoroSettingsContainer.style.opacity = '0';
+        pomodoroStartContainer.style.display = 'block';
+        setTimeout(() => {
+          pomodoroStartContainer.style.opacity = '1';
+          pomodoroStartContainer.style.visibility = 'visible';
+          pomodoroSettingsContainer.style.display = 'none';
+        }, 1000);
+      } else {
+        pomodoroSettingsContainer.style.opacity = '0';
+        pomodoroTimeContainer.style.display = 'flex';
+        setTimeout(() => {
+          pomodoroTimeContainer.style.opacity = '1';
+          pomodoroSettingsContainer.style.display = 'none';
+        }, 1000);
       }
 
-      if (pomodoroApp.minutes < 10 && pomodoroApp.minutes >= 0) pomodoroMins.innerText = '0' + pomodoroApp.minutes;else pomodoroMins.innerText = pomodoroApp.minutes;
-    }
-
-    function secondsTimer() {
-      pomodoroApp.seconds = pomodoroApp.seconds - 1;
-      if (pomodoroApp.seconds < 10 && pomodoroApp.seconds >= 0) pomodoroSecs.innerText = '0' + pomodoroApp.seconds;else pomodoroSecs.innerText = pomodoroApp.seconds;
-
-      if (pomodoroApp.seconds <= 0) {
-        pomodoroApp.seconds = 2;
-
-        if (pomodoroApp.minutes <= 0) {
-          pomodoroStartContainer.style.opacity = '0';
-          setTimeout(() => {
-            pomodoroStartContainer.style.opacity = '1';
-
-            if (pomodoroMsg.textContent == 'Time to focus.') {
-              if (pomodoroCount === 3) {
-                clearInterval(pomodoroApp.minutesInverval);
-                pomodoroApp.minutes = parseInt(pomodoroLongBreak.value) - 1;
-                pomodoroMins.innerText = pomodoroApp.minutes;
-                cycleCount++;
-                pomodoroCounter.textContent = cycleCount;
-                if (pomodoroApp.minutes < 10 && pomodoroApp.minutes >= 0) pomodoroMins.innerText = '0' + pomodoroApp.minutes;else pomodoroMins.innerText = pomodoroApp.minutes;
-                pomodoroMsg.textContent = 'Time for a long break.';
-                pomodoroApp.longBreakInterval = setInterval(longTimer, 2000);
-              } else {
-                clearInterval(pomodoroApp.minutesInverval);
-                pomodoroApp.minutes = parseInt(pomodoroShortBreak.value) - 1;
-                pomodoroMins.innerText = pomodoroApp.minutes;
-                if (pomodoroApp.minutes < 10 && pomodoroApp.minutes >= 0) pomodoroMins.innerText = '0' + pomodoroApp.minutes;else pomodoroMins.innerText = pomodoroApp.minutes;
-                pomodoroMsg.textContent = 'Time for a short break.';
-
-                if (repeatModeBtn.checked) {
-                  pomodoroCount++;
-                  cycleCount++;
-                  pomodoroCounter.textContent = cycleCount;
-                }
-
-                pomodoroApp.shortBreakInterval = setInterval(shortTimer, 2000);
-              }
-            } else if (pomodoroMsg.textContent == 'Time for a short break.') {
-              if (!repeatModeBtn.checked) {
-                clearInterval(pomodoroApp.secondsInterval);
-                clearInterval(pomodoroApp.shortBreakInterval);
-                clearInterval(pomodoroApp.minutesInverval);
-                pomodoroApp.minutes = 0;
-                pomodoroApp.seconds = 2;
-                pomodoroStartContainer.style.opacity = '0';
-                pomodoroSettingsContainer.style.display = 'block';
-                pomodoroMsg.textContent = 'Time to focus.';
-                setTimeout(() => {
-                  pomodoroSettingsContainer.style.opacity = '1';
-                }, 100);
-              } else if (repeatModeBtn.checked) {
-                clearInterval(pomodoroApp.shortBreakInterval);
-                pomodoroApp.minutes = parseInt(pomodoroTimeInput.value) - 1;
-                pomodoroMins.innerText = pomodoroApp.minutes;
-                if (pomodoroApp.minutes < 10 && pomodoroApp.minutes >= 0) pomodoroMins.innerText = '0' + pomodoroApp.minutes;else pomodoroMins.innerText = pomodoroApp.minutes;
-                pomodoroMsg.textContent = 'Time to focus.';
-                pomodoroApp.minutesInverval = setInterval(minutesTimer, 2000);
-              }
-            } else if (pomodoroMsg.textContent == 'Time for a long break.') {
-              clearInterval(pomodoroApp.longBreakInterval);
-              pomodoroCount = 0;
-              pomodoroApp.minutes = parseInt(pomodoroTimeInput.value) - 1;
-              pomodoroMins.innerText = pomodoroApp.minutes;
-              if (pomodoroApp.minutes < 10 && pomodoroApp.minutes >= 0) pomodoroMins.innerText = '0' + pomodoroApp.minutes;else pomodoroMins.innerText = pomodoroApp.minutes;
-              pomodoroMsg.textContent = 'Time to focus.';
-              pomodoroApp.minutesInverval = setInterval(minutesTimer, 2000);
-            }
-          }, 1000);
-        }
-      }
-    }
-
-    function shortTimer() {
-      if (pomodoroApp.seconds > 0) {
-        pomodoroApp.minutes = pomodoroApp.minutes - 1;
-        pomodoroMins.innerText = pomodoroApp.minutes;
-      }
-
-      if (pomodoroApp.minutes < 10 && pomodoroApp.minutes >= 0) pomodoroMins.innerText = '0' + pomodoroApp.minutes;else pomodoroMins.innerText = pomodoroApp.minutes;
-    }
-
-    function longTimer() {
-      if (pomodoroApp.seconds > 0) {
-        pomodoroApp.minutes = pomodoroApp.minutes - 1;
-        pomodoroMins.innerText = pomodoroApp.minutes;
-      }
-
-      if (pomodoroApp.minutes < 10 && pomodoroApp.minutes >= 0) pomodoroMins.innerText = '0' + pomodoroApp.minutes;else pomodoroMins.innerText = pomodoroApp.minutes;
+      pomodoroApp.minutes = parseInt(pomodoroTimeInput.value) - 1;
+      pomodoroApp.seconds = 5;
+      pomodoroMins.innerText = pomodoroApp.minutes;
+      pomodoroSecs.innerText = pomodoroApp.seconds;
+      if (pomodoroApp.minutes < 10) pomodoroMins.innerText = '0' + pomodoroApp.minutes;else pomodoroMins.innerText = pomodoroApp.minutes;
+      pomodoroApp.secondsInterval = setInterval(pomodoroApp.secondsTimer, 1000);
     }
   },
   showPomodoroBtns: function () {
@@ -787,46 +817,78 @@ const pomodoroApp = {
     }
   },
   pausePomodoroTimer: function (e) {
-    if (e.target.textContent == 'Pause') {
+    if (e.target.textContent == 'Pause' && pomodoroApp.seconds !== 5) {
+      pomodoroApp.paused = true;
       e.target.textContent = 'Play';
       clearInterval(pomodoroApp.secondsInterval);
-
-      if (pomodoroMsg.textContent == 'Time for a long break.') {
-        clearInterval(pomodoroApp.longBreakInterval);
-        console.log('long');
-      } else if (pomodoroMsg.textContent == 'Time for a short break.') {
-        clearInterval(pomodoroApp.shortBreakInterval);
-        console.log('short');
-      } else if (pomodoroMsg.textContent == 'Time to focus.') {
-        clearInterval(pomodoroApp.minutesInverval);
-        console.log('focus');
-      }
-    } else if (e.target.textContent == 'Play') {
+    } else if (e.target.textContent == 'Play' && pomodoroApp.seconds !== 5) {
+      pomodoroApp.paused = false;
       e.target.textContent = 'Pause';
-      pomodoroApp.secondsInterval = setInterval(secondsTimer, 1000);
-
-      if (pomodoroMsg.textContent == 'Time for a long break.') {
-        pomodoroApp.longBreakInterval = setInterval(longTimer, 2000);
-        console.log('play long');
-      } else if (pomodoroMsg.textContent == 'Time for a short break.') {
-        pomodoroApp.shortBreakInterval = setInterval(shortTimer, 2000);
-        console.log(pomodoroApp.minutes);
-        console.log(pomodoroApp.seconds);
-        console.log('play short');
-      } else if (pomodoroMsg.textContent == 'Time to focus.') {
-        pomodoroApp.minutesInverval = setInterval(minutesTimer, 2000);
-        console.log('play focus');
-      }
+      pomodoroApp.minutes = parseInt(pomodoroMins.innerText);
+      pomodoroApp.seconds = parseInt(pomodoroSecs.innerText);
+      pomodoroApp.secondsInterval = setInterval(pomodoroApp.secondsTimer, 1000);
     }
   },
-  resetPomodoroTimer: function () {
-    console.log('do this next');
+  resetPomodoroTimer: function (e) {
+    if (pomodoroResetBtn.textContent === 'End') {
+      clearInterval(pomodoroApp.secondsInterval);
+      pomodoroApp.pomodoroCount = 0;
+      pomodoroApp.cycleCount = 0;
+      pomodoroSettingsContainer.style.display = 'block';
+      pomodoroStartContainer.style.opacity = '0';
+      setTimeout(() => {
+        pomodoroMsg.textContent = 'Time to focus.';
+        pomodoroResetBtn.textContent = 'Reset';
+        pomodoroCounter.textContent = pomodoroApp.cycleCount;
+        pomodoroStartContainer.style.display = 'none';
+        pomodoroSettingsContainer.style.opacity = '1';
+      }, 1000);
+    } else {
+      pomodoroWarning.style.opacity = '1';
+      pomodoroWarning.style.visibility = 'visible';
+    }
   },
-  stopPomodoroTimer: function () {
-    console.log('do this last');
+  closeWarning: function () {
+    pomodoroWarning.style.opacity = '0';
+    pomodoroWarning.style.visibility = 'hidden';
+  },
+  exitPomodoro: function () {
+    clearInterval(pomodoroApp.secondsInterval);
+    pomodoroApp.pomodoroCount = 0;
+    pomodoroApp.cycleCount = 0;
+    pomodoroSettingsContainer.style.display = 'block';
+    pomodoroStartContainer.style.opacity = '0';
+    pomodoroWarning.style.opacity = '0';
+    pomodoroWarning.style.visibility = 'hidden';
+    pomodoroWarning.style.display = 'none';
+    setTimeout(() => {
+      pomodoroCounter.textContent = pomodoroApp.cycleCount;
+      pomodoroStartContainer.style.display = 'none';
+      pomodoroSettingsContainer.style.opacity = '1';
+      pomodoroWarning.style.display = 'flex';
+    }, 1000);
   },
   showPomdoroHistory: function () {
-    console.log('do this last last');
+    pomodoroHistoryContainer.classList.toggle('openHistoryContainer');
+    historyDatesList.innerHTML = '';
+    historyMinsList.innerHTML = '';
+    pomodoroApp.historyScores.forEach(score => {
+      const historyDate = document.createElement('li');
+      historyDate.classList.add('pomodoro-history-date');
+      historyDate.textContent = score.date;
+      const historyMin = document.createElement('li');
+      historyMin.classList.add('pomodoro-history-minutes');
+      historyMin.textContent = score.minutes;
+      historyDatesList.appendChild(historyDate);
+      historyMinsList.appendChild(historyMin);
+    });
+    historyTotalMins.textContent = pomodoroApp.historyScores.reduce((prev, curr) => prev + parseInt(curr.minutes), 0);
+  },
+  resetPomodoroHistory: function () {
+    historyDatesList.innerHTML = '';
+    historyMinsList.innerHTML = '';
+    pomodoroApp.historyScores = [];
+    localStorage.setItem('historyScores', JSON.stringify(pomodoroApp.historyScores));
   }
 };
 pomodoroIcon.addEventListener('click', pomodoroApp.openPomodoroApp);
@@ -834,9 +896,11 @@ closePomodoroBtn.addEventListener('click', pomodoroApp.closePomodoroApp);
 startPomodoroBtn.addEventListener('click', pomodoroApp.startPomodoro);
 showPomodoroCta.addEventListener('click', pomodoroApp.showPomodoroBtns);
 pomodoroResetBtn.addEventListener('click', pomodoroApp.resetPomodoroTimer);
-pomodoroStopBtn.addEventListener('click', pomodoroApp.stopPomodoroTimer);
 pomodoroPauseBtn.addEventListener('click', pomodoroApp.pausePomodoroTimer);
-pomodoroHistory.addEventListener('click', pomodoroApp.showPomdoroHistory);
+pomodoroHistoryBtn.addEventListener('click', pomodoroApp.showPomdoroHistory);
+pomodoroCancelBtn.addEventListener('click', pomodoroApp.closeWarning);
+pomodoroStopBtn.addEventListener('click', pomodoroApp.exitPomodoro);
+pomodoroHistoryReset.addEventListener('click', pomodoroApp.resetPomodoroHistory);
 greetingsEllipsisIcon.addEventListener('click', openGreetingsOptions);
 editNameBtn.addEventListener('click', editName);
 greetingName.addEventListener('dblclick', editName);
@@ -1775,7 +1839,7 @@ featuresDots.forEach((dot, i) => dot.addEventListener('click', () => {
       break;
   }
 }));
-},{"./config":"src/js/config.js","../images/weather/storming.png":"src/images/weather/storming.png","../images/weather/sunny.png":"src/images/weather/sunny.png","../images/weather/snowing.png":"src/images/weather/snowing.png","../images/weather/raining.png":"src/images/weather/raining.png","../images/weather/cloudy sun.png":"src/images/weather/cloudy sun.png","../images/weather/cloudy rain.png":"src/images/weather/cloudy rain.png","../images/weather/cloudy.png":"src/images/weather/cloudy.png","../images/weather/windy.png":"src/images/weather/windy.png","../images/todo/uncheck1.png":"src/images/todo/uncheck1.png","../images/todo/trash1.png":"src/images/todo/trash1.png","../images/todo/checked1.png":"src/images/todo/checked1.png","../images/svgs/focus.svg":"src/images/svgs/focus.svg","../images/svgs/todo.svg":"src/images/svgs/todo.svg","../images/svgs/links.svg":"src/images/svgs/links.svg","../images/svgs/calendar.svg":"src/images/svgs/calendar.svg","../images/svgs/clock.svg":"src/images/svgs/clock.svg","../images/svgs/weather.svg":"src/images/svgs/weather.svg","../images/svgs/picture.svg":"src/images/svgs/picture.svg","../images/svgs/quote.svg":"src/images/svgs/quote.svg","../images/svgs/mantra.svg":"src/images/svgs/mantra.svg"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./config":"src/js/config.js","../images/pomodoro.mp3":"src/images/pomodoro.mp3","../images/weather/storming.png":"src/images/weather/storming.png","../images/weather/sunny.png":"src/images/weather/sunny.png","../images/weather/snowing.png":"src/images/weather/snowing.png","../images/weather/raining.png":"src/images/weather/raining.png","../images/weather/cloudy sun.png":"src/images/weather/cloudy sun.png","../images/weather/cloudy rain.png":"src/images/weather/cloudy rain.png","../images/weather/cloudy.png":"src/images/weather/cloudy.png","../images/weather/windy.png":"src/images/weather/windy.png","../images/todo/uncheck1.png":"src/images/todo/uncheck1.png","../images/todo/trash1.png":"src/images/todo/trash1.png","../images/todo/checked1.png":"src/images/todo/checked1.png","../images/svgs/focus.svg":"src/images/svgs/focus.svg","../images/svgs/todo.svg":"src/images/svgs/todo.svg","../images/svgs/links.svg":"src/images/svgs/links.svg","../images/svgs/calendar.svg":"src/images/svgs/calendar.svg","../images/svgs/clock.svg":"src/images/svgs/clock.svg","../images/svgs/weather.svg":"src/images/svgs/weather.svg","../images/svgs/picture.svg":"src/images/svgs/picture.svg","../images/svgs/quote.svg":"src/images/svgs/quote.svg","../images/svgs/mantra.svg":"src/images/svgs/mantra.svg"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -1803,7 +1867,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53781" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61471" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
