@@ -643,14 +643,16 @@ const pomodoroHistoryReset = document.querySelector('.pomodoro-history-reset');
 const historyDatesList = document.querySelector('.pomodoro-history-dates');
 const historyMinsList = document.querySelector('.pomodoro-history-time');
 const historyTotalMins = document.querySelector('.pomodoro-history-totalminutes');
+const outsetHeader = document.querySelector('header');
+const outsetFooter = document.querySelector('footer');
+const pomodoroThemeBtns = document.querySelectorAll('.pomodoroThemeIcons');
 const pomodoroAudioHello = new Audio(_pomodoro.default);
 const pomodoroApp = {
   minutes: pomodoroTimeInput.value,
-  seconds: 5,
+  seconds: 60,
   pomodoroCount: 0,
   cycleCount: 0,
   paused: false,
-  //pomodoroAudio: new Audio('pomodoro.mp3'),
   pomodoroDate: new Date(),
   historyScores: localStorage.getItem('historyScores') === null ? [] : JSON.parse(localStorage.getItem('historyScores')),
   secondsTimer: function () {
@@ -670,7 +672,7 @@ const pomodoroApp = {
 
     if (pomodoroApp.seconds <= 0) {
       pomodoroApp.minutes = pomodoroApp.minutes - 1;
-      pomodoroApp.seconds = 5;
+      pomodoroApp.seconds = 60;
 
       if (pomodoroApp.minutes < 0) {
         pomodoroAudioHello.play();
@@ -722,7 +724,7 @@ const pomodoroApp = {
             if (!repeatModeBtn.checked) {
               clearInterval(pomodoroApp.secondsInterval);
               pomodoroApp.minutes = 0;
-              pomodoroApp.seconds = 5;
+              pomodoroApp.seconds = 60;
               pomodoroStartContainer.style.opacity = '0';
               pomodoroStartContainer.style.visibility = 'hidden';
               pomodoroSettingsContainer.style.display = 'block';
@@ -769,7 +771,12 @@ const pomodoroApp = {
     timeAppContainer.style.display = 'block';
     setTimeout(() => {
       timeAppContainer.style.opacity = '1';
+      outsetHeader.style.opacity = '1';
+      outsetFooter.style.opacity = '1';
+      todoOpen.style.opacity = '1';
       pomodoroAppContainer.style.display = 'none';
+      pomodoroTimeContainer.style.display = 'none';
+      pomodoroTimeContainer.style.opacity = '0';
     }, 1000);
   },
   startPomodoro: function () {
@@ -781,26 +788,22 @@ const pomodoroApp = {
       pomodoroResetBtn.textContent = 'Reset';
       if (!repeatModeBtn.checked) pomodoroCycleMsg.style.display = 'none';else pomodoroCycleMsg.style.display = 'block';
       if (deepModeBtn.checked) pomodoroPauseBtn.style.display = 'none';else pomodoroPauseBtn.style.display = 'block';
-
-      if (pomodoroTimeContainer.style.display == 'flex') {
-        pomodoroSettingsContainer.style.opacity = '0';
-        pomodoroStartContainer.style.display = 'block';
-        setTimeout(() => {
-          pomodoroStartContainer.style.opacity = '1';
-          pomodoroStartContainer.style.visibility = 'visible';
-          pomodoroSettingsContainer.style.display = 'none';
-        }, 1000);
-      } else {
-        pomodoroSettingsContainer.style.opacity = '0';
-        pomodoroTimeContainer.style.display = 'flex';
-        setTimeout(() => {
-          pomodoroTimeContainer.style.opacity = '1';
-          pomodoroSettingsContainer.style.display = 'none';
-        }, 1000);
-      }
-
+      pomodoroSettingsContainer.style.opacity = '0';
+      pomodoroTimeContainer.style.display = 'flex';
+      pomodoroStartContainer.style.display = 'block';
+      setTimeout(() => {
+        pomodoroStartContainer.style.opacity = '1';
+        pomodoroStartContainer.style.visibility = 'visible';
+        pomodoroTimeContainer.style.opacity = '1';
+        pomodoroSettingsContainer.style.display = 'none';
+      }, 1000);
+      pomodoroStartContainer.addEventListener('transitionend', () => {
+        outsetHeader.style.opacity = '0';
+        outsetFooter.style.opacity = '0';
+        todoOpen.style.opacity = '0';
+      });
       pomodoroApp.minutes = parseInt(pomodoroTimeInput.value) - 1;
-      pomodoroApp.seconds = 5;
+      pomodoroApp.seconds = 60;
       pomodoroMins.innerText = pomodoroApp.minutes;
       pomodoroSecs.innerText = pomodoroApp.seconds;
       if (pomodoroApp.minutes < 10) pomodoroMins.innerText = '0' + pomodoroApp.minutes;else pomodoroMins.innerText = pomodoroApp.minutes;
@@ -817,11 +820,11 @@ const pomodoroApp = {
     }
   },
   pausePomodoroTimer: function (e) {
-    if (e.target.textContent == 'Pause' && pomodoroApp.seconds !== 5) {
+    if (e.target.textContent == 'Pause' && pomodoroApp.seconds !== 60) {
       pomodoroApp.paused = true;
       e.target.textContent = 'Play';
       clearInterval(pomodoroApp.secondsInterval);
-    } else if (e.target.textContent == 'Play' && pomodoroApp.seconds !== 5) {
+    } else if (e.target.textContent == 'Play' && pomodoroApp.seconds !== 60) {
       pomodoroApp.paused = false;
       e.target.textContent = 'Pause';
       pomodoroApp.minutes = parseInt(pomodoroMins.innerText);
@@ -837,6 +840,7 @@ const pomodoroApp = {
       pomodoroSettingsContainer.style.display = 'block';
       pomodoroStartContainer.style.opacity = '0';
       setTimeout(() => {
+        document.title = 'Outset';
         pomodoroMsg.textContent = 'Time to focus.';
         pomodoroResetBtn.textContent = 'Reset';
         pomodoroCounter.textContent = pomodoroApp.cycleCount;
@@ -861,6 +865,7 @@ const pomodoroApp = {
     pomodoroWarning.style.opacity = '0';
     pomodoroWarning.style.visibility = 'hidden';
     pomodoroWarning.style.display = 'none';
+    document.title = 'Outset';
     setTimeout(() => {
       pomodoroCounter.textContent = pomodoroApp.cycleCount;
       pomodoroStartContainer.style.display = 'none';
@@ -889,6 +894,17 @@ const pomodoroApp = {
     historyMinsList.innerHTML = '';
     pomodoroApp.historyScores = [];
     localStorage.setItem('historyScores', JSON.stringify(pomodoroApp.historyScores));
+  },
+  pomodoroChangeTheme: function (e) {
+    if (e.target.classList.contains('fa-sun')) {
+      pomodoroTimeContainer.setAttribute('id', '');
+      e.target.classList.replace('fa-sun', 'fa-moon');
+      pomodoroThemeBtns[1].classList.replace('fa-moon', 'fa-sun');
+    } else if (e.target.classList.contains('fa-moon')) {
+      pomodoroTimeContainer.id = 'pomodoroDarkMode';
+      e.target.classList.replace('fa-moon', 'fa-sun');
+      pomodoroThemeBtns[1].classList.replace('fa-sun', 'fa-moon');
+    }
   }
 };
 pomodoroIcon.addEventListener('click', pomodoroApp.openPomodoroApp);
@@ -901,6 +917,7 @@ pomodoroHistoryBtn.addEventListener('click', pomodoroApp.showPomdoroHistory);
 pomodoroCancelBtn.addEventListener('click', pomodoroApp.closeWarning);
 pomodoroStopBtn.addEventListener('click', pomodoroApp.exitPomodoro);
 pomodoroHistoryReset.addEventListener('click', pomodoroApp.resetPomodoroHistory);
+pomodoroThemeBtns.forEach(btn => btn.addEventListener('click', pomodoroApp.pomodoroChangeTheme));
 greetingsEllipsisIcon.addEventListener('click', openGreetingsOptions);
 editNameBtn.addEventListener('click', editName);
 greetingName.addEventListener('dblclick', editName);
@@ -926,6 +943,7 @@ function setIntention() {
     localStorage.setItem('intention', JSON.stringify(intention));
   } else if (intention.length > 0) {
     intentionQuestionContainer.style.visibility = 'hidden';
+    intentionQuestionContainer.style.opacity = '0';
     intentionAnswer.textContent = intention[0];
     intentionAnswerContainer.style.visibility = 'visible';
     intentionAnswerContainer.style.opacity = '1';
@@ -964,14 +982,16 @@ function intentionAnswerIcons() {
       intentionAnswerContainer.style.opacity = '0';
       setTimeout(() => {
         intentionAnswerContainer.style.visibility = 'hidden';
+        icon.style.visibility = 'hidden';
         intentionQuestionContainer.style.opacity = '1';
         intentionQuestionContainer.style.visibility = 'visible';
-        intention[0] = intentionInput.value;
       }, 600);
 
       if (e.target.classList.contains('fa-times')) {
         intentionInput.value = '';
         intention = [];
+      } else if (e.target.classList.contains('fa-pen')) {
+        intentionInput.value = intention[0];
       }
 
       localStorage.setItem('intention', JSON.stringify(intention));
@@ -1867,7 +1887,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61471" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55666" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
