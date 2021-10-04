@@ -1898,7 +1898,271 @@ footer {
   }
   .footer-space {
     display: flex;
+    align-items: center;
+    justify-content: flex-end;
     flex: 0 0 240px;
+    position: relative;
+    color: rgb(87, 82, 85);
+    ul {
+      list-style: none;
+    }
+    .tobe-container {
+      position: relative;
+      text-align: right;
+      cursor: pointer;
+      .tobe-title {
+        font-size: 1.05em;
+        line-height: 48px;
+        color: white;
+      }
+      .tobe-app {
+        bottom: 50px;
+        right: -20px;
+        padding: 1em 1.25em;
+        position: absolute;
+        background-color: white;
+        width: 320px;
+        height: auto;
+        border-radius: 0.35em;
+        text-align: left;
+        transform-origin: 90% 110%;
+        transform: scale(0) translateY(50px);
+        transition: 0.3s;
+        &::after {
+          content: "";
+          display: block;
+          position: absolute;
+          right: 34px;
+          bottom: -7px;
+          height: 0;
+          width: 0;
+          border-left: 7px solid transparent;
+          border-right: 7px solid transparent;
+          border-top: 7px solid white;
+        }
+        &__ellipsis-wrapper {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          opacity: 0;
+          justify-content: center;
+          cursor: pointer;
+          font-size: 0.8em;
+          i {
+            margin-top: 2px;
+            margin-right: 1px;
+          }
+          &::after {
+            content: "";
+            width: 22px;
+            opacity: 0;
+            height: 22px;
+            position: absolute;
+            background-color: rgba(80, 69, 69, 0.5);
+            border-radius: 50%;
+          }
+          &:hover {
+            i {
+              color: white;
+              z-index: 5;
+            }
+            &::after {
+              opacity: 1;
+            }
+          }
+        }
+        &__header {
+          position: relative;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 0.75em;
+          cursor: pointer;
+          &:hover .tobe-app__projects .tobe-app__ellipsis-wrapper {
+            opacity: 1;
+          }
+        }
+        &__projects {
+          display: flex;
+          align-items: center;
+          flex: 1 1 auto;
+          &:hover {
+            .tobe-app__projects__toggle {
+              &::after {
+                opacity: 1;
+              }
+              i {
+                color: white;
+                z-index: 5;
+              }
+            }
+          }
+          &__name {
+            font-size: 1.3em;
+            font-weight: 500;
+            margin-right: 0.5em;
+          }
+          &__toggle {
+            opacity: 1;
+            margin-top: 4px;
+          }
+          &__list {
+            background-color: rgb(87, 82, 85);
+            color: rgb(206, 206, 206);
+            position: absolute;
+            border-radius: 0.4em;
+            top: 36px;
+            z-index: 10;
+            font-size: 0.9em;
+            padding: 0.4em 1em;
+            min-width: 240px;
+            display: none;
+            &::after {
+              content: "";
+              position: absolute;
+              display: block;
+              opacity: 1;
+              top: -7px;
+              left: 18px;
+              border-left: 7px solid transparent;
+              border-right: 7px solid transparent;
+              border-bottom: 7px solid rgb(87, 82, 85);
+            }
+            &__item {
+              padding: 6px 0px;
+              &--active {
+                color: white;
+                .tobe-app__projects__list__count {
+                  display: inline-block;
+                }
+              }
+            }
+            &__count {
+              font-size: 0.85em;
+              margin-left: 0.25em;
+              display: none;
+            }
+            &__add-wrapper {
+              display: flex;
+              align-items: center;
+              i {
+                font-size: 0.7em;
+                margin-right: 0.5em;
+              }
+              span {
+                font-size: 0.9em;
+              }
+            }
+          }
+        }
+        &__options {
+          &:hover {
+            .tobe-app__projects__options__ellipsis-wrapper {
+              &::after {
+                opacity: 1;
+              }
+            }
+          }
+          &__ellipsis-wrapper {
+            opacity: 1;
+          }
+          &__dropdown-wrapper {
+            background-color: rgb(87, 82, 85);
+            color: rgb(206, 206, 206);
+            position: absolute;
+            border-radius: 0.4em;
+            top: 36px;
+            z-index: 10;
+            font-size: 0.85em;
+            right: -15px;
+            padding: 5px 0px;
+            display: none;
+            &::after {
+              content: "";
+              position: absolute;
+              display: block;
+              opacity: 1;
+              top: -7px;
+              right: 15px;
+              border-left: 7px solid transparent;
+              border-right: 7px solid transparent;
+              border-bottom: 7px solid rgb(87, 82, 85);
+            }
+          }
+          &__dropdown {
+            &__item {
+              padding: 0.35em 1em;
+              &:hover {
+                background-color: rgb(110, 107, 109);
+              }
+            }
+            &__line {
+              height: 1px;
+              margin: 5px 0;
+              padding: 0em;
+              background-color: white;
+            }
+          }
+        }
+        &__item {
+          display: flex;
+          align-items: center;
+          margin: 0.25em 0em;
+          &:hover {
+            .tobe-app__item__ellipsis {
+              opacity: 1;
+            }
+          }
+          &__checkbox {
+            margin-right: 0.6em;
+          }
+          &__name {
+            flex: 1 1 auto;
+          }
+          &__options {
+            position: relative;
+            display: flex;
+          }
+        }
+        &__dropdown-wrapper {
+          background-color: rgb(87, 82, 85);
+          color: rgb(206, 206, 206);
+          position: absolute;
+          box-shadow: 2px 2px 8px rgb(0 0 0 / 30%);
+          border-radius: 0.35em;
+          top: -4px;
+          z-index: 10;
+          font-size: 0.85em;
+          right: 22px;
+          width: max-content;
+          padding: 5px 0px;
+          display: none;
+        }
+        &__dropdown {
+          &__item {
+            padding: 0.5em 1em;
+            cursor: pointer;
+            &:hover {
+              background-color: rgb(110, 107, 109);
+            }
+          }
+        }
+        &__footer {
+          margin-top: 0.25em;
+          &__input {
+            padding-top: 10px;
+            display: block;
+            background: 0;
+            width: 100%;
+            border: 0;
+            color: rgb(87, 82, 85);
+            font-size: 1em;
+            font-weight: 500;
+            outline: none;
+          }
+        }
+      }
+    }
   }
 }
 

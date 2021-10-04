@@ -1858,7 +1858,19 @@ featuresDots.forEach((dot, i) => dot.addEventListener('click', () => {
       featuresIndex++;
       break;
   }
-}));
+})); // Tobe App
+
+const tobeContainer = document.querySelector('.tobe-container');
+const tobeProjectsContainer = document.querySelector('.tobe-app__projects');
+const tobeProjectsOptions = document.querySelector('.tobe-app__options');
+const tobeItemOptions = document.querySelector('.tobe-app__item__options');
+const tobeAppContainer = document.querySelector('.tobe-app');
+const tobeApp = {
+  openTobeApp: function () {
+    tobeAppContainer.classList.toggle('share-open');
+  }
+};
+tobeContainer.addEventListener('click', tobeApp.openTobeApp);
 },{"./config":"src/js/config.js","../images/pomodoro.mp3":"src/images/pomodoro.mp3","../images/weather/storming.png":"src/images/weather/storming.png","../images/weather/sunny.png":"src/images/weather/sunny.png","../images/weather/snowing.png":"src/images/weather/snowing.png","../images/weather/raining.png":"src/images/weather/raining.png","../images/weather/cloudy sun.png":"src/images/weather/cloudy sun.png","../images/weather/cloudy rain.png":"src/images/weather/cloudy rain.png","../images/weather/cloudy.png":"src/images/weather/cloudy.png","../images/weather/windy.png":"src/images/weather/windy.png","../images/todo/uncheck1.png":"src/images/todo/uncheck1.png","../images/todo/trash1.png":"src/images/todo/trash1.png","../images/todo/checked1.png":"src/images/todo/checked1.png","../images/svgs/focus.svg":"src/images/svgs/focus.svg","../images/svgs/todo.svg":"src/images/svgs/todo.svg","../images/svgs/links.svg":"src/images/svgs/links.svg","../images/svgs/calendar.svg":"src/images/svgs/calendar.svg","../images/svgs/clock.svg":"src/images/svgs/clock.svg","../images/svgs/weather.svg":"src/images/svgs/weather.svg","../images/svgs/picture.svg":"src/images/svgs/picture.svg","../images/svgs/quote.svg":"src/images/svgs/quote.svg","../images/svgs/mantra.svg":"src/images/svgs/mantra.svg"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -1887,7 +1899,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55666" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52323" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

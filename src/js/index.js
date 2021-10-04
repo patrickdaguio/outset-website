@@ -1753,3 +1753,19 @@ featuresDots.forEach((dot, i) => dot.addEventListener('click', () => {
             break;
     }
 }))
+
+// Tobe App
+
+const tobeContainer = document.querySelector('.tobe-container')
+const tobeProjectsContainer = document.querySelector('.tobe-app__projects')
+const tobeProjectsOptions = document.querySelector('.tobe-app__options')
+const tobeItemOptions = document.querySelector('.tobe-app__item__options')
+const tobeAppContainer = document.querySelector('.tobe-app')
+
+const tobeApp = {
+    openTobeApp: function() {
+        tobeAppContainer.classList.toggle('share-open')
+    }
+}
+
+tobeContainer.addEventListener('click', tobeApp.openTobeApp)
