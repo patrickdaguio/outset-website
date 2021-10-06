@@ -525,6 +525,40 @@ document.addEventListener('click', e => {
   if (!pomodoroAppContainer.contains(e.target)) {
     pomodoroHistoryContainer.classList.remove('openHistoryContainer');
   }
+
+  if (!tobeProjectsContainer.contains(e.target)) {
+    tobeProjectsList.classList.remove('display');
+    tobeListWrapper.style.minHeight = '0px';
+
+    if (tobeProjectsOptions.contains(e.target)) {
+      tobeProjectOptionsWrapper.classList.toggle('display');
+      if (tobeProjectOptionsWrapper.classList.contains('display')) tobeListWrapper.style.minHeight = tobeProjectOptionsWrapper.offsetHeight + 'px';else tobeListWrapper.style.minHeight = '0px';
+    }
+  }
+
+  if (!tobeProjectsOptions.contains(e.target)) {
+    tobeProjectOptionsWrapper.classList.remove('display');
+    tobeListWrapper.style.minHeight = '0px';
+
+    if (tobeProjectsContainer.contains(e.target)) {
+      tobeProjectsList.classList.toggle('display');
+      if (tobeProjectsList.classList.contains('display')) tobeListWrapper.style.minHeight = tobeProjectsList.offsetHeight + 'px';else tobeListWrapper.style.minHeight = '0px';
+    }
+  }
+
+  if (!currentTobeProject.contains(e.target) && !tobeProjectOptionsWrapper.contains(e.target)) {
+    currentTobeProject.contentEditable = 'false';
+
+    if (currentTobeProject.textContent === '' || tobeApp.lastTobeProject === currentTobeProject.textContent) {
+      currentTobeProject.textContent = tobeApp.lastTobeProject;
+    } else {
+      tobeApp.tobeObject[currentTobeProject.textContent] = tobeApp.tobeObject[tobeApp.lastTobeProject];
+      delete tobeApp.tobeObject[tobeApp.lastTobeProject];
+      tobeApp.lastTobeProject = currentTobeProject.textContent;
+      localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
+      localStorage.setItem('lastTobe', JSON.stringify(tobeApp.lastTobeProject));
+    }
+  }
 }); // Greeting App
 // HTML Tags
 
@@ -1361,7 +1395,8 @@ const filterOption = document.querySelector('.filter-todo');
 const todoOpen = document.querySelector('.todo-open');
 const todoApp = document.querySelector('.todo-app');
 const main = document.querySelector('main');
-document.addEventListener('DOMContentLoaded', getTodos);
+/* document.addEventListener('DOMContentLoaded', getTodos); */
+
 addBtn.addEventListener('click', addTodo);
 todoList.addEventListener('click', deleteCheck);
 filterOption.addEventListener('click', filterTodo);
@@ -1543,12 +1578,13 @@ new Sortable(todolist, {
     localStorage.setItem('todos', JSON.stringify(todos));
   }
 });
-document.addEventListener('DOMContentLoaded', () => {
-  const todoItems = document.querySelectorAll('.todo-item');
-  todoItems.forEach(items => {
-    items.setAttribute("contenteditable", "true");
-  });
-}); // Personal Name Functionality
+/* document.addEventListener('DOMContentLoaded', () => {
+    const todoItems = document.querySelectorAll('.todo-item')
+    todoItems.forEach(items => {
+        items.setAttribute("contenteditable", "true");
+    })
+})  */
+// Personal Name Functionality
 
 const introduction = document.querySelector('.introduction');
 const introductionContainer = document.querySelector('.intro-question-container');
@@ -1860,17 +1896,267 @@ featuresDots.forEach((dot, i) => dot.addEventListener('click', () => {
   }
 })); // Tobe App
 
-const tobeContainer = document.querySelector('.tobe-container');
+const tobeTitle = document.querySelector('.tobe-title');
+const tobeNippleWrapper = document.querySelector('.tobe-nipple-wrapper');
 const tobeProjectsContainer = document.querySelector('.tobe-app__projects');
 const tobeProjectsOptions = document.querySelector('.tobe-app__options');
-const tobeItemOptions = document.querySelector('.tobe-app__item__options');
-const tobeAppContainer = document.querySelector('.tobe-app');
+const tobeItemOptions = document.querySelectorAll('.tobe-app__item__options');
+const tobeListWrapper = document.querySelector('.tobe-app__list-wrapper');
+const tobeProjectsList = document.querySelector('.tobe-app__projects__list');
+const tobeProjectOptionsWrapper = document.querySelector('.tobe-app__options__dropdown-wrapper');
+const tobeInput = document.querySelector('.todoInput');
+const tobeItemList = document.querySelector('.tobe-app__list');
+const currentTobeProject = document.querySelector('.tobe-app__projects__name');
+const addNewProjectBtn = document.querySelector('.tobe-app__projects__list__add');
+const inboxProjectCount = document.querySelector('.inboxCount');
+const inboxProject = document.querySelector('.inboxProject');
+const tobeProjectInput = document.querySelector('.todoProject');
 const tobeApp = {
+  tobeObject: localStorage.getItem('tobes') === null ? {} : JSON.parse(localStorage.getItem('tobes')),
+  lastTobeProject: localStorage.getItem('lastTobe') === null ? '' : JSON.parse(localStorage.getItem('lastTobe')),
+  todoItem: function (name) {
+    return `
+        <li class="tobe-app__item">
+            <input type="checkbox" class="tobe-app__item__checkbox">
+            <span class="tobe-app__item__name">${name}</span>
+            <div class="tobe-app__item__options">
+                <div class="tobe-app__item__ellipsis tobe-app__ellipsis-wrapper">
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+                <div class="tobe-app__dropdown-wrapper">
+                    <ul class="tobe-app__dropdown">
+                        <li class="tobe-app__dropdown__item">Edit</li>
+                        <li class="tobe-app__dropdown__item">Move to inbox</li>
+                        <li class="tobe-app__dropdown__item">Delete</li>
+                    </ul>
+                </div>
+            </div>
+        </li>`;
+  },
   openTobeApp: function () {
-    tobeAppContainer.classList.toggle('share-open');
+    tobeNippleWrapper.classList.toggle('share-open');
+    tobeInput.focus();
+  },
+  openTobeAppItemOptions: function (e) {
+    console.log('need to do still');
+  },
+  loadTobeApp: function () {
+    Object.keys(tobeApp.tobeObject).forEach(project => {
+      if (project == 'Inbox') {
+        inboxProjectCount.textContent = tobeApp.tobeObject[project].length;
+      } else {
+        const projectLi = document.createElement('li');
+        projectLi.classList.add('tobe-app__projects__list__item');
+        projectLi.textContent = project;
+        if (project == tobeApp.lastTobeProject) projectLi.classList.add('tobe-app__projects__list__item--active');
+        const projectCount = document.createElement('span');
+        projectCount.classList.add('tobe-app__projects__list__count');
+        projectCount.textContent = tobeApp.tobeObject[project].length;
+        projectLi.appendChild(projectCount);
+        tobeProjectsList.insertBefore(projectLi, addNewProjectBtn);
+      }
+    });
+    currentTobeProject.textContent = tobeApp.lastTobeProject;
+    if (tobeApp.lastTobeProject == 'Inbox') inboxProject.classList.add('tobe-app__projects__list__item--active');
+    tobeApp.tobeObject[tobeApp.lastTobeProject].forEach(tobe => {
+      let todoItem = tobeApp.todoItem(tobe.name);
+      tobeItemList.insertAdjacentHTML('beforeend', todoItem);
+    });
+    tobeApp.updateTobeItem();
+  },
+  updateProjectCount: function (project) {
+    const projectItem = document.querySelectorAll('.tobe-app__projects__list__item');
+    const projectCount = document.querySelectorAll('.tobe-app__projects__list__count');
+    projectItem.forEach((item, i) => {
+      if (project == item.childNodes[0].nodeValue) {
+        projectCount[i].textContent = tobeApp.tobeObject[project].length;
+      }
+    });
+  },
+  addTobeItem: function (e) {
+    let projectName = currentTobeProject.textContent;
+    let addedTodo = tobeApp.todoItem(e.target.value);
+
+    if (e.keyCode === 13 && e.target.value !== '') {
+      tobeItemList.insertAdjacentHTML('beforeend', addedTodo);
+      tobeApp.updateTobeItem();
+
+      if (tobeApp.tobeObject[projectName] === undefined) {
+        tobeApp.tobeObject[projectName] = [];
+        tobeApp.tobeObject[projectName].push({
+          name: e.target.value,
+          completed: false
+        });
+      } else {
+        tobeApp.tobeObject[projectName].push({
+          name: e.target.value,
+          completed: false
+        });
+      }
+
+      tobeApp.updateProjectCount(projectName);
+      tobeInput.value = '';
+    } else if (e.keyCode === 13 && e.target.value === '') {
+      tobeInput.classList.add('warning');
+      tobeInput.focus();
+      tobeInput.addEventListener('animationend', function () {
+        tobeInput.classList.remove('warning');
+      });
+    }
+
+    localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
+  },
+  changeTobeProject: function (e) {
+    const projectItem = document.querySelectorAll('.tobe-app__projects__list__item');
+
+    if (addNewProjectBtn.contains(e.target)) {
+      tobeItemList.innerHTML = '';
+      tobeInput.style.display = 'none';
+      tobeProjectInput.style.display = 'block';
+      currentTobeProject.textContent = '';
+      tobeProjectInput.focus();
+    } else if (e.target.classList.contains('tobe-app__projects__list__item')) {
+      currentTobeProject.textContent = e.target.childNodes[0].nodeValue;
+      projectItem.forEach(item => {
+        item.classList.remove('tobe-app__projects__list__item--active');
+        e.target.classList.add('tobe-app__projects__list__item--active');
+      });
+      tobeApp.lastTobeProject = e.target.childNodes[0].nodeValue;
+      localStorage.setItem('lastTobe', JSON.stringify(tobeApp.lastTobeProject));
+      tobeItemList.innerHTML = '';
+      tobeApp.tobeObject[tobeApp.lastTobeProject].forEach(tobe => {
+        let todoItem = tobeApp.todoItem(tobe.name);
+        tobeItemList.insertAdjacentHTML('beforeend', todoItem);
+      });
+      tobeInput.focus();
+      tobeApp.updateTobeItem();
+    }
+  },
+  addNewProject: function (e) {
+    const projectItem = document.querySelectorAll('.tobe-app__projects__list__item');
+    const value = e.target.value;
+    currentTobeProject.textContent = value;
+    const projectLi = document.createElement('li');
+    projectLi.classList.add('tobe-app__projects__list__item');
+    const projectCount = document.createElement('span');
+    projectCount.classList.add('tobe-app__projects__list__count');
+
+    if (e.keyCode === 13 && e.target.value !== '') {
+      tobeProjectInput.style.display = 'none';
+      tobeInput.style.display = 'block';
+      tobeInput.focus();
+      tobeApp.lastTobeProject = value;
+      tobeApp.tobeObject[value] = [];
+      projectLi.textContent = value;
+      projectCount.textContent = tobeApp.tobeObject[value].length;
+      projectLi.appendChild(projectCount);
+      tobeProjectsList.insertBefore(projectLi, addNewProjectBtn);
+      projectItem.forEach(item => {
+        item.classList.remove('tobe-app__projects__list__item--active');
+      });
+      projectLi.classList.add('tobe-app__projects__list__item--active');
+      localStorage.setItem('lastTobe', JSON.stringify(tobeApp.lastTobeProject));
+      localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
+    }
+  },
+  updateTobeItem: function () {
+    const tobeCheckbox = document.querySelectorAll('.tobe-app__item__checkbox');
+    tobeCheckbox.forEach((box, i) => box.addEventListener('click', e => {
+      if (e.target.checked) tobeApp.tobeObject[currentTobeProject.textContent][i].completed = true;else tobeApp.tobeObject[currentTobeProject.textContent][i].completed = false;
+      localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
+    }));
+    tobeApp.tobeObject[currentTobeProject.textContent].forEach((tobe, i) => {
+      if (tobe.completed) tobeCheckbox[i].checked = true;
+    });
+  },
+  projectCta: function (e) {
+    let projectIndex;
+    const projectItem = document.querySelectorAll('.tobe-app__projects__list__item');
+    Object.keys(tobeApp.tobeObject).forEach((proj, i) => {
+      if (proj === currentTobeProject.textContent) projectIndex = i;
+    });
+
+    if (e.target.classList.contains('editProject')) {
+      currentTobeProject.contentEditable = 'true';
+      placeCaretAtEnd(currentTobeProject);
+      currentTobeProject.addEventListener('keypress', e => {
+        if (e.keyCode === 13) {
+          if (currentTobeProject.textContent === '' || tobeApp.lastTobeProject === currentTobeProject.textContent) {
+            currentTobeProject.contentEditable = 'false';
+            currentTobeProject.textContent = tobeApp.lastTobeProject;
+          } else {
+            currentTobeProject.contentEditable = 'false';
+            tobeApp.tobeObject[currentTobeProject.textContent] = tobeApp.tobeObject[tobeApp.lastTobeProject];
+            delete tobeApp.tobeObject[tobeApp.lastTobeProject];
+            tobeApp.lastTobeProject = currentTobeProject.textContent;
+            localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
+            localStorage.setItem('lastTobe', JSON.stringify(tobeApp.lastTobeProject));
+            projectItem[projectIndex].childNodes[0].textContent = currentTobeProject.textContent;
+          }
+        }
+      });
+    } else if (e.target.classList.contains('deleteProject')) {
+      delete tobeApp.tobeObject[currentTobeProject.textContent];
+      projectItem[projectIndex].remove();
+      currentTobeProject.textContent = 'Inbox';
+      projectItem.forEach(item => {
+        item.classList.remove('tobe-app__projects__list__item--active');
+        inboxProject.classList.add('tobe-app__projects__list__item--active');
+      });
+      tobeApp.lastTobeProject = 'Inbox';
+      localStorage.setItem('lastTobe', JSON.stringify(tobeApp.lastTobeProject));
+      localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
+      tobeItemList.innerHTML = '';
+      tobeApp.tobeObject[tobeApp.lastTobeProject].forEach(tobe => {
+        let todoItem = tobeApp.todoItem(tobe.name);
+        tobeItemList.insertAdjacentHTML('beforeend', todoItem);
+      });
+      tobeInput.focus();
+      tobeApp.updateTobeItem();
+    }
   }
 };
-tobeContainer.addEventListener('click', tobeApp.openTobeApp);
+
+function placeCaretAtEnd(el) {
+  el.focus();
+
+  if (typeof window.getSelection != "undefined" && typeof document.createRange != "undefined") {
+    var range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  } else if (typeof document.body.createTextRange != "undefined") {
+    var textRange = document.body.createTextRange();
+    textRange.moveToElementText(el);
+    textRange.collapse(false);
+    textRange.select();
+  }
+}
+
+new Sortable(tobeItemList, {
+  animation: 150,
+  onUpdate: function (e) {
+    function array_move(arr, old_index, new_index) {
+      arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+      return arr;
+    }
+
+    ;
+    array_move(tobeApp.tobeObject[currentTobeProject.textContent], e.oldIndex, e.newIndex);
+    localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
+  }
+});
+tobeTitle.addEventListener('click', tobeApp.openTobeApp);
+tobeItemOptions.forEach(item => {
+  item.addEventListener('click', tobeApp.openTobeAppItemOptions);
+});
+tobeInput.addEventListener('keypress', tobeApp.addTobeItem);
+document.addEventListener('DOMContentLoaded', tobeApp.loadTobeApp);
+tobeProjectsList.addEventListener('click', tobeApp.changeTobeProject);
+tobeProjectInput.addEventListener('keyup', tobeApp.addNewProject);
+tobeProjectOptionsWrapper.addEventListener('click', tobeApp.projectCta);
 },{"./config":"src/js/config.js","../images/pomodoro.mp3":"src/images/pomodoro.mp3","../images/weather/storming.png":"src/images/weather/storming.png","../images/weather/sunny.png":"src/images/weather/sunny.png","../images/weather/snowing.png":"src/images/weather/snowing.png","../images/weather/raining.png":"src/images/weather/raining.png","../images/weather/cloudy sun.png":"src/images/weather/cloudy sun.png","../images/weather/cloudy rain.png":"src/images/weather/cloudy rain.png","../images/weather/cloudy.png":"src/images/weather/cloudy.png","../images/weather/windy.png":"src/images/weather/windy.png","../images/todo/uncheck1.png":"src/images/todo/uncheck1.png","../images/todo/trash1.png":"src/images/todo/trash1.png","../images/todo/checked1.png":"src/images/todo/checked1.png","../images/svgs/focus.svg":"src/images/svgs/focus.svg","../images/svgs/todo.svg":"src/images/svgs/todo.svg","../images/svgs/links.svg":"src/images/svgs/links.svg","../images/svgs/calendar.svg":"src/images/svgs/calendar.svg","../images/svgs/clock.svg":"src/images/svgs/clock.svg","../images/svgs/weather.svg":"src/images/svgs/weather.svg","../images/svgs/picture.svg":"src/images/svgs/picture.svg","../images/svgs/quote.svg":"src/images/svgs/quote.svg","../images/svgs/mantra.svg":"src/images/svgs/mantra.svg"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -1899,7 +2185,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52323" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65416" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

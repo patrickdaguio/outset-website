@@ -14,7 +14,7 @@ body {
   background-repeat: no-repeat;
   background-position: bottom center;
   height: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
   transition: background-image 2s ease-in-out;
 }
 
@@ -1924,38 +1924,41 @@ footer .footer-space ul {
 footer .footer-space .tobe-container {
   position: relative;
   text-align: right;
-  cursor: pointer;
 }
 footer .footer-space .tobe-container .tobe-title {
   font-size: 1.05em;
   line-height: 48px;
   color: white;
+  cursor: pointer;
+  display: inline-block;
+  user-select: none;
 }
-footer .footer-space .tobe-container .tobe-app {
-  bottom: 50px;
-  right: -20px;
-  padding: 1em 1.25em;
-  position: absolute;
-  background-color: white;
-  width: 320px;
-  height: auto;
-  border-radius: 0.35em;
-  text-align: left;
+footer .footer-space .tobe-container .tobe-nipple-wrapper {
   transform-origin: 90% 110%;
-  transform: scale(0) translateY(50px);
+  transform: scale(0) translateY(-200px);
   transition: 0.3s;
 }
-footer .footer-space .tobe-container .tobe-app::after {
+footer .footer-space .tobe-container .tobe-nipple-wrapper::after {
   content: "";
-  display: block;
   position: absolute;
-  right: 34px;
-  bottom: -7px;
+  right: 12px;
+  top: -56px;
   height: 0;
   width: 0;
   border-left: 7px solid transparent;
   border-right: 7px solid transparent;
   border-top: 7px solid white;
+}
+footer .footer-space .tobe-container .tobe-app {
+  bottom: 56px;
+  right: -20px;
+  padding: 1em 1.25em;
+  position: absolute;
+  background-color: white;
+  width: 320px;
+  border-radius: 0.35em;
+  text-align: left;
+  overflow: hidden;
 }
 footer .footer-space .tobe-container .tobe-app__ellipsis-wrapper {
   position: relative;
@@ -2013,6 +2016,7 @@ footer .footer-space .tobe-container .tobe-app__projects__name {
   font-size: 1.3em;
   font-weight: 500;
   margin-right: 0.5em;
+  outline: none;
 }
 footer .footer-space .tobe-container .tobe-app__projects__toggle {
   opacity: 1;
@@ -2020,13 +2024,13 @@ footer .footer-space .tobe-container .tobe-app__projects__toggle {
 }
 footer .footer-space .tobe-container .tobe-app__projects__list {
   background-color: #575255;
-  color: #cecece;
+  color: #bebebe;
   position: absolute;
   border-radius: 0.4em;
   top: 36px;
   z-index: 10;
   font-size: 0.9em;
-  padding: 0.4em 1em;
+  padding: 0.4em 0em;
   min-width: 240px;
   display: none;
 }
@@ -2041,19 +2045,26 @@ footer .footer-space .tobe-container .tobe-app__projects__list::after {
   border-right: 7px solid transparent;
   border-bottom: 7px solid #575255;
 }
-footer .footer-space .tobe-container .tobe-app__projects__list__item {
-  padding: 6px 0px;
+footer .footer-space .tobe-container .tobe-app__projects__list__item,
+footer .footer-space .tobe-container .tobe-app__projects__list .tobe-app__projects__list__add {
+  padding: 6px 1em;
 }
-footer .footer-space .tobe-container .tobe-app__projects__list__item--active {
+footer .footer-space .tobe-container .tobe-app__projects__list__item--active,
+footer .footer-space .tobe-container .tobe-app__projects__list .tobe-app__projects__list__add--active {
   color: white;
 }
-footer .footer-space .tobe-container .tobe-app__projects__list__item--active .tobe-app__projects__list__count {
+footer .footer-space .tobe-container .tobe-app__projects__list__item--active .tobe-app__projects__list__count,
+footer .footer-space .tobe-container .tobe-app__projects__list .tobe-app__projects__list__add--active .tobe-app__projects__list__count {
   display: inline-block;
 }
+footer .footer-space .tobe-container .tobe-app__projects__list__item:hover,
+footer .footer-space .tobe-container .tobe-app__projects__list .tobe-app__projects__list__add:hover {
+  background-color: #6e6b6d;
+}
 footer .footer-space .tobe-container .tobe-app__projects__list__count {
-  font-size: 0.85em;
-  margin-left: 0.25em;
-  display: none;
+  font-size: 0.875em;
+  margin-left: 0.5em;
+  pointer-events: none;
 }
 footer .footer-space .tobe-container .tobe-app__projects__list__add-wrapper {
   display: flex;
@@ -2118,12 +2129,20 @@ footer .footer-space .tobe-container .tobe-app__item:hover .tobe-app__item__elli
 footer .footer-space .tobe-container .tobe-app__item__checkbox {
   margin-right: 0.6em;
 }
+footer .footer-space .tobe-container .tobe-app__item input[type=checkbox]:checked + .tobe-app__item__name {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
 footer .footer-space .tobe-container .tobe-app__item__name {
   flex: 1 1 auto;
+  transition: 0.5s;
 }
 footer .footer-space .tobe-container .tobe-app__item__options {
   position: relative;
   display: flex;
+}
+footer .footer-space .tobe-container .tobe-app__list-wrapper {
+  transition: 0.3s;
 }
 footer .footer-space .tobe-container .tobe-app__dropdown-wrapper {
   background-color: #575255;
@@ -2159,6 +2178,9 @@ footer .footer-space .tobe-container .tobe-app__footer__input {
   font-size: 1em;
   font-weight: 500;
   outline: none;
+}
+footer .footer-space .tobe-container .tobe-app__footer .todoProject {
+  display: none;
 }
 
 .share {
@@ -2397,6 +2419,14 @@ footer .footer-space .tobe-container .tobe-app__footer__input {
     transform: translateY(50%);
   }
 }
+@keyframes swipeLeft {
+  0% {
+    transform: translateX(150%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
 @keyframes zoomIn {
   0% {
     opacity: 0;
@@ -2429,6 +2459,10 @@ footer .footer-space .tobe-container .tobe-app__footer__input {
 .share-open {
   opacity: 1 !important;
   transform: scale(1) translateY(0px) !important;
+}
+
+.display {
+  display: block !important;
 }
 
 /*# sourceMappingURL=/style.7c77ac46.css.map */

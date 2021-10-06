@@ -42,7 +42,7 @@ body {
   background-repeat: no-repeat;
   background-position: bottom center;
   height: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
   transition: background-image 2s ease-in-out;
 }
 
@@ -1909,37 +1909,41 @@ footer {
     .tobe-container {
       position: relative;
       text-align: right;
-      cursor: pointer;
       .tobe-title {
         font-size: 1.05em;
         line-height: 48px;
         color: white;
+        cursor: pointer;
+        display: inline-block;
+        user-select: none;
       }
-      .tobe-app {
-        bottom: 50px;
-        right: -20px;
-        padding: 1em 1.25em;
-        position: absolute;
-        background-color: white;
-        width: 320px;
-        height: auto;
-        border-radius: 0.35em;
-        text-align: left;
+      .tobe-nipple-wrapper {
         transform-origin: 90% 110%;
-        transform: scale(0) translateY(50px);
+        transform: scale(0) translateY(-200px);
         transition: 0.3s;
         &::after {
           content: "";
-          display: block;
           position: absolute;
-          right: 34px;
-          bottom: -7px;
+          right: 12px;
+          top: -56px;
           height: 0;
           width: 0;
           border-left: 7px solid transparent;
           border-right: 7px solid transparent;
           border-top: 7px solid white;
         }
+      }
+      .tobe-app {
+        bottom: 56px;
+        right: -20px;
+        padding: 1em 1.25em;
+        position: absolute;
+        background-color: white;
+        width: 320px;
+        border-radius: 0.35em;
+        text-align: left;
+        overflow: hidden;
+
         &__ellipsis-wrapper {
           position: relative;
           display: inline-flex;
@@ -2001,6 +2005,7 @@ footer {
             font-size: 1.3em;
             font-weight: 500;
             margin-right: 0.5em;
+            outline: none;
           }
           &__toggle {
             opacity: 1;
@@ -2008,13 +2013,13 @@ footer {
           }
           &__list {
             background-color: rgb(87, 82, 85);
-            color: rgb(206, 206, 206);
+            color: rgb(190, 190, 190);
             position: absolute;
             border-radius: 0.4em;
             top: 36px;
             z-index: 10;
             font-size: 0.9em;
-            padding: 0.4em 1em;
+            padding: 0.4em 0em;
             min-width: 240px;
             display: none;
             &::after {
@@ -2028,19 +2033,23 @@ footer {
               border-right: 7px solid transparent;
               border-bottom: 7px solid rgb(87, 82, 85);
             }
-            &__item {
-              padding: 6px 0px;
+            &__item,
+            .tobe-app__projects__list__add {
+              padding: 6px 1em;
               &--active {
                 color: white;
                 .tobe-app__projects__list__count {
                   display: inline-block;
                 }
               }
+              &:hover {
+                background-color: rgb(110, 107, 109);
+              }
             }
             &__count {
-              font-size: 0.85em;
-              margin-left: 0.25em;
-              display: none;
+              font-size: 0.875em;
+              margin-left: 0.5em;
+              pointer-events: none;
             }
             &__add-wrapper {
               display: flex;
@@ -2116,13 +2125,21 @@ footer {
           &__checkbox {
             margin-right: 0.6em;
           }
+          input[type="checkbox"]:checked + .tobe-app__item__name {
+            text-decoration: line-through;
+            opacity: 0.7;
+          }
           &__name {
             flex: 1 1 auto;
+            transition: 0.5s;
           }
           &__options {
             position: relative;
             display: flex;
           }
+        }
+        &__list-wrapper {
+          transition: 0.3s;
         }
         &__dropdown-wrapper {
           background-color: rgb(87, 82, 85);
@@ -2159,6 +2176,9 @@ footer {
             font-size: 1em;
             font-weight: 500;
             outline: none;
+          }
+          .todoProject {
+            display: none;
           }
         }
       }
@@ -2399,6 +2419,15 @@ footer {
   }
 }
 
+@keyframes swipeLeft {
+  0% {
+    transform: translateX(150%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
 @keyframes zoomIn {
   0% {
     opacity: 0;
@@ -2436,4 +2465,8 @@ footer {
 .share-open {
   opacity: 1 !important;
   transform: scale(1) translateY(0px) !important;
+}
+
+.display {
+  display: block !important;
 }

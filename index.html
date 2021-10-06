@@ -382,66 +382,45 @@
             <div class="footer-space">
                 <div class="tobe-container">
                     <span class="tobe-title">Todo</span>
-                    <div class="tobe-app">
-                        <div class="tobe-app__header">
-                            <div class="tobe-app__projects">
-                                <span class="tobe-app__projects__name">Inbox</span>
-                                <div class="tobe-app__projects__toggle tobe-app__ellipsis-wrapper">
-                                    <i class="fas fa-chevron-down"></i>
-                                </div>
-                                <ul class="tobe-app__projects__list">
-                                    <li class="tobe-app__projects__list__item tobe-app__projects__list__item--active">Inbox
-                                        <span class="tobe-app__projects__list__count">8</span>
-                                    </li>
-                                    <li class="tobe-app__projects__list__item">Today
-                                        <span class="tobe-app__projects__list__count">6</span>
-                                    </li>
-                                    <li class="tobe-app__projects__list__item">Done
-                                        <span class="tobe-app__projects__list__count">3</span>
-                                    </li>
-                                    <li class="tobe-app__projects__list__item">
-                                        <div class="tobe-app__projects__list__add-wrapper">
-                                            <i class="fas fa-plus"></i>
-                                            <span>New Project</span>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="tobe-app__options">
-                                <div class="tobe-app__options__ellipsis-wrapper tobe-app__ellipsis-wrapper">
-                                    <i class="fas fa-ellipsis-h"></i>
-                                </div>
-                                <div class="tobe-app__options__dropdown-wrapper">
-                                    <ul class="tobe-app__options__dropdown">
-                                        <li class="tobe-app__options__dropdown__item">Edit Project</li>
-                                        <li class="tobe-app__options__dropdown__line"></li>
-                                        <li class="tobe-app__options__dropdown__item">Delete Project</li>
+                    <div class="tobe-nipple-wrapper">
+                        <div class="tobe-app">
+                            <div class="tobe-app__header">
+                                <div class="tobe-app__projects">
+                                    <span class="tobe-app__projects__name">Inbox</span>
+                                    <div class="tobe-app__projects__toggle tobe-app__ellipsis-wrapper">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                    <ul class="tobe-app__projects__list">
+                                        <li class="tobe-app__projects__list__item inboxProject">Inbox<span class="tobe-app__projects__list__count inboxCount"></span></li>
+                                        <li class="tobe-app__projects__list__add">
+                                            <div class="tobe-app__projects__list__add-wrapper">
+                                                <i class="fas fa-plus"></i>
+                                                <span>New Project</span>
+                                            </div>
+                                        </li>
                                     </ul>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="tobe-app__list-wrapper">
-                            <ul class="tobe-app__list">
-                                <li class="tobe-app__item">
-                                    <input type="checkbox" class="tobe-app__item__checkbox">
-                                    <span class="tobe-app__item__name">Task 1</span>
-                                    <div class="tobe-app__item__options">
-                                        <div class="tobe-app__item__ellipsis tobe-app__ellipsis-wrapper">
-                                            <i class="fas fa-ellipsis-h"></i>
-                                        </div>
-                                        <div class="tobe-app__dropdown-wrapper">
-                                            <ul class="tobe-app__dropdown">
-                                                <li class="tobe-app__dropdown__item">Edit</li>
-                                                <li class="tobe-app__dropdown__item">Move to inbox</li>
-                                                <li class="tobe-app__dropdown__item">Delete</li>
-                                            </ul>
-                                        </div>
+                                <div class="tobe-app__options">
+                                    <div class="tobe-app__options__ellipsis-wrapper tobe-app__ellipsis-wrapper">
+                                        <i class="fas fa-ellipsis-h"></i>
                                     </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="tobe-app__footer">
-                            <input type="text" placeholder="New Todo" autocomplete="off" class="tobe-app__footer__input">
+                                    <div class="tobe-app__options__dropdown-wrapper">
+                                        <ul class="tobe-app__options__dropdown">
+                                            <li class="tobe-app__options__dropdown__item editProject">Edit Project</li>
+                                            <li class="tobe-app__options__dropdown__line"></li>
+                                            <li class="tobe-app__options__dropdown__item deleteProject">Delete Project</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tobe-app__list-wrapper">
+                                <ul class="tobe-app__list">
+                                </ul>
+                            </div>
+                            <div class="tobe-app__footer">
+                                <input type="text" placeholder="New Todo" autocomplete="off" class="tobe-app__footer__input todoInput">
+                                <input type="text" placeholder="New Project" autocomplete="off" class="tobe-app__footer__input todoProject">
+                            </div>
                         </div>
                     </div>
                 </div>
