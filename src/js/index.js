@@ -306,6 +306,7 @@ linkName.addEventListener('keypress', (e) => {
         userUrlLink.focus()
     }
 })
+
 document.addEventListener('click', (e) => {
     if (!linksApp.contains(e.target) && !e.target.classList.contains('url-delete') && !e.target.classList.contains('delete-link')) {        nippleWrapper.classList.remove('share-open')
         linksMenuWrapper.classList.remove('second-tab')
@@ -361,17 +362,27 @@ document.addEventListener('click', (e) => {
         }
     }
 
-    if(!currentTobeProject.contains(e.target) && !tobeProjectOptionsWrapper.contains(e.target)) {
+    if(!currentTobeProject.contains(e.target) && !tobeProjectOptionsWrapper.contains(e.target) && !tobeApp.newProject) {
         currentTobeProject.contentEditable = 'false'
         if (currentTobeProject.textContent === '' || tobeApp.lastTobeProject === currentTobeProject.textContent) {
             currentTobeProject.textContent = tobeApp.lastTobeProject
         } else {
+            const projectItem = document.querySelectorAll('.tobe-app__projects__list__item')
+
             tobeApp.tobeObject[currentTobeProject.textContent] = tobeApp.tobeObject[tobeApp.lastTobeProject]
             delete tobeApp.tobeObject[tobeApp.lastTobeProject]
             tobeApp.lastTobeProject = currentTobeProject.textContent
             localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
-            localStorage.setItem('lastTobe', JSON.stringify(tobeApp.lastTobeProject))                
+            localStorage.setItem('lastTobe', JSON.stringify(tobeApp.lastTobeProject))      
+            projectItem[tobeApp.projectIndex].childNodes[0].textContent = currentTobeProject.textContent            
         }
+    }
+
+    if (e.target.classList.contains('tobeAppOptions')) {
+        const tobeAppOptionContainer = document.querySelectorAll('.tobeAppOptions')
+        let indexArr = [...tobeAppOptionContainer].indexOf(e.target);
+/*         if (indexArr >= tobeAppOptionContainer.length - 3) console.log('higher')
+        else console.log('lower') */
     }
 })
 
@@ -1240,7 +1251,6 @@ async function generateBackground() {
     const response = await fetch(`https://api.unsplash.com/collections/GsNw3bdVLPM/photos/?client_id=${api.keyTwo}&per_page=30`)
     const data = await response.json()
     const bgIndex =  await data[generateUniqueRandom(data)];
-    console.log(data)
     document.body.style.backgroundImage = `url(${bgIndex.urls.full})`
     const responseTwo = await fetch(`https://api.unsplash.com/photos/${bgIndex.id}/?client_id=${api.keyTwo}`)
     const dataTwo  = await responseTwo.json()
@@ -1793,7 +1803,6 @@ const tobeTitle = document.querySelector('.tobe-title')
 const tobeNippleWrapper = document.querySelector('.tobe-nipple-wrapper')
 const tobeProjectsContainer = document.querySelector('.tobe-app__projects')
 const tobeProjectsOptions = document.querySelector('.tobe-app__options')
-const tobeItemOptions = document.querySelectorAll('.tobe-app__item__options')
 const tobeListWrapper = document.querySelector('.tobe-app__list-wrapper')
 const tobeProjectsList = document.querySelector('.tobe-app__projects__list')
 const tobeProjectOptionsWrapper = document.querySelector('.tobe-app__options__dropdown-wrapper')
@@ -1805,10 +1814,13 @@ const inboxProjectCount = document.querySelector('.inboxCount')
 const inboxProject = document.querySelector('.inboxProject')
 const tobeProjectInput = document.querySelector('.todoProject')
 
-
 const tobeApp = {
-    tobeObject: localStorage.getItem('tobes') === null ? {} : JSON.parse(localStorage.getItem('tobes')),
+    tobeObject: localStorage.getItem('tobes') === null ? {
+        'Inbox': []
+    } : JSON.parse(localStorage.getItem('tobes')),
     lastTobeProject: localStorage.getItem('lastTobe') === null ? '' : JSON.parse(localStorage.getItem('lastTobe')),
+    newProject: false,
+    projectIndex: 0,
     todoItem: function(name) {
         return `
         <li class="tobe-app__item">
@@ -1816,7 +1828,7 @@ const tobeApp = {
             <span class="tobe-app__item__name">${name}</span>
             <div class="tobe-app__item__options">
                 <div class="tobe-app__item__ellipsis tobe-app__ellipsis-wrapper">
-                    <i class="fas fa-ellipsis-h"></i>
+                    <i class="fas fa-ellipsis-h tobeAppOptions"></i>
                 </div>
                 <div class="tobe-app__dropdown-wrapper">
                     <ul class="tobe-app__dropdown">
@@ -1828,45 +1840,55 @@ const tobeApp = {
             </div>
         </li>`
     },
+
     openTobeApp: function() {
         tobeNippleWrapper.classList.toggle('share-open')
         tobeInput.focus()
     },
 
-    openTobeAppItemOptions: function(e) {
-        console.log('need to do still')
-    },
-
     loadTobeApp: function() {
-          Object.keys(tobeApp.tobeObject).forEach(project => {
-              if (project == 'Inbox') {
-                inboxProjectCount.textContent = tobeApp.tobeObject[project].length
-              } else {
-                const projectLi = document.createElement('li')
-                projectLi.classList.add('tobe-app__projects__list__item')
-                projectLi.textContent = project
+        if (!tobeApp.tobeObject[tobeApp.lastTobeProject]) {
+            tobeApp.lastTobeProject = 'Inbox'
+            currentTobeProject.textContent = tobeApp.lastTobeProject
+            localStorage.setItem('lastTobe', JSON.stringify(tobeApp.lastTobeProject))
+            inboxProject.classList.add('tobe-app__projects__list__item--active')
+        } else {
+            Object.keys(tobeApp.tobeObject).forEach(project => {
+                if (project == 'Inbox') {
+                  inboxProjectCount.textContent = tobeApp.tobeObject[project].length
+                  tobeProjectsOptions.style.display = 'none'
+                } else {
+                  tobeProjectsOptions.style.display = 'block'
+  
+                  const projectLi = document.createElement('li')
+                  projectLi.classList.add('tobe-app__projects__list__item')
+                  projectLi.textContent = project
+  
+                  if (project == tobeApp.lastTobeProject) projectLi.classList.add('tobe-app__projects__list__item--active')
+          
+                  const projectCount = document.createElement('span')
+                  projectCount.classList.add('tobe-app__projects__list__count')
+                  projectCount.textContent = tobeApp.tobeObject[project].length
+          
+                  projectLi.appendChild(projectCount)
+                  tobeProjectsList.insertBefore(projectLi, addNewProjectBtn)
+                }
+          })  
+  
+          currentTobeProject.textContent = tobeApp.lastTobeProject
+  
+          if (tobeApp.lastTobeProject == 'Inbox') {
+              tobeProjectsOptions.style.display = 'none'
+              inboxProject.classList.add('tobe-app__projects__list__item--active')
+          }
 
-                if (project == tobeApp.lastTobeProject) projectLi.classList.add('tobe-app__projects__list__item--active')
-        
-                const projectCount = document.createElement('span')
-                projectCount.classList.add('tobe-app__projects__list__count')
-                projectCount.textContent = tobeApp.tobeObject[project].length
-        
-                projectLi.appendChild(projectCount)
-                tobeProjectsList.insertBefore(projectLi, addNewProjectBtn)
-              }
-        })  
-
-        currentTobeProject.textContent = tobeApp.lastTobeProject
-
-        if (tobeApp.lastTobeProject == 'Inbox') inboxProject.classList.add('tobe-app__projects__list__item--active')
-
-        tobeApp.tobeObject[tobeApp.lastTobeProject].forEach(tobe => {
-            let todoItem = tobeApp.todoItem(tobe.name)
-            tobeItemList.insertAdjacentHTML('beforeend', todoItem)
-        })
-
-        tobeApp.updateTobeItem()
+            tobeApp.tobeObject[tobeApp.lastTobeProject].forEach(tobe => {
+                let todoItem = tobeApp.todoItem(tobe.name)
+                tobeItemList.insertAdjacentHTML('beforeend', todoItem)
+            })
+            tobeApp.updateTobeItem()
+            tobeApp.openTobeAppItemOptions()
+        }
     },
 
     updateProjectCount: function(project) {
@@ -1901,6 +1923,8 @@ const tobeApp = {
             } 
             tobeApp.updateProjectCount(projectName)
             tobeInput.value = ''
+            tobeApp.openTobeAppItemOptions()
+            localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject))
         } else if (e.keyCode === 13 && e.target.value === ''){
             tobeInput.classList.add('warning')  
             tobeInput.focus()
@@ -1908,20 +1932,27 @@ const tobeApp = {
                 tobeInput.classList.remove('warning')  
             });
         }
-        localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject))
     },
 
     changeTobeProject: function(e) {
         const projectItem = document.querySelectorAll('.tobe-app__projects__list__item')
 
         if (addNewProjectBtn.contains(e.target)) {
+            tobeApp.newProject = true
+            tobeProjectsOptions.style.display = 'none'
             tobeItemList.innerHTML = ''
             tobeInput.style.display = 'none'
             tobeProjectInput.style.display = 'block'
             currentTobeProject.textContent = ''
+            tobeProjectInput.value = ''
             tobeProjectInput.focus()
         } else if (e.target.classList.contains('tobe-app__projects__list__item')) {
+            if (e.target.classList.contains('inboxProject')) tobeProjectsOptions.style.display = 'none'
+            else tobeProjectsOptions.style.display = 'block'
+            tobeProjectInput.value = ''
             currentTobeProject.textContent = e.target.childNodes[0].nodeValue
+            tobeInput.style.display = 'block'
+            tobeProjectInput.style.display = 'none'
             projectItem.forEach(item => {
                 item.classList.remove('tobe-app__projects__list__item--active')
                 e.target.classList.add('tobe-app__projects__list__item--active')
@@ -1937,8 +1968,8 @@ const tobeApp = {
             })
             tobeInput.focus()
             tobeApp.updateTobeItem()
+            tobeApp.openTobeAppItemOptions()
         }
-
     }, 
 
     addNewProject: function(e) {
@@ -1955,21 +1986,49 @@ const tobeApp = {
         projectCount.classList.add('tobe-app__projects__list__count')
 
         if (e.keyCode === 13 && e.target.value !== '') {
-            tobeProjectInput.style.display = 'none'
-            tobeInput.style.display = 'block'
-            tobeInput.focus()
-            tobeApp.lastTobeProject = value
-            tobeApp.tobeObject[value] = []
-            projectLi.textContent = value
-            projectCount.textContent = tobeApp.tobeObject[value].length
-            projectLi.appendChild(projectCount)
-            tobeProjectsList.insertBefore(projectLi, addNewProjectBtn)
-            projectItem.forEach(item => {
-                item.classList.remove('tobe-app__projects__list__item--active')
-            })
-            projectLi.classList.add('tobe-app__projects__list__item--active')
-            localStorage.setItem('lastTobe', JSON.stringify(tobeApp.lastTobeProject))
-            localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject))
+            let projectIndex = Object.keys(tobeApp.tobeObject).indexOf(value)
+            if (projectIndex >= 0) {
+                if (value === 'Inbox') tobeProjectsOptions.style.display = 'none'
+                else tobeProjectsOptions.style.display = 'block'
+                tobeProjectInput.value = ''
+                currentTobeProject.textContent = value
+                tobeInput.style.display = 'block'
+                tobeProjectInput.style.display = 'none'
+                projectItem.forEach(item => {
+                    item.classList.remove('tobe-app__projects__list__item--active')
+                    projectItem[projectIndex].classList.add('tobe-app__projects__list__item--active')
+                })
+                tobeApp.lastTobeProject = value
+                localStorage.setItem('lastTobe', JSON.stringify(tobeApp.lastTobeProject))
+        
+                tobeItemList.innerHTML = ''
+        
+                tobeApp.tobeObject[tobeApp.lastTobeProject].forEach(tobe => {
+                    let todoItem = tobeApp.todoItem(tobe.name)
+                    tobeItemList.insertAdjacentHTML('beforeend', todoItem)
+                })
+                tobeInput.focus()
+                tobeApp.updateTobeItem()
+                //tobeApp.openTobeAppItemOptions()
+            } else {
+                tobeProjectInput.style.display = 'none'
+                tobeInput.style.display = 'block'
+                tobeInput.focus()
+                tobeApp.lastTobeProject = value
+                tobeApp.tobeObject[value] = []
+                projectLi.textContent = value
+                projectCount.textContent = tobeApp.tobeObject[value].length
+                projectLi.appendChild(projectCount)
+                tobeProjectsList.insertBefore(projectLi, addNewProjectBtn)
+                projectItem.forEach(item => {
+                    item.classList.remove('tobe-app__projects__list__item--active')
+                })
+                projectLi.classList.add('tobe-app__projects__list__item--active')
+                localStorage.setItem('lastTobe', JSON.stringify(tobeApp.lastTobeProject))
+                localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject))
+                tobeProjectInput.value = ''
+                tobeProjectsOptions.style.display = 'block'
+            }
         }
     },
 
@@ -1988,11 +2047,10 @@ const tobeApp = {
     },
 
     projectCta: function(e) {
-        let projectIndex
         const projectItem = document.querySelectorAll('.tobe-app__projects__list__item')
 
         Object.keys(tobeApp.tobeObject).forEach((proj, i) => {
-            if (proj === currentTobeProject.textContent) projectIndex = i
+            if (proj === currentTobeProject.textContent) tobeApp.projectIndex = i
         })
 
         if (e.target.classList.contains('editProject')) {
@@ -2010,13 +2068,14 @@ const tobeApp = {
                         tobeApp.lastTobeProject = currentTobeProject.textContent
                         localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
                         localStorage.setItem('lastTobe', JSON.stringify(tobeApp.lastTobeProject))   
-                        projectItem[projectIndex].childNodes[0].textContent = currentTobeProject.textContent  
+                        projectItem[tobeApp.projectIndex].childNodes[0].textContent = currentTobeProject.textContent  
                     }
                 }
             })
         } else if (e.target.classList.contains('deleteProject')) {
             delete tobeApp.tobeObject[currentTobeProject.textContent]
-            projectItem[projectIndex].remove()
+            projectItem[tobeApp.projectIndex].remove()
+            tobeProjectsOptions.style.display = 'none'
             currentTobeProject.textContent = 'Inbox'
             projectItem.forEach(item => {
                 item.classList.remove('tobe-app__projects__list__item--active')
@@ -2034,9 +2093,73 @@ const tobeApp = {
             })
             tobeInput.focus()
             tobeApp.updateTobeItem()
+            tobeApp.openTobeAppItemOptions()
         }
+    },
+
+    openTobeAppItemOptions: function() {
+        const tobeItemOptions = document.querySelectorAll('.tobeAppOptions')
+        const tobeItemDropdown = document.querySelectorAll('.tobe-app__dropdown-wrapper')
+        let curr, prev
+        curr = prev = 0
+        tobeItemOptions.forEach((item, i) => item.addEventListener('click', e => {
+            prev = curr
+            if (item.contains(e.target)) {
+                curr = i
+                item.parentElement.nextElementSibling.classList.toggle('display')
+                console.log(tobeItemDropdown[i].classList)
+
+                console.log('the curr is:' + curr)
+                console.log('the prev is:' + prev)
+                console.log('the i is:' + i)
+                console.log('---------------------------------------------------------------------------------------')
+
+                if (curr != prev) tobeItemOptions[prev].parentElement.nextElementSibling.classList.remove('display') 
+                //else if (curr == prev) tobeItemOptions[curr].parentElement.nextElementSibling.classList.add('display') 
+
+                console.log(tobeItemDropdown[i].classList)
+            }
+        }))
     }
 }
+
+/* const ellipsisWrapper = document.querySelectorAll('.ellipsis-wrapper')
+let curr, prev
+curr = prev = 0
+ellipsisWrapper.forEach((ellipsis, i ) => ellipsis.addEventListener('click', (e) => {
+    prev = curr
+    if (ellipsis.contains(e.target)) {
+        curr = i
+        ellipsis.nextElementSibling.classList.toggle('visibility')
+        if (curr != prev) ellipsisWrapper[prev].nextElementSibling.classList.remove('visibility')
+    }
+}))
+const dropdownList = document.querySelectorAll('.dropdown-list')
+const nodes = Array.prototype.slice.call(linksList.children);
+dropdownList.forEach(list => list.addEventListener('click', (e) => {
+    let listItem = e.target.parentElement.parentElement.parentElement.parentElement
+    if (e.target.className === 'delete-link') {
+        linksObject.urls.splice(nodes.indexOf(listItem), 1)
+        nodes.splice(nodes.indexOf(listItem), 1)
+        listItem.remove()
+        localStorage.setItem('urls', JSON.stringify(linksObject.urls))
+        linksOuterWrapper.style.height = linksListContainer.offsetHeight + 'px'
+    } else if (e.target.className === 'edit-link') {
+        let linkIndex = linksObject.urls[nodes.indexOf(listItem)]
+        linksMenuWrapper.classList.add('second-tab')
+        createUrlBtn.style.display = 'none'
+        saveUrlBtn.style.display = 'block'
+        linkName.value = linkIndex.name
+        linkIndex.links.forEach((link, i) => {
+            let savedUrl = 
+            `<li class="url">
+                <a class="url-link" href="${link}" target="_blank"><span class="url-text">${linkIndex.user[i]}</span></a>
+                <i class="fas fa-times url-delete"></i>
+            </li>`
+            urlsList.insertAdjacentHTML('beforeend', savedUrl)
+        })
+        linksOuterWrapper.style.height = addLinksContainer.offsetHeight + 'px'
+        linksObject.editUrlIndex = nodes.indexOf(listItem) */
 
 function placeCaretAtEnd(el) {
     el.focus();
@@ -2072,9 +2195,6 @@ new Sortable(tobeItemList, {
 });
 
 tobeTitle.addEventListener('click', tobeApp.openTobeApp)
-tobeItemOptions.forEach(item => {
-    item.addEventListener('click', tobeApp.openTobeAppItemOptions)
-})
 tobeInput.addEventListener('keypress', tobeApp.addTobeItem)
 document.addEventListener('DOMContentLoaded', tobeApp.loadTobeApp)
 tobeProjectsList.addEventListener('click', tobeApp.changeTobeProject)

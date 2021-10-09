@@ -1945,33 +1945,30 @@ footer {
         overflow: hidden;
 
         &__ellipsis-wrapper {
-          position: relative;
-          display: inline-flex;
-          align-items: center;
-          opacity: 0;
-          justify-content: center;
-          cursor: pointer;
           font-size: 0.8em;
           i {
-            margin-top: 2px;
-            margin-right: 1px;
-          }
-          &::after {
-            content: "";
-            width: 22px;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
             opacity: 0;
-            height: 22px;
-            position: absolute;
-            background-color: rgba(80, 69, 69, 0.5);
-            border-radius: 50%;
-          }
-          &:hover {
-            i {
+            justify-content: center;
+            cursor: pointer;
+            &::after {
+              content: "";
+              width: 22px;
+              opacity: 0;
+              height: 22px;
+              position: absolute;
+              background-color: rgba(80, 69, 69, 0.5);
+              border-radius: 50%;
+              z-index: -1;
+            }
+            &:hover {
               color: white;
               z-index: 5;
-            }
-            &::after {
-              opacity: 1;
+              &::after {
+                opacity: 1;
+              }
             }
           }
         }
@@ -1981,6 +1978,7 @@ footer {
           justify-content: space-between;
           align-items: center;
           margin-bottom: 0.75em;
+          height: 25px;
           cursor: pointer;
           &:hover .tobe-app__projects .tobe-app__ellipsis-wrapper {
             opacity: 1;
@@ -1991,13 +1989,11 @@ footer {
           align-items: center;
           flex: 1 1 auto;
           &:hover {
-            .tobe-app__projects__toggle {
+            i {
+              color: white;
+              z-index: 5;
               &::after {
                 opacity: 1;
-              }
-              i {
-                color: white;
-                z-index: 5;
               }
             }
           }
@@ -2007,9 +2003,12 @@ footer {
             margin-right: 0.5em;
             outline: none;
           }
-          &__toggle {
+          i {
             opacity: 1;
             margin-top: 4px;
+            &::after {
+              top: -6px;
+            }
           }
           &__list {
             background-color: rgb(87, 82, 85);
@@ -2065,15 +2064,15 @@ footer {
           }
         }
         &__options {
+          i {
+            opacity: 1;
+          }
           &:hover {
-            .tobe-app__projects__options__ellipsis-wrapper {
+            i {
               &::after {
                 opacity: 1;
               }
             }
-          }
-          &__ellipsis-wrapper {
-            opacity: 1;
           }
           &__dropdown-wrapper {
             background-color: rgb(87, 82, 85);
@@ -2118,11 +2117,12 @@ footer {
           align-items: center;
           margin: 0.25em 0em;
           &:hover {
-            .tobe-app__item__ellipsis {
+            i {
               opacity: 1;
             }
           }
           &__checkbox {
+            cursor: pointer;
             margin-right: 0.6em;
           }
           input[type="checkbox"]:checked + .tobe-app__item__name {
@@ -2131,6 +2131,8 @@ footer {
           }
           &__name {
             flex: 1 1 auto;
+            cursor: move;
+
             transition: 0.5s;
           }
           &__options {

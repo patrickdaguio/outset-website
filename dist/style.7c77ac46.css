@@ -1961,19 +1961,17 @@ footer .footer-space .tobe-container .tobe-app {
   overflow: hidden;
 }
 footer .footer-space .tobe-container .tobe-app__ellipsis-wrapper {
+  font-size: 0.8em;
+}
+footer .footer-space .tobe-container .tobe-app__ellipsis-wrapper i {
   position: relative;
   display: inline-flex;
   align-items: center;
   opacity: 0;
   justify-content: center;
   cursor: pointer;
-  font-size: 0.8em;
 }
-footer .footer-space .tobe-container .tobe-app__ellipsis-wrapper i {
-  margin-top: 2px;
-  margin-right: 1px;
-}
-footer .footer-space .tobe-container .tobe-app__ellipsis-wrapper::after {
+footer .footer-space .tobe-container .tobe-app__ellipsis-wrapper i::after {
   content: "";
   width: 22px;
   opacity: 0;
@@ -1981,12 +1979,13 @@ footer .footer-space .tobe-container .tobe-app__ellipsis-wrapper::after {
   position: absolute;
   background-color: rgba(80, 69, 69, 0.5);
   border-radius: 50%;
+  z-index: -1;
 }
-footer .footer-space .tobe-container .tobe-app__ellipsis-wrapper:hover i {
+footer .footer-space .tobe-container .tobe-app__ellipsis-wrapper i:hover {
   color: white;
   z-index: 5;
 }
-footer .footer-space .tobe-container .tobe-app__ellipsis-wrapper:hover::after {
+footer .footer-space .tobe-container .tobe-app__ellipsis-wrapper i:hover::after {
   opacity: 1;
 }
 footer .footer-space .tobe-container .tobe-app__header {
@@ -1995,6 +1994,7 @@ footer .footer-space .tobe-container .tobe-app__header {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.75em;
+  height: 25px;
   cursor: pointer;
 }
 footer .footer-space .tobe-container .tobe-app__header:hover .tobe-app__projects .tobe-app__ellipsis-wrapper {
@@ -2005,12 +2005,12 @@ footer .footer-space .tobe-container .tobe-app__projects {
   align-items: center;
   flex: 1 1 auto;
 }
-footer .footer-space .tobe-container .tobe-app__projects:hover .tobe-app__projects__toggle::after {
-  opacity: 1;
-}
-footer .footer-space .tobe-container .tobe-app__projects:hover .tobe-app__projects__toggle i {
+footer .footer-space .tobe-container .tobe-app__projects:hover i {
   color: white;
   z-index: 5;
+}
+footer .footer-space .tobe-container .tobe-app__projects:hover i::after {
+  opacity: 1;
 }
 footer .footer-space .tobe-container .tobe-app__projects__name {
   font-size: 1.3em;
@@ -2018,9 +2018,12 @@ footer .footer-space .tobe-container .tobe-app__projects__name {
   margin-right: 0.5em;
   outline: none;
 }
-footer .footer-space .tobe-container .tobe-app__projects__toggle {
+footer .footer-space .tobe-container .tobe-app__projects i {
   opacity: 1;
   margin-top: 4px;
+}
+footer .footer-space .tobe-container .tobe-app__projects i::after {
+  top: -6px;
 }
 footer .footer-space .tobe-container .tobe-app__projects__list {
   background-color: #575255;
@@ -2077,10 +2080,10 @@ footer .footer-space .tobe-container .tobe-app__projects__list__add-wrapper i {
 footer .footer-space .tobe-container .tobe-app__projects__list__add-wrapper span {
   font-size: 0.9em;
 }
-footer .footer-space .tobe-container .tobe-app__options:hover .tobe-app__projects__options__ellipsis-wrapper::after {
+footer .footer-space .tobe-container .tobe-app__options i {
   opacity: 1;
 }
-footer .footer-space .tobe-container .tobe-app__options__ellipsis-wrapper {
+footer .footer-space .tobe-container .tobe-app__options:hover i::after {
   opacity: 1;
 }
 footer .footer-space .tobe-container .tobe-app__options__dropdown-wrapper {
@@ -2123,10 +2126,11 @@ footer .footer-space .tobe-container .tobe-app__item {
   align-items: center;
   margin: 0.25em 0em;
 }
-footer .footer-space .tobe-container .tobe-app__item:hover .tobe-app__item__ellipsis {
+footer .footer-space .tobe-container .tobe-app__item:hover i {
   opacity: 1;
 }
 footer .footer-space .tobe-container .tobe-app__item__checkbox {
+  cursor: pointer;
   margin-right: 0.6em;
 }
 footer .footer-space .tobe-container .tobe-app__item input[type=checkbox]:checked + .tobe-app__item__name {
@@ -2135,6 +2139,7 @@ footer .footer-space .tobe-container .tobe-app__item input[type=checkbox]:checke
 }
 footer .footer-space .tobe-container .tobe-app__item__name {
   flex: 1 1 auto;
+  cursor: move;
   transition: 0.5s;
 }
 footer .footer-space .tobe-container .tobe-app__item__options {
