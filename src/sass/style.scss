@@ -2064,6 +2064,7 @@ footer {
           }
         }
         &__options {
+          display: none;
           i {
             opacity: 1;
           }
@@ -2132,7 +2133,7 @@ footer {
           &__name {
             flex: 1 1 auto;
             cursor: move;
-
+            outline: none;
             transition: 0.5s;
           }
           &__options {

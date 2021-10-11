@@ -2080,6 +2080,9 @@ footer .footer-space .tobe-container .tobe-app__projects__list__add-wrapper i {
 footer .footer-space .tobe-container .tobe-app__projects__list__add-wrapper span {
   font-size: 0.9em;
 }
+footer .footer-space .tobe-container .tobe-app__options {
+  display: none;
+}
 footer .footer-space .tobe-container .tobe-app__options i {
   opacity: 1;
 }
@@ -2140,6 +2143,7 @@ footer .footer-space .tobe-container .tobe-app__item input[type=checkbox]:checke
 footer .footer-space .tobe-container .tobe-app__item__name {
   flex: 1 1 auto;
   cursor: move;
+  outline: none;
   transition: 0.5s;
 }
 footer .footer-space .tobe-container .tobe-app__item__options {
