@@ -1764,7 +1764,6 @@ footer {
       .tobe-app {
         bottom: 56px;
         right: -20px;
-        padding: 1em 1.25em;
         position: absolute;
         background-color: white;
         width: 320px;
@@ -1805,7 +1804,7 @@ footer {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 0.75em;
+          padding: 1.5em 1.25em;
           height: 25px;
           cursor: pointer;
           &:hover .tobe-app__projects .tobe-app__ellipsis-wrapper {
@@ -1838,27 +1837,44 @@ footer {
               top: -6px;
             }
           }
-          &__list {
-            background-color: rgb(87, 82, 85);
-            color: rgb(190, 190, 190);
+          &__nipple-wrapper {
             position: absolute;
-            border-radius: 0.4em;
-            top: 36px;
-            z-index: 10;
-            font-size: 0.9em;
-            padding: 0.4em 0em;
-            min-width: 240px;
+            top: 46px;
             display: none;
+            z-index: 100;
+
             &::after {
               content: "";
               position: absolute;
               display: block;
               opacity: 1;
               top: -7px;
-              left: 18px;
+              left: 22px;
               border-left: 7px solid transparent;
               border-right: 7px solid transparent;
               border-bottom: 7px solid rgb(87, 82, 85);
+            }
+          }
+          &__list {
+            background-color: rgb(87, 82, 85);
+            color: rgb(190, 190, 190);
+            border-radius: 0.4em;
+            font-size: 0.9em;
+            padding: 0.4em 0em;
+            min-width: 240px;
+            max-height: 310px;
+            overflow-y: auto;
+            &::-webkit-scrollbar {
+              width: 12px;
+            }
+            &::-webkit-scrollbar-track {
+              background: transparent;
+            }
+            &::-webkit-scrollbar-thumb {
+              border: 4px solid rgba(0, 0, 0, 0);
+              background-clip: padding-box;
+              border-radius: 9999px;
+              background-color: #aaa;
             }
             &__item,
             .tobe-app__projects__list__add {
@@ -1908,10 +1924,10 @@ footer {
             color: rgb(206, 206, 206);
             position: absolute;
             border-radius: 0.4em;
-            top: 36px;
+            top: 46px;
             z-index: 10;
             font-size: 0.85em;
-            right: -15px;
+            right: 6px;
             padding: 5px 0px;
             display: none;
             &::after {
@@ -1920,7 +1936,7 @@ footer {
               display: block;
               opacity: 1;
               top: -7px;
-              right: 15px;
+              right: 13px;
               border-left: 7px solid transparent;
               border-right: 7px solid transparent;
               border-bottom: 7px solid rgb(87, 82, 85);
@@ -1943,14 +1959,15 @@ footer {
         }
         &__item {
           display: flex;
-          align-items: center;
-          margin: 0.25em 0em;
+          padding: 0.25em 1.25em;
           &:hover {
             i {
               opacity: 1;
             }
           }
           &__checkbox {
+            position: relative;
+            top: 2px;
             cursor: pointer;
             margin-right: 0.6em;
           }
@@ -1960,7 +1977,6 @@ footer {
           }
           &__name {
             flex: 1 1 auto;
-            cursor: move;
             outline: none;
             transition: 0.5s;
           }
@@ -1970,7 +1986,22 @@ footer {
           }
         }
         &__list-wrapper {
+          max-height: 420px;
+          overflow-y: auto;
+          overflow-x: hidden;
           transition: 0.3s;
+          &::-webkit-scrollbar {
+            width: 16px;
+          }
+          &::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          &::-webkit-scrollbar-thumb {
+            border: 4px solid rgba(0, 0, 0, 0);
+            background-clip: padding-box;
+            border-radius: 9999px;
+            background-color: #aaa;
+          }
         }
         &__dropdown-wrapper {
           background-color: rgb(87, 82, 85);
@@ -1980,7 +2011,7 @@ footer {
           border-radius: 0.35em;
           top: -4px;
           z-index: 10;
-          font-size: 0.85em;
+          font-size: 0.8em;
           right: 22px;
           width: max-content;
           padding: 5px 0px;
@@ -1997,6 +2028,8 @@ footer {
         }
         &__footer {
           margin-top: 0.25em;
+          padding: 1em 1.25em;
+          padding-top: 0em;
           &__input {
             padding-top: 10px;
             display: block;
@@ -2223,4 +2256,8 @@ footer {
 
 .display {
   display: block !important;
+}
+
+.highlight {
+  background-color: rgb(211, 211, 211);
 }

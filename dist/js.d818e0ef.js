@@ -519,7 +519,7 @@ document.addEventListener('click', e => {
   }
 
   if (!tobeProjectsContainer.contains(e.target)) {
-    tobeProjectsList.classList.remove('display');
+    tobeProjectsNippleWrapper.classList.remove('display');
     tobeListWrapper.style.minHeight = '0px';
 
     if (tobeProjectsOptions.contains(e.target)) {
@@ -533,15 +533,15 @@ document.addEventListener('click', e => {
     tobeListWrapper.style.minHeight = '0px';
 
     if (tobeProjectsContainer.contains(e.target)) {
-      tobeProjectsList.classList.toggle('display');
-      if (tobeProjectsList.classList.contains('display')) tobeListWrapper.style.minHeight = tobeProjectsList.offsetHeight + 'px';else tobeListWrapper.style.minHeight = '0px';
+      tobeProjectsNippleWrapper.classList.toggle('display');
+      if (tobeProjectsNippleWrapper.classList.contains('display')) tobeListWrapper.style.minHeight = tobeProjectsList.offsetHeight + 'px';else tobeListWrapper.style.minHeight = '0px';
     }
   }
 
   if (!currentTobeProject.contains(e.target) && !tobeProjectOptionsWrapper.contains(e.target) && !tobeApp.newProject) {
     currentTobeProject.contentEditable = 'false';
 
-    if (currentTobeProject.textContent === '' || tobeApp.lastTobeProject === currentTobeProject.textContent) {
+    if (currentTobeProject.textContent === '' || tobeApp.lastTobeProject === currentTobeProject.textContent || tobeApp.tobeObject.hasOwnProperty(currentTobeProject.textContent)) {
       currentTobeProject.textContent = tobeApp.lastTobeProject;
     } else {
       const projectItem = document.querySelectorAll('.tobe-app__projects__list__item');
@@ -554,11 +554,30 @@ document.addEventListener('click', e => {
     }
   }
 
-  if (e.target.classList.contains('tobeAppOptions')) {
+  if (e.target.classList.contains('open')) {
     const tobeAppOptionContainer = document.querySelectorAll('.tobeAppOptions');
     let indexArr = [...tobeAppOptionContainer].indexOf(e.target);
-    /*         if (indexArr >= tobeAppOptionContainer.length - 3) console.log('higher')
-            else console.log('lower') */
+
+    if (indexArr === tobeAppOptionContainer.length - 3) {
+      tobeListWrapper.style.minHeight = tobeListWrapper.offsetHeight + tobeAppOptionContainer[indexArr].offsetHeight + 'px';
+    } else if (indexArr === tobeAppOptionContainer.length - 2) {
+      tobeListWrapper.style.minHeight = tobeListWrapper.offsetHeight + tobeAppOptionContainer[indexArr].offsetHeight + 27 + 'px';
+    } else if (indexArr === tobeAppOptionContainer.length - 1) {
+      tobeListWrapper.style.minHeight = tobeListWrapper.offsetHeight + tobeAppOptionContainer[indexArr].offsetHeight + 54 + 'px';
+    }
+
+    if (tobeListWrapper.offsetHeight < 420) tobeListWrapper.style.overflow = 'hidden';
+  } else if (!e.target.classList.contains('open')) {
+    const tobeAppOptionContainer = document.querySelectorAll('.tobeAppOptions');
+    tobeAppOptionContainer.forEach(list => {
+      if (!list.contains(e.target)) {
+        list.parentElement.nextElementSibling.classList.remove('display');
+        list.classList.remove('open');
+        list.parentElement.parentElement.parentElement.classList.remove('highlight');
+      }
+    });
+    tobeListWrapper.style.overflowX = 'hidden';
+    tobeListWrapper.style.overflowY = 'auto';
   }
 }); // Greeting App
 // HTML Tags
@@ -568,7 +587,6 @@ const time = document.querySelector('.time');
 const greetingContainer = document.querySelector('.greeting-container');
 const greeting = document.querySelector('.greeting');
 const greetingName = document.querySelector('.greeting-name');
-const todayDate = document.querySelector('.today-date');
 const greetingsEllipsis = document.querySelector('.greeting-ellipsis-wrapper');
 const greetingsOption = document.querySelector('.ellipsis-dropdown');
 const greetingsEllipsisIcon = document.querySelector('.greetingEllipsis');
@@ -1696,6 +1714,7 @@ const tobeProjectsContainer = document.querySelector('.tobe-app__projects');
 const tobeProjectsOptions = document.querySelector('.tobe-app__options');
 const tobeListWrapper = document.querySelector('.tobe-app__list-wrapper');
 const tobeProjectsList = document.querySelector('.tobe-app__projects__list');
+const tobeProjectsNippleWrapper = document.querySelector('.tobe-app__projects__nipple-wrapper');
 const tobeProjectOptionsWrapper = document.querySelector('.tobe-app__options__dropdown-wrapper');
 const tobeInput = document.querySelector('.todoInput');
 const tobeItemList = document.querySelector('.tobe-app__list');
@@ -1704,81 +1723,13 @@ const addNewProjectBtn = document.querySelector('.tobe-app__projects__list__add'
 const inboxProjectCount = document.querySelector('.inboxCount');
 const inboxProject = document.querySelector('.inboxProject');
 const tobeProjectInput = document.querySelector('.todoProject');
-/* loadUrls: function() {
-    linksList.innerHTML = ''
-    let loadedUrl
-    linksObject.urls.forEach((url, i) => {
-        loadedUrl = `               
-        <li class="link">
-            <div class="link-wrapper">
-                <a href="#" class="link-url">
-                    <img src="${url.img}" class="link-favicon">
-                    <span class="link-text">${url.name}</span>
-                </a>
-            </div>
-            <div class="link-options">
-                <div class="ellipsis-wrapper">
-                    <i class="fas fa-ellipsis-h"></i>
-                </div>
-                <div class="link-dropdown">
-                    <ul class="dropdown-list">
-                        <li class="edit-link">Edit</li>
-                        <li class="delete-link">Delete</li>
-                    </ul>
-                </div>
-            </div>
-        </li>`
-        linksList.insertAdjacentHTML('beforeend', loadedUrl)
-        const multipleLinks = document.querySelectorAll('.link-url')
-        multipleLinks[i].onclick = () => url.links.reverse().forEach(link => window.open(link))
-    })
-    const ellipsisWrapper = document.querySelectorAll('.ellipsis-wrapper')
-    let curr, prev
-    curr = prev = 0
-    ellipsisWrapper.forEach((ellipsis, i ) => ellipsis.addEventListener('click', (e) => {
-        prev = curr
-        if (ellipsis.contains(e.target)) {
-            curr = i
-            ellipsis.nextElementSibling.classList.toggle('visibility')
-            if (curr != prev) ellipsisWrapper[prev].nextElementSibling.classList.remove('visibility')
-        }
-    }))
-    const dropdownList = document.querySelectorAll('.dropdown-list')
-    const nodes = Array.prototype.slice.call(linksList.children);
-    dropdownList.forEach(list => list.addEventListener('click', (e) => {
-        let listItem = e.target.parentElement.parentElement.parentElement.parentElement
-        if (e.target.className === 'delete-link') {
-            linksObject.urls.splice(nodes.indexOf(listItem), 1)
-            nodes.splice(nodes.indexOf(listItem), 1)
-            listItem.remove()
-            localStorage.setItem('urls', JSON.stringify(linksObject.urls))
-            linksOuterWrapper.style.height = linksListContainer.offsetHeight + 'px'
-        } else if (e.target.className === 'edit-link') {
-            let linkIndex = linksObject.urls[nodes.indexOf(listItem)]
-            linksMenuWrapper.classList.add('second-tab')
-            createUrlBtn.style.display = 'none'
-            saveUrlBtn.style.display = 'block'
-            linkName.value = linkIndex.name
-            linkIndex.links.forEach((link, i) => {
-                let savedUrl = 
-                `<li class="url">
-                    <a class="url-link" href="${link}" target="_blank"><span class="url-text">${linkIndex.user[i]}</span></a>
-                    <i class="fas fa-times url-delete"></i>
-                </li>`
-                urlsList.insertAdjacentHTML('beforeend', savedUrl)
-            })
-            linksOuterWrapper.style.height = addLinksContainer.offsetHeight + 'px'
-            linksObject.editUrlIndex = nodes.indexOf(listItem)
-        }
-    })) 
-} */
-
 const tobeApp = {
   tobeObject: localStorage.getItem('tobes') === null ? {} : JSON.parse(localStorage.getItem('tobes')),
   lastTobeProject: localStorage.getItem('lastTobe') === null ? '' : JSON.parse(localStorage.getItem('lastTobe')),
   newProject: false,
   projectIndex: 1,
   todoItem: function (proj) {
+    console.log(proj);
     tobeItemList.innerHTML = '';
     let todo;
     tobeApp.tobeObject[proj].forEach(tobe => {
@@ -1802,6 +1753,7 @@ const tobeApp = {
       tobeItemList.insertAdjacentHTML('beforeend', todo);
     });
     const tobeItemOptions = document.querySelectorAll('.tobeAppOptions');
+    const tobeItem = document.querySelectorAll('.tobe-app__item');
     let curr, prev;
     curr = prev = 0;
     tobeItemOptions.forEach((item, i) => item.addEventListener('click', e => {
@@ -1809,8 +1761,14 @@ const tobeApp = {
 
       if (item.contains(e.target)) {
         curr = i;
+        item.classList.toggle('open');
+        tobeItem[curr].classList.toggle('highlight');
         item.parentElement.nextElementSibling.classList.toggle('display');
-        if (curr != prev) tobeItemOptions[prev].parentElement.nextElementSibling.classList.remove('display');
+
+        if (curr != prev) {
+          tobeItemOptions[prev].parentElement.nextElementSibling.classList.remove('display');
+          tobeItem[prev].classList.remove('highlight');
+        }
       }
     }));
     const tobeItemDropdown = document.querySelectorAll('.tobe-app__dropdown-wrapper');
@@ -1840,25 +1798,6 @@ const tobeApp = {
             }
           }
         });
-        console.log(selectedText.textContent);
-        /*                 currentTobeProject.contentEditable = 'true'
-                        placeCaretAtEnd(currentTobeProject)
-                        currentTobeProject.addEventListener('keypress', (e) => {
-                            if (e.keyCode === 13) {
-                                if (currentTobeProject.textContent === '' || tobeApp.lastTobeProject === currentTobeProject.textContent) {
-                                    currentTobeProject.contentEditable = 'false'
-                                    currentTobeProject.textContent = tobeApp.lastTobeProject
-                                } else {
-                                    currentTobeProject.contentEditable = 'false'
-                                    tobeApp.tobeObject[currentTobeProject.textContent] = tobeApp.tobeObject[tobeApp.lastTobeProject]
-                                    delete tobeApp.tobeObject[tobeApp.lastTobeProject]
-                                    tobeApp.lastTobeProject = currentTobeProject.textContent
-                                    localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
-                                    localStorage.setItem('lastTobe', JSON.stringify(tobeApp.lastTobeProject))   
-                                    projectItem[tobeApp.projectIndex].childNodes[0].textContent = currentTobeProject.textContent  
-                                }
-                            }
-                        }) */
       }
     }));
   },
@@ -1897,16 +1836,23 @@ const tobeApp = {
       tobeApp.todoItem(projectName);
       tobeApp.updateTobeItem();
       tobeApp.updateProjectCount(projectName);
+      tobeListWrapper.scrollTop = tobeListWrapper.scrollHeight;
     } else if (e.keyCode === 13 && e.target.value === '') {
       tobeInput.classList.add('warning');
       tobeInput.focus();
       tobeInput.addEventListener('animationend', function () {
         tobeInput.classList.remove('warning');
       });
+      tobeListWrapper.scrollTop = tobeListWrapper.scrollHeight;
     }
   },
   changeTobeProject: function (e) {
     const projectItem = document.querySelectorAll('.tobe-app__projects__list__item');
+
+    if (tobeListWrapper.offsetHeight > 420) {
+      tobeListWrapper.style.overflowX = 'hidden';
+      tobeListWrapper.style.overflowY = 'auto';
+    }
 
     if (addNewProjectBtn.contains(e.target)) {
       tobeApp.newProject = true;
@@ -1995,8 +1941,6 @@ const tobeApp = {
   },
   projectCta: function (e) {
     const projectItem = document.querySelectorAll('.tobe-app__projects__list__item');
-    let editedProject;
-    console.log(projectItem);
     Object.keys(tobeApp.tobeObject).forEach((proj, i) => {
       if (proj === currentTobeProject.textContent) tobeApp.projectIndex = i;
     });
@@ -2037,10 +1981,10 @@ const tobeApp = {
             console.log(tobeApp.tobeObject);
             console.log(tobeApp.projectIndex);
             tobeApp.tobeObject[currentTobeProject.textContent] = tobeApp.tobeObject[tobeApp.lastTobeProject];
-            projectItem[tobeApp.projectIndex].childNodes[0].textContent = currentTobeProject.textContent; // stuvk here
-
+            projectItem[tobeApp.projectIndex].childNodes[0].textContent = currentTobeProject.textContent;
             delete tobeApp.tobeObject[tobeApp.lastTobeProject];
             tobeApp.lastTobeProject = currentTobeProject.textContent;
+            tobeInput.focus();
             localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
             localStorage.setItem('lastTobe', JSON.stringify(tobeApp.lastTobeProject));
           }
@@ -2133,12 +2077,12 @@ new Sortable(tobeItemList, {
     localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
   }
 });
+document.addEventListener('DOMContentLoaded', tobeApp.loadTobeApp);
 tobeTitle.addEventListener('click', tobeApp.openTobeApp);
 tobeInput.addEventListener('keypress', tobeApp.addTobeItem);
 tobeProjectsList.addEventListener('click', tobeApp.changeTobeProject);
 tobeProjectInput.addEventListener('keyup', tobeApp.addNewProject);
 tobeProjectOptionsWrapper.addEventListener('click', tobeApp.projectCta);
-document.addEventListener('DOMContentLoaded', tobeApp.loadTobeApp);
 },{"./config":"src/js/config.js","../images/pomodoro.mp3":"src/images/pomodoro.mp3","../images/weather/storming.png":"src/images/weather/storming.png","../images/weather/sunny.png":"src/images/weather/sunny.png","../images/weather/snowing.png":"src/images/weather/snowing.png","../images/weather/raining.png":"src/images/weather/raining.png","../images/weather/cloudy sun.png":"src/images/weather/cloudy sun.png","../images/weather/cloudy rain.png":"src/images/weather/cloudy rain.png","../images/weather/cloudy.png":"src/images/weather/cloudy.png","../images/weather/windy.png":"src/images/weather/windy.png","../images/svgs/focus.svg":"src/images/svgs/focus.svg","../images/svgs/todo.svg":"src/images/svgs/todo.svg","../images/svgs/links.svg":"src/images/svgs/links.svg","../images/svgs/calendar.svg":"src/images/svgs/calendar.svg","../images/svgs/clock.svg":"src/images/svgs/clock.svg","../images/svgs/weather.svg":"src/images/svgs/weather.svg","../images/svgs/picture.svg":"src/images/svgs/picture.svg","../images/svgs/quote.svg":"src/images/svgs/quote.svg","../images/svgs/mantra.svg":"src/images/svgs/mantra.svg"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -2167,7 +2111,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59680" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53201" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
