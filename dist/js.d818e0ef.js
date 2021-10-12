@@ -148,12 +148,6 @@ module.exports = "/cloudy rain.2d59ad33.png";
 module.exports = "/cloudy.f668b013.png";
 },{}],"src/images/weather/windy.png":[function(require,module,exports) {
 module.exports = "/windy.e8f5e152.png";
-},{}],"src/images/todo/uncheck1.png":[function(require,module,exports) {
-module.exports = "/uncheck1.c79750a4.png";
-},{}],"src/images/todo/trash1.png":[function(require,module,exports) {
-module.exports = "/trash1.3c262aa8.png";
-},{}],"src/images/todo/checked1.png":[function(require,module,exports) {
-module.exports = "/checked1.cc84f948.png";
 },{}],"src/images/svgs/focus.svg":[function(require,module,exports) {
 module.exports = "/focus.f05fe073.svg";
 },{}],"src/images/svgs/todo.svg":[function(require,module,exports) {
@@ -213,9 +207,7 @@ window.addEventListener("load", () => {
   checkUserName();
   greetings();
   generateQuote();
-  dateToday();
   setIntention();
-  changeDate();
   getQuote();
 });
 
@@ -1385,214 +1377,8 @@ function showQuoteDetails() {
   quoteBtn.querySelector('span').textContent = 'Copy to clipboard';
   quoteDetails.classList.toggle('visibility');
   shareBox.classList.remove('share-open');
-} // Todo List App
+} // Personal Name Functionality
 
-
-function dateToday(x) {
-  let date = new Date();
-  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  todayDate.textContent = `${days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
-} // HTML Tags
-
-
-const todoList = document.querySelector('.todo-list');
-const addInput = document.querySelector('.add-input');
-const addBtn = document.querySelector('.add-btn');
-const filterOption = document.querySelector('.filter-todo');
-const todoOpen = document.querySelector('.todo-open');
-const todoApp = document.querySelector('.todo-app');
-const main = document.querySelector('main');
-/* document.addEventListener('DOMContentLoaded', getTodos); */
-
-addBtn.addEventListener('click', addTodo);
-todoList.addEventListener('click', deleteCheck);
-filterOption.addEventListener('click', filterTodo);
-todoOpen.addEventListener('click', openTodoList);
-
-function openTodoList() {
-  todoApp.classList.toggle('todo-close');
-  main.classList.toggle('main-left');
-} // Global - LocalStorage variable
-
-
-let todos;
-
-if (localStorage.getItem('todos') === null) {
-  todos = [];
-} else {
-  todos = JSON.parse(localStorage.getItem('todos'));
-}
-
-function addTodo(event) {
-  event.preventDefault(); // Todo DIV
-
-  const todoDiv = document.createElement('div');
-  todoDiv.classList.add("todo"); // Todo LI
-
-  const newTodo = document.createElement('li');
-  newTodo.innerText = addInput.value;
-  newTodo.classList.add('todo-item');
-  todoDiv.appendChild(newTodo); // Add todo to Local Storage
-
-  saveLocalTodos(addInput.value); // Check Mark Button
-
-  const completedButton = document.createElement('button');
-  completedButton.innerHTML = `<img src='${require("../images/todo/uncheck1.png")}'>`;
-  completedButton.classList.add('complete-btn');
-  todoDiv.appendChild(completedButton); // Delete Mark Button
-
-  const trashButton = document.createElement('button');
-  trashButton.innerHTML = `<img src='${require("../images/todo/trash1.png")}'>`;
-  trashButton.classList.add('trash-btn');
-  todoDiv.appendChild(trashButton);
-  todoList.appendChild(todoDiv);
-  addInput.value = '';
-}
-
-function deleteCheck(e) {
-  const item = e.target;
-  const todo = item.parentElement;
-  const nodes = Array.prototype.slice.call(todoList.children); // Check Mark
-
-  if (item.classList[0] === 'complete-btn') {
-    todo.classList.toggle('completed');
-  }
-
-  if (item.firstElementChild.src.match('uncheck1')) {
-    item.firstElementChild.src = require("../images/todo/checked1.png");
-  } else if (item.firstElementChild.src.match('checked')) {
-    item.firstElementChild.src = require("../images/todo/uncheck1.png");
-    todo.style.transition = "all 0.5s ease";
-  } else {
-    item.firstElementChild.src = require("../images/todo/trash1.png");
-    todo.style.transition = "all 0.5s ease";
-  }
-
-  if (todo.classList.contains('completed')) {
-    todos[nodes.indexOf(todo)].status = 'complete';
-  } else {
-    todos[nodes.indexOf(todo)].status = 'incomplete';
-  }
-
-  localStorage.setItem('todos', JSON.stringify(todos)); // Delete Todo
-
-  if (item.classList[0] === 'trash-btn') {
-    // Animation
-    todo.classList.add('fall');
-    removeLocalTodos(nodes.indexOf(todo));
-    todo.addEventListener('transitionend', function () {
-      todo.remove();
-    });
-  }
-}
-
-function filterTodo(e) {
-  const todos = todoList.childNodes;
-  todos.forEach(function (todo) {
-    switch (e.target.value) {
-      case 'all':
-        todo.style.display = 'flex';
-        break;
-
-      case 'completed':
-        if (todo.classList.contains('completed')) {
-          todo.style.display = 'flex';
-        } else {
-          todo.style.display = 'none';
-        }
-
-        break;
-
-      case 'uncompleted':
-        if (!todo.classList.contains('completed')) {
-          todo.style.display = 'flex';
-        } else {
-          todo.style.display = 'none';
-        }
-
-        break;
-    }
-  });
-}
-
-function saveLocalTodos(todo) {
-  todos.push({
-    item: todo,
-    status: 'incomplete'
-  });
-  localStorage.setItem('todos', JSON.stringify(todos));
-}
-
-function getTodos() {
-  todos.forEach(function (todo) {
-    // Todo DIV
-    const todoDiv = document.createElement('div');
-    todoDiv.classList.add("todo"); // Todo LI
-
-    const newTodo = document.createElement('li');
-    newTodo.innerText = todo.item;
-    newTodo.classList.add('todo-item');
-    todoDiv.appendChild(newTodo); // Check Mark Button
-
-    const completedButton = document.createElement('button');
-    completedButton.innerHTML = `<img src='${require("../images/todo/uncheck1.png")}'>`;
-    completedButton.classList.add('complete-btn');
-    todoDiv.appendChild(completedButton); // Delete Mark Button
-
-    const trashButton = document.createElement('button');
-    trashButton.innerHTML = `<img src='${require("../images/todo/trash1.png")}'>`;
-    trashButton.classList.add('trash-btn');
-    todoDiv.appendChild(trashButton);
-
-    if (todo.status === 'complete') {
-      newTodo.parentElement.classList.add('completed');
-      completedButton.innerHTML = `<img src='${require("../images/todo/checked1.png")}'>`;
-    }
-
-    todoList.appendChild(todoDiv);
-  });
-}
-
-function removeLocalTodos(todo) {
-  todos.splice(todo, 1);
-  localStorage.setItem('todos', JSON.stringify(todos));
-}
-
-function changeDate() {
-  let date = new Date();
-  const shortenedDays = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'];
-  const shortenedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-
-  if (x.matches) {
-    todayDate.textContent = `${shortenedDays[date.getDay()]}, ${date.getDate()} ${shortenedMonths[date.getMonth()]} ${date.getFullYear()}`;
-  } else {
-    dateToday();
-  }
-}
-
-const x = window.matchMedia("(max-width: 1350px)");
-x.addEventListener('change', changeDate);
-new Sortable(todolist, {
-  animation: 150,
-  onUpdate: function (e) {
-    function array_move(arr, old_index, new_index) {
-      arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
-      return arr;
-    }
-
-    ;
-    array_move(todos, e.oldIndex, e.newIndex);
-    localStorage.setItem('todos', JSON.stringify(todos));
-  }
-});
-/* document.addEventListener('DOMContentLoaded', () => {
-    const todoItems = document.querySelectorAll('.todo-item')
-    todoItems.forEach(items => {
-        items.setAttribute("contenteditable", "true");
-    })
-})  */
-// Personal Name Functionality
 
 const introduction = document.querySelector('.introduction');
 const introductionContainer = document.querySelector('.intro-question-container');
@@ -2150,7 +1936,7 @@ const tobeApp = {
   },
   addNewProject: function (e) {
     const projectItem = document.querySelectorAll('.tobe-app__projects__list__item');
-    const value = e.target.value;
+    let value = e.target.value;
     currentTobeProject.textContent = value;
     const projectLi = document.createElement('li');
     projectLi.classList.add('tobe-app__projects__list__item');
@@ -2159,8 +1945,6 @@ const tobeApp = {
 
     if (e.keyCode === 13 && e.target.value !== '') {
       let projectIndex = Object.keys(tobeApp.tobeObject).indexOf(value);
-      console.log(tobeApp.tobeObject);
-      console.log(projectIndex);
 
       if (projectIndex >= 0) {
         if (value === 'Inbox') tobeProjectsOptions.style.display = 'none';else tobeProjectsOptions.style.display = 'block';
@@ -2181,16 +1965,9 @@ const tobeApp = {
         tobeProjectInput.style.display = 'none';
         tobeInput.style.display = 'block';
         tobeInput.focus();
-        tobeApp.lastTobeProject = value;
-        Object.assign(tobeApp.tobeObject, {
-          [value]: []
-        });
-        /*                 tobeApp.tobeObject = {
-                            ...tobeApp.tobeObject,
-                            [value]: []
-                        } */
-        //tobeApp.tobeObject[value] = []
+        tobeApp.lastTobeProject = value; //Object.assign(tobeApp.tobeObject, { [value]: []})
 
+        tobeApp.tobeObject[value] = [];
         projectLi.textContent = value;
         projectCount.textContent = tobeApp.tobeObject[value].length;
         projectLi.appendChild(projectCount);
@@ -2203,7 +1980,6 @@ const tobeApp = {
         localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
         tobeProjectInput.value = '';
         tobeProjectsOptions.style.display = 'block';
-        console.log(tobeApp.tobeObject);
       }
     }
   },
@@ -2363,7 +2139,7 @@ tobeProjectsList.addEventListener('click', tobeApp.changeTobeProject);
 tobeProjectInput.addEventListener('keyup', tobeApp.addNewProject);
 tobeProjectOptionsWrapper.addEventListener('click', tobeApp.projectCta);
 document.addEventListener('DOMContentLoaded', tobeApp.loadTobeApp);
-},{"./config":"src/js/config.js","../images/pomodoro.mp3":"src/images/pomodoro.mp3","../images/weather/storming.png":"src/images/weather/storming.png","../images/weather/sunny.png":"src/images/weather/sunny.png","../images/weather/snowing.png":"src/images/weather/snowing.png","../images/weather/raining.png":"src/images/weather/raining.png","../images/weather/cloudy sun.png":"src/images/weather/cloudy sun.png","../images/weather/cloudy rain.png":"src/images/weather/cloudy rain.png","../images/weather/cloudy.png":"src/images/weather/cloudy.png","../images/weather/windy.png":"src/images/weather/windy.png","../images/todo/uncheck1.png":"src/images/todo/uncheck1.png","../images/todo/trash1.png":"src/images/todo/trash1.png","../images/todo/checked1.png":"src/images/todo/checked1.png","../images/svgs/focus.svg":"src/images/svgs/focus.svg","../images/svgs/todo.svg":"src/images/svgs/todo.svg","../images/svgs/links.svg":"src/images/svgs/links.svg","../images/svgs/calendar.svg":"src/images/svgs/calendar.svg","../images/svgs/clock.svg":"src/images/svgs/clock.svg","../images/svgs/weather.svg":"src/images/svgs/weather.svg","../images/svgs/picture.svg":"src/images/svgs/picture.svg","../images/svgs/quote.svg":"src/images/svgs/quote.svg","../images/svgs/mantra.svg":"src/images/svgs/mantra.svg"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./config":"src/js/config.js","../images/pomodoro.mp3":"src/images/pomodoro.mp3","../images/weather/storming.png":"src/images/weather/storming.png","../images/weather/sunny.png":"src/images/weather/sunny.png","../images/weather/snowing.png":"src/images/weather/snowing.png","../images/weather/raining.png":"src/images/weather/raining.png","../images/weather/cloudy sun.png":"src/images/weather/cloudy sun.png","../images/weather/cloudy rain.png":"src/images/weather/cloudy rain.png","../images/weather/cloudy.png":"src/images/weather/cloudy.png","../images/weather/windy.png":"src/images/weather/windy.png","../images/svgs/focus.svg":"src/images/svgs/focus.svg","../images/svgs/todo.svg":"src/images/svgs/todo.svg","../images/svgs/links.svg":"src/images/svgs/links.svg","../images/svgs/calendar.svg":"src/images/svgs/calendar.svg","../images/svgs/clock.svg":"src/images/svgs/clock.svg","../images/svgs/weather.svg":"src/images/svgs/weather.svg","../images/svgs/picture.svg":"src/images/svgs/picture.svg","../images/svgs/quote.svg":"src/images/svgs/quote.svg","../images/svgs/mantra.svg":"src/images/svgs/mantra.svg"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -2391,7 +2167,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55202" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59680" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
