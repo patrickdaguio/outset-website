@@ -1979,6 +1979,9 @@ footer {
             flex: 1 1 auto;
             outline: none;
             transition: 0.5s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
           &__options {
             position: relative;
@@ -1986,7 +1989,7 @@ footer {
           }
         }
         &__list-wrapper {
-          max-height: 420px;
+          max-height: 400px;
           overflow-y: auto;
           overflow-x: hidden;
           transition: 0.3s;
@@ -2018,12 +2021,30 @@ footer {
           display: none;
         }
         &__dropdown {
+          max-height: 168px;
+          overflow: auto;
+          &::-webkit-scrollbar {
+            width: 10px;
+          }
+          &::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          &::-webkit-scrollbar-thumb {
+            border: 3px solid rgba(0, 0, 0, 0);
+            background-clip: padding-box;
+            border-radius: 9999px;
+            background-color: #aaa;
+          }
           &__item {
             padding: 0.5em 1em;
             cursor: pointer;
             &:hover {
               background-color: rgb(110, 107, 109);
             }
+          }
+          &__line {
+            height: 1px;
+            background-color: rgb(168, 168, 168);
           }
         }
         &__footer {

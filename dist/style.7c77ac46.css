@@ -1950,13 +1950,16 @@ footer .footer-space .tobe-container .tobe-app__item__name {
   flex: 1 1 auto;
   outline: none;
   transition: 0.5s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 footer .footer-space .tobe-container .tobe-app__item__options {
   position: relative;
   display: flex;
 }
 footer .footer-space .tobe-container .tobe-app__list-wrapper {
-  max-height: 420px;
+  max-height: 400px;
   overflow-y: auto;
   overflow-x: hidden;
   transition: 0.3s;
@@ -1987,12 +1990,32 @@ footer .footer-space .tobe-container .tobe-app__dropdown-wrapper {
   padding: 5px 0px;
   display: none;
 }
+footer .footer-space .tobe-container .tobe-app__dropdown {
+  max-height: 168px;
+  overflow: auto;
+}
+footer .footer-space .tobe-container .tobe-app__dropdown::-webkit-scrollbar {
+  width: 10px;
+}
+footer .footer-space .tobe-container .tobe-app__dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+footer .footer-space .tobe-container .tobe-app__dropdown::-webkit-scrollbar-thumb {
+  border: 3px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
+  border-radius: 9999px;
+  background-color: #aaa;
+}
 footer .footer-space .tobe-container .tobe-app__dropdown__item {
   padding: 0.5em 1em;
   cursor: pointer;
 }
 footer .footer-space .tobe-container .tobe-app__dropdown__item:hover {
   background-color: #6e6b6d;
+}
+footer .footer-space .tobe-container .tobe-app__dropdown__line {
+  height: 1px;
+  background-color: #a8a8a8;
 }
 footer .footer-space .tobe-container .tobe-app__footer {
   margin-top: 0.25em;

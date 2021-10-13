@@ -378,15 +378,16 @@ document.addEventListener('click', (e) => {
 
     if (e.target.classList.contains('open')) {
         const tobeAppOptionContainer = document.querySelectorAll('.tobeAppOptions') 
+        const tobeItemDropdown = document.querySelectorAll('.tobe-app__dropdown')
         let indexArr = [...tobeAppOptionContainer].indexOf(e.target);
-        if (indexArr === tobeAppOptionContainer.length - 3) {
-            tobeListWrapper.style.minHeight = tobeListWrapper.offsetHeight + tobeAppOptionContainer[indexArr].offsetHeight + 'px'
-        } else if (indexArr === tobeAppOptionContainer.length - 2) {
-            tobeListWrapper.style.minHeight = tobeListWrapper.offsetHeight + tobeAppOptionContainer[indexArr].offsetHeight + 27 + 'px'
-        } else if (indexArr === tobeAppOptionContainer.length - 1) {
-            tobeListWrapper.style.minHeight = tobeListWrapper.offsetHeight + tobeAppOptionContainer[indexArr].offsetHeight + 54 + 'px'
+
+       if ((indexArr * 27) + tobeItemDropdown[indexArr].offsetHeight + 10 >= 400) {
+            tobeListWrapper.style.minHeight = '400px'
+        } else if (tobeListWrapper.offsetHeight > tobeApp.height || tobeListWrapper.offsetHeight <= tobeApp.height) {
+            tobeListWrapper.style.minHeight = (indexArr * 27) + tobeItemDropdown[indexArr].offsetHeight + 10 + 'px'
         }
-        if (tobeListWrapper.offsetHeight < 420) tobeListWrapper.style.overflow = 'hidden'
+        if (tobeListWrapper.offsetHeight < 400) tobeListWrapper.style.overflow = 'hidden'
+
     } else if (!e.target.classList.contains('open')) {
         const tobeAppOptionContainer = document.querySelectorAll('.tobeAppOptions') 
         tobeAppOptionContainer.forEach(list => {
@@ -1622,8 +1623,8 @@ const tobeApp = {
     lastTobeProject: localStorage.getItem('lastTobe') === null ? '' : JSON.parse(localStorage.getItem('lastTobe')),
     newProject: false,
     projectIndex: 1,
+    height: 0,
     todoItem: function(proj) {
-        console.log(proj)
         tobeItemList.innerHTML = ''
         let todo
         tobeApp.tobeObject[proj].forEach(tobe => {
@@ -1638,7 +1639,8 @@ const tobeApp = {
                     <div class="tobe-app__dropdown-wrapper">
                         <ul class="tobe-app__dropdown">
                             <li class="tobe-app__dropdown__item editTobeItem">Edit</li>
-                            <li class="tobe-app__dropdown__item moveTobeItem">Move to inbox</li>
+                            <li class="tobe-app__dropdown__line"></li>
+                            <li class="tobe-app__dropdown__line tobeLine"></li>
                             <li class="tobe-app__dropdown__item deleteTobeItem">Delete</li>
                         </ul>
                     </div>
@@ -1646,6 +1648,22 @@ const tobeApp = {
             </li>`
             tobeItemList.insertAdjacentHTML('beforeend', todo)
         })
+
+        tobeApp.height = tobeItemList.offsetHeight
+
+        const tobeLine = document.querySelectorAll('.tobeLine')
+        const tobeDropdown = document.querySelectorAll('.tobe-app__dropdown')
+        let tobeKeys = Object.keys(tobeApp.tobeObject)
+
+        tobeDropdown.forEach((dropdown, i) => {
+            tobeKeys.forEach(key => {
+                let projectEdit = document.createElement('li')
+                projectEdit.classList.add('tobe-app__dropdown__item', 'moveTobeItem')
+                projectEdit.textContent = 'Move to ' + key
+                dropdown.insertBefore(projectEdit, tobeLine[i])
+            })
+        })
+
         const tobeItemOptions = document.querySelectorAll('.tobeAppOptions')
         const tobeItem = document.querySelectorAll('.tobe-app__item')
         let curr, prev
@@ -1688,6 +1706,13 @@ const tobeApp = {
                         }
                     }
                 })
+            } else if (e.target.classList.contains('moveTobeItem')) {
+                let projectSelect = e.target.textContent.replace('Move to ', '')
+                tobeApp.tobeObject[projectSelect].push(tobeApp.tobeObject[proj].splice(nodes.indexOf(selectedTobeItem), 1)[0])
+                nodes.splice(nodes.indexOf(selectedTobeItem), 1)
+                localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject))
+                selectedTobeItem.remove()
+                tobeApp.updateProjectCount(projectSelect)
             }
         }))
     },
@@ -1743,7 +1768,7 @@ const tobeApp = {
     changeTobeProject: function(e) {
         const projectItem = document.querySelectorAll('.tobe-app__projects__list__item')
 
-        if (tobeListWrapper.offsetHeight > 420) {
+        if (tobeListWrapper.offsetHeight > 400) {
             tobeListWrapper.style.overflowX = 'hidden'
             tobeListWrapper.style.overflowY = 'auto'
         }
