@@ -541,13 +541,13 @@ document.addEventListener('click', e => {
   if (!currentTobeProject.contains(e.target) && !tobeProjectOptionsWrapper.contains(e.target) && !tobeApp.newProject) {
     currentTobeProject.contentEditable = 'false';
 
-    if (currentTobeProject.textContent === '' || tobeApp.lastTobeProject === currentTobeProject.textContent || tobeApp.tobeObject.hasOwnProperty(currentTobeProject.textContent)) {
-      currentTobeProject.textContent = tobeApp.lastTobeProject;
+    if (currentTobeProject.textContent === '' || tobeApp.lastTobeProject === 'z' + currentTobeProject.textContent || tobeApp.tobeObject.hasOwnProperty('z' + currentTobeProject.textContent)) {
+      currentTobeProject.textContent = tobeApp.lastTobeProject.replace('z', '');
     } else {
       const projectItem = document.querySelectorAll('.tobe-app__projects__list__item');
-      tobeApp.tobeObject[currentTobeProject.textContent] = tobeApp.tobeObject[tobeApp.lastTobeProject];
+      tobeApp.tobeObject['z' + currentTobeProject.textContent] = tobeApp.tobeObject[tobeApp.lastTobeProject];
       delete tobeApp.tobeObject[tobeApp.lastTobeProject];
-      tobeApp.lastTobeProject = currentTobeProject.textContent;
+      tobeApp.lastTobeProject = 'z' + currentTobeProject.textContent;
       localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
       localStorage.setItem('lastTobe', JSON.stringify(tobeApp.lastTobeProject));
       projectItem[tobeApp.projectIndex].childNodes[0].textContent = currentTobeProject.textContent;
@@ -713,12 +713,12 @@ const pomodoroApp = {
     if (pomodoroApp.minutes < 10 && pomodoroApp.minutes >= 0) pomodoroMins.innerText = '0' + pomodoroApp.minutes;else pomodoroMins.innerText = pomodoroApp.minutes;
 
     if (pomodoroApp.minutes < 0) {
-      if (pomodoroMsg.textContent == 'Time to focus.') document.title = `Focus - 00:00`;else document.title = `Break - 00:00`;
+      if (pomodoroMsg.textContent == 'Time to focus.') document.title = `00:00 - Focus`;else document.title = `Break - 00:00`;
     } else {
       if (pomodoroMsg.textContent == 'Time to focus.') {
-        document.title = `Focus - ${pomodoroMins.innerText}:${pomodoroSecs.innerText}`;
+        document.title = `${pomodoroMins.innerText}:${pomodoroSecs.innerText} - Focus`;
       } else {
-        document.title = `Break - ${pomodoroMins.innerText}:${pomodoroSecs.innerText}`;
+        document.title = `${pomodoroMins.innerText}:${pomodoroSecs.innerText} - Break`;
       }
     }
 
@@ -825,7 +825,6 @@ const pomodoroApp = {
       timeAppContainer.style.opacity = '1';
       outsetHeader.style.opacity = '1';
       outsetFooter.style.opacity = '1';
-      todoOpen.style.opacity = '1';
       pomodoroAppContainer.style.display = 'none';
       pomodoroTimeContainer.style.display = 'none';
       pomodoroTimeContainer.style.opacity = '0';
@@ -852,7 +851,6 @@ const pomodoroApp = {
       pomodoroStartContainer.addEventListener('transitionend', () => {
         outsetHeader.style.opacity = '0';
         outsetFooter.style.opacity = '0';
-        todoOpen.style.opacity = '0';
       });
       pomodoroApp.minutes = parseInt(pomodoroTimeInput.value) - 1;
       pomodoroApp.seconds = 60;
@@ -1760,7 +1758,7 @@ const tobeApp = {
       tobeKeys.forEach(key => {
         let projectEdit = document.createElement('li');
         projectEdit.classList.add('tobe-app__dropdown__item', 'moveTobeItem');
-        projectEdit.textContent = 'Move to ' + key;
+        projectEdit.textContent = 'Move to ' + key.replace('z', '');
         dropdown.insertBefore(projectEdit, tobeLine[i]);
       });
     });
@@ -1794,6 +1792,7 @@ const tobeApp = {
         tobeApp.tobeObject[proj].splice(nodes.indexOf(selectedTobeItem), 1);
         nodes.splice(nodes.indexOf(selectedTobeItem), 1);
         selectedTobeItem.remove();
+        tobeApp.updateProjectCount(proj);
         localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
       } else if (e.target.classList.contains('editTobeItem')) {
         selectedText.contentEditable = 'true';
@@ -1811,12 +1810,13 @@ const tobeApp = {
           }
         });
       } else if (e.target.classList.contains('moveTobeItem')) {
-        let projectSelect = e.target.textContent.replace('Move to ', '');
+        let projectSelect = e.target.textContent.replace('Move to ', 'z');
         tobeApp.tobeObject[projectSelect].push(tobeApp.tobeObject[proj].splice(nodes.indexOf(selectedTobeItem), 1)[0]);
         nodes.splice(nodes.indexOf(selectedTobeItem), 1);
         localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
         selectedTobeItem.remove();
         tobeApp.updateProjectCount(projectSelect);
+        tobeApp.updateProjectCount(proj);
       }
     }));
   },
@@ -1828,13 +1828,13 @@ const tobeApp = {
     const projectItem = document.querySelectorAll('.tobe-app__projects__list__item');
     const projectCount = document.querySelectorAll('.tobe-app__projects__list__count');
     projectItem.forEach((item, i) => {
-      if (project == item.childNodes[0].nodeValue) {
+      if (project.replace('z', '') == item.childNodes[0].nodeValue) {
         projectCount[i].textContent = tobeApp.tobeObject[project].length;
       }
     });
   },
   addTobeItem: function (e) {
-    let projectName = currentTobeProject.textContent;
+    let projectName = 'z' + currentTobeProject.textContent;
 
     if (e.keyCode === 13 && e.target.value !== '') {
       if (tobeApp.tobeObject[projectName] === undefined) {
@@ -1892,7 +1892,7 @@ const tobeApp = {
         item.classList.remove('tobe-app__projects__list__item--active');
         e.target.classList.add('tobe-app__projects__list__item--active');
       });
-      tobeApp.lastTobeProject = e.target.childNodes[0].nodeValue;
+      tobeApp.lastTobeProject = 'z' + e.target.childNodes[0].nodeValue;
       localStorage.setItem('lastTobe', JSON.stringify(tobeApp.lastTobeProject));
       tobeInput.focus();
       tobeApp.todoItem(tobeApp.lastTobeProject);
@@ -1901,8 +1901,8 @@ const tobeApp = {
   },
   addNewProject: function (e) {
     const projectItem = document.querySelectorAll('.tobe-app__projects__list__item');
-    let value = e.target.value;
-    currentTobeProject.textContent = value;
+    let value = 'z' + e.target.value;
+    currentTobeProject.textContent = value.replace('z', '');
     const projectLi = document.createElement('li');
     projectLi.classList.add('tobe-app__projects__list__item');
     const projectCount = document.createElement('span');
@@ -1912,9 +1912,9 @@ const tobeApp = {
       let projectIndex = Object.keys(tobeApp.tobeObject).indexOf(value);
 
       if (projectIndex >= 0) {
-        if (value === 'Inbox') tobeProjectsOptions.style.display = 'none';else tobeProjectsOptions.style.display = 'block';
+        if (value === 'zInbox') tobeProjectsOptions.style.display = 'none';else tobeProjectsOptions.style.display = 'block';
         tobeProjectInput.value = '';
-        currentTobeProject.textContent = value;
+        currentTobeProject.textContent = value.replace('z', '');
         tobeInput.style.display = 'block';
         tobeProjectInput.style.display = 'none';
         projectItem.forEach(item => {
@@ -1933,7 +1933,7 @@ const tobeApp = {
         tobeApp.lastTobeProject = value; //Object.assign(tobeApp.tobeObject, { [value]: []})
 
         tobeApp.tobeObject[value] = [];
-        projectLi.textContent = value;
+        projectLi.textContent = value.replace('z', '');
         projectCount.textContent = tobeApp.tobeObject[value].length;
         projectLi.appendChild(projectCount);
         tobeProjectsList.insertBefore(projectLi, addNewProjectBtn);
@@ -1945,23 +1945,29 @@ const tobeApp = {
         localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
         tobeProjectInput.value = '';
         tobeProjectsOptions.style.display = 'block';
+        console.log(tobeApp.tobeObject);
+        console.log(tobeApp.lastTobeProject);
       }
     }
   },
   updateTobeItem: function () {
     const tobeCheckbox = document.querySelectorAll('.tobe-app__item__checkbox');
     tobeCheckbox.forEach((box, i) => box.addEventListener('click', e => {
-      if (e.target.checked) tobeApp.tobeObject[currentTobeProject.textContent][i].completed = true;else tobeApp.tobeObject[currentTobeProject.textContent][i].completed = false;
+      if (e.target.checked) tobeApp.tobeObject['z' + currentTobeProject.textContent][i].completed = true;else tobeApp.tobeObject['z' + currentTobeProject.textContent][i].completed = false;
       localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
     }));
-    tobeApp.tobeObject[currentTobeProject.textContent].forEach((tobe, i) => {
+    tobeApp.tobeObject['z' + currentTobeProject.textContent].forEach((tobe, i) => {
       if (tobe.completed) tobeCheckbox[i].checked = true;
     });
   },
   projectCta: function (e) {
     const projectItem = document.querySelectorAll('.tobe-app__projects__list__item');
     Object.keys(tobeApp.tobeObject).forEach((proj, i) => {
-      if (proj === currentTobeProject.textContent) tobeApp.projectIndex = i;
+      console.log(proj);
+
+      if (proj === 'z' + currentTobeProject.textContent) {
+        tobeApp.projectIndex = i;
+      }
     });
     console.log(tobeApp.projectIndex);
     console.log(tobeApp.tobeObject);
@@ -1971,38 +1977,30 @@ const tobeApp = {
       placeCaretAtEnd(currentTobeProject);
       currentTobeProject.addEventListener('keypress', e => {
         if (e.keyCode === 13) {
-          let projectCheck = Object.keys(tobeApp.tobeObject).indexOf(e.target.textContent);
+          let projectCheck = Object.keys(tobeApp.tobeObject).indexOf('z' + e.target.textContent);
           currentTobeProject.contentEditable = 'false';
 
-          if (currentTobeProject.textContent === '' || tobeApp.lastTobeProject === currentTobeProject.textContent) {
-            currentTobeProject.textContent = tobeApp.lastTobeProject;
+          if (currentTobeProject.textContent === '' || tobeApp.lastTobeProject === 'z' + currentTobeProject.textContent) {
+            currentTobeProject.textContent = tobeApp.lastTobeProject.replace('z', '');
           } else if (projectCheck >= 0) {
-            if (e.target.textContent === 'Inbox') {
-              tobeProjectsOptions.style.display = 'none';
-              projectCheck = 0;
-            } else {
-              tobeProjectsOptions.style.display = 'block';
-              projectCheck = projectCheck + 1;
-            }
-
-            console.log(projectCheck);
+            if (e.target.textContent === 'Inbox') tobeProjectsOptions.style.display = 'none';else tobeProjectsOptions.style.display = 'block';
             currentTobeProject.textContent = e.target.textContent;
             projectItem.forEach(item => {
               item.classList.remove('tobe-app__projects__list__item--active');
               projectItem[projectCheck].classList.add('tobe-app__projects__list__item--active');
             });
-            tobeApp.lastTobeProject = currentTobeProject.textContent;
+            tobeApp.lastTobeProject = 'z' + currentTobeProject.textContent;
             localStorage.setItem('lastTobe', JSON.stringify(tobeApp.lastTobeProject));
             tobeInput.focus();
             tobeApp.todoItem(tobeApp.lastTobeProject);
             tobeApp.updateTobeItem();
           } else if (projectCheck < 0) {
-            console.log(tobeApp.tobeObject);
             console.log(tobeApp.projectIndex);
-            tobeApp.tobeObject[currentTobeProject.textContent] = tobeApp.tobeObject[tobeApp.lastTobeProject];
+            console.log(projectCheck);
+            tobeApp.tobeObject['z' + currentTobeProject.textContent] = tobeApp.tobeObject[tobeApp.lastTobeProject];
             projectItem[tobeApp.projectIndex].childNodes[0].textContent = currentTobeProject.textContent;
             delete tobeApp.tobeObject[tobeApp.lastTobeProject];
-            tobeApp.lastTobeProject = currentTobeProject.textContent;
+            tobeApp.lastTobeProject = 'z' + currentTobeProject.textContent;
             tobeInput.focus();
             localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
             localStorage.setItem('lastTobe', JSON.stringify(tobeApp.lastTobeProject));
@@ -2010,7 +2008,7 @@ const tobeApp = {
         }
       });
     } else if (e.target.classList.contains('deleteProject')) {
-      delete tobeApp.tobeObject[currentTobeProject.textContent];
+      delete tobeApp.tobeObject['z' + currentTobeProject.textContent];
       projectItem[tobeApp.projectIndex].remove();
       tobeProjectsOptions.style.display = 'none';
       currentTobeProject.textContent = 'Inbox';
@@ -2018,30 +2016,30 @@ const tobeApp = {
         item.classList.remove('tobe-app__projects__list__item--active');
         inboxProject.classList.add('tobe-app__projects__list__item--active');
       });
-      tobeApp.lastTobeProject = 'Inbox';
+      tobeApp.lastTobeProject = 'zInbox';
       localStorage.setItem('lastTobe', JSON.stringify(tobeApp.lastTobeProject));
       localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
       tobeInput.focus();
-      tobeApp.updateTobeItem();
       tobeApp.todoItem(tobeApp.lastTobeProject);
+      tobeApp.updateTobeItem();
     }
   },
   loadTobeApp: function () {
     if (!tobeApp.tobeObject[tobeApp.lastTobeProject]) {
-      tobeApp.tobeObject.Inbox = [];
-      tobeApp.lastTobeProject = 'Inbox';
-      currentTobeProject.textContent = tobeApp.lastTobeProject;
+      tobeApp.tobeObject.zInbox = [];
+      tobeApp.lastTobeProject = 'zInbox';
+      currentTobeProject.textContent = tobeApp.lastTobeProject.replace('z', '');
       localStorage.setItem('lastTobe', JSON.stringify(tobeApp.lastTobeProject));
       inboxProject.classList.add('tobe-app__projects__list__item--active');
     } else {
       Object.keys(tobeApp.tobeObject).forEach(project => {
-        if (project == 'Inbox') {
+        if (project == 'zInbox') {
           inboxProjectCount.textContent = tobeApp.tobeObject[project].length;
         } else {
           tobeProjectsOptions.style.display = 'block';
           const projectLi = document.createElement('li');
           projectLi.classList.add('tobe-app__projects__list__item');
-          projectLi.textContent = project;
+          projectLi.textContent = project.replace('z', '');
           if (project == tobeApp.lastTobeProject) projectLi.classList.add('tobe-app__projects__list__item--active');
           const projectCount = document.createElement('span');
           projectCount.classList.add('tobe-app__projects__list__count');
@@ -2050,9 +2048,9 @@ const tobeApp = {
           tobeProjectsList.insertBefore(projectLi, addNewProjectBtn);
         }
       });
-      currentTobeProject.textContent = tobeApp.lastTobeProject;
+      currentTobeProject.textContent = tobeApp.lastTobeProject.replace('z', '');
 
-      if (tobeApp.lastTobeProject == 'Inbox') {
+      if (tobeApp.lastTobeProject == 'zInbox') {
         tobeProjectsOptions.style.display = 'none';
         inboxProject.classList.add('tobe-app__projects__list__item--active');
       }
@@ -2060,8 +2058,6 @@ const tobeApp = {
       tobeApp.todoItem(tobeApp.lastTobeProject);
       tobeApp.updateTobeItem();
     }
-
-    console.log(tobeApp.tobeObject);
   }
 };
 
@@ -2092,7 +2088,7 @@ new Sortable(tobeItemList, {
     }
 
     ;
-    array_move(tobeApp.tobeObject[currentTobeProject.textContent], e.oldIndex, e.newIndex);
+    array_move(tobeApp.tobeObject['z' + currentTobeProject.textContent], e.oldIndex, e.newIndex);
     localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
   }
 });
@@ -2130,7 +2126,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64649" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49890" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
