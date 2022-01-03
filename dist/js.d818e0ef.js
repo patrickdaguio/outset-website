@@ -176,11 +176,11 @@ var _pomodoro = _interopRequireDefault(require("../images/pomodoro.mp3"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Weather App
-// API 
+// API
 const api = {
   keyOne: _config.default.MY_KEY_1,
   keyTwo: _config.default.MY_KEY_2,
-  base: "https://api.openweathermap.org/data/2.5/"
+  base: 'https://api.openweathermap.org/data/2.5/'
 }; // HTML TAgs
 
 const searchBox = document.querySelector('.search-box');
@@ -190,7 +190,7 @@ const geolocation = document.querySelector('.location');
 const humidity = document.querySelector('.humidity');
 const wind = document.querySelector('.wind');
 searchBox.addEventListener('keypress', setQuery);
-window.addEventListener("load", () => {
+window.addEventListener('load', () => {
   let lon;
   let lat;
 
@@ -208,6 +208,7 @@ window.addEventListener("load", () => {
   greetings();
   generateQuote();
   setIntention();
+  setMantra();
   getQuote();
 });
 
@@ -229,22 +230,22 @@ function displayResults(weather) {
   humidity.textContent = `${weather.main.humidity}%`;
   wind.textContent = `${weather.wind.speed.toFixed(1)}mph`;
 
-  if (weather.weather[0].main === "Thunderstorm") {
-    temperatureIcon.src = `${require("../images/weather/storming.png")}`;
-  } else if (weather.weather[0].main === "Clear") {
-    temperatureIcon.src = `${require("../images/weather/sunny.png")}`;
-  } else if (weather.weather[0].main === "Snow") {
-    temperatureIcon.src = `${require("../images/weather/snowing.png")}`;
-  } else if (weather.weather[0].main === "Rain") {
-    temperatureIcon.src = `${require("../images/weather/raining.png")}`;
-  } else if (weather.weather[0].description === "few clouds" || weather.weather[0].description === "scattered clouds") {
-    temperatureIcon.src = `${require("../images/weather/cloudy sun.png")}`;
-  } else if (weather.weather[0].main === "Drizzle") {
-    temperatureIcon.src = `${require("../images/weather/cloudy rain.png")}`;
-  } else if (weather.weather[0].description === "broken clouds" || weather.weather[0].description === "overcast clouds") {
-    temperatureIcon.src = `${require("../images/weather/cloudy.png")}`;
+  if (weather.weather[0].main === 'Thunderstorm') {
+    temperatureIcon.src = `${require('../images/weather/storming.png')}`;
+  } else if (weather.weather[0].main === 'Clear') {
+    temperatureIcon.src = `${require('../images/weather/sunny.png')}`;
+  } else if (weather.weather[0].main === 'Snow') {
+    temperatureIcon.src = `${require('../images/weather/snowing.png')}`;
+  } else if (weather.weather[0].main === 'Rain') {
+    temperatureIcon.src = `${require('../images/weather/raining.png')}`;
+  } else if (weather.weather[0].description === 'few clouds' || weather.weather[0].description === 'scattered clouds') {
+    temperatureIcon.src = `${require('../images/weather/cloudy sun.png')}`;
+  } else if (weather.weather[0].main === 'Drizzle') {
+    temperatureIcon.src = `${require('../images/weather/cloudy rain.png')}`;
+  } else if (weather.weather[0].description === 'broken clouds' || weather.weather[0].description === 'overcast clouds') {
+    temperatureIcon.src = `${require('../images/weather/cloudy.png')}`;
   } else if (weather.wind.speed > 30) {
-    temperatureIcon.src = `${require("../images/weather/windy.png")}`;
+    temperatureIcon.src = `${require('../images/weather/windy.png')}`;
   }
 
   searchBox.value = '';
@@ -628,6 +629,26 @@ function openGreetingsOptions() {
 function editName() {
   let userName;
   if (localStorage.getItem('username') === null) userName = '';else userName = JSON.parse(localStorage.getItem('username'));
+
+  if (mantraContainer.style.display == 'block') {
+    greetingMiddle.style.opacity = '0';
+    setTimeout(() => {
+      greetingMiddle.style.opacity = '1';
+      mantraContainer.style.display = 'none';
+      nameContainer.style.display = 'block';
+      nameInput.focus();
+      showMantraBtn.textContent = "Show today's mantra";
+    }, 600);
+  }
+
+  const hideMantra = document.querySelector('.changeMantra');
+  const mantraLine = document.querySelector('.mantra-line');
+
+  if (showMantraBtn.textContent != "Show today's mantra") {
+    hideMantra.remove();
+    mantraLine.remove();
+  }
+
   const nameInput = document.createElement('input');
   nameInput.classList.add('greeting-input');
   nameInput.value = userName[0];
@@ -658,12 +679,107 @@ function editName() {
 
 function resizeInput() {
   this.style.width = this.value.length + 'ch';
+} // My-Mantra API
+
+
+const nameContainer = document.querySelector('.name-container');
+const mantraContainer = document.querySelector('.mantra-container');
+const greetingMiddle = document.querySelector('.greeting-middle');
+const ellipsisOptions = document.querySelector('.ellipsis-options');
+
+function addChangeMantraBtn() {
+  let mantra;
+  if (localStorage.getItem('mantra') === null) mantra = [];else mantra = JSON.parse(localStorage.getItem('mantra'));
+  nameContainer.style.display = 'none';
+  mantraContainer.style.display = 'block';
+  mantraContainer.textContent = mantra[0];
+  showMantraBtn.textContent = "Hide today's mantra";
+  const changeMantra = document.createElement('li');
+  const mantraLine = document.createElement('li');
+  changeMantra.classList.add('changeMantra');
+  mantraLine.classList.add('line', 'mantra-line');
+  changeMantra.textContent = 'Change mantra';
+  ellipsisOptions.insertBefore(changeMantra, editNameBtn);
+  ellipsisOptions.insertBefore(mantraLine, editNameBtn);
+  changeMantra.addEventListener('click', () => {
+    greetingsOption.classList.remove('share-open');
+    greetingMiddle.style.opacity = '0';
+    fetch('https://my-mantra-api.herokuapp.com/mantras').then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      let index = generateUniqueRandom(data);
+      setTimeout(() => {
+        greetingMiddle.style.opacity = '1';
+        mantraContainer.textContent = data[index].mantra;
+        showMantraBtn.textContent = "Hide today's mantra";
+      }, 600);
+      mantra[0] = data[index].mantra;
+      localStorage.setItem('mantra', JSON.stringify(mantra));
+    });
+  });
 }
 
-function showMantra() {
-  console.log('hello');
-} // Pomodoro App
+function setMantra() {
+  let mantra;
+  if (localStorage.getItem('mantra') === null) mantra = [];else mantra = JSON.parse(localStorage.getItem('mantra'));
+  let mantraDate = new Date();
 
+  if (mantra[1] !== mantraDate.toDateString()) {
+    mantra = [];
+    localStorage.setItem('mantra', JSON.stringify(mantra));
+  } else {
+    addChangeMantraBtn();
+  }
+}
+
+function showMantra(e) {
+  greetingMiddle.style.opacity = '0';
+  greetingsOption.classList.remove('share-open');
+  let mantra;
+  if (localStorage.getItem('mantra') === null) mantra = [];else mantra = JSON.parse(localStorage.getItem('mantra'));
+  let mantraDate = new Date();
+
+  if (e.target.innerText == "Show today's mantra" && mantra.length <= 0) {
+    fetch('https://my-mantra-api.herokuapp.com/mantras').then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      let index = generateUniqueRandom(data);
+      setTimeout(() => {
+        greetingMiddle.style.opacity = '1';
+        nameContainer.style.display = 'none';
+        mantraContainer.textContent = data[index].mantra;
+        mantraContainer.style.display = 'block';
+        showMantraBtn.textContent = "Hide today's mantra";
+      }, 600);
+      mantra[0] = data[index].mantra;
+      mantra[1] = mantraDate.toDateString();
+      localStorage.setItem('mantra', JSON.stringify(mantra));
+      addChangeMantraBtn();
+    });
+  } else if (e.target.innerText == "Show today's mantra" && mantra) {
+    setTimeout(() => {
+      greetingMiddle.style.opacity = '1';
+      nameContainer.style.display = 'none';
+      mantraContainer.style.display = 'block';
+      mantraContainer.textContent = mantra[0];
+      showMantraBtn.textContent = "Hide today's mantra";
+      addChangeMantraBtn();
+    }, 600);
+  } else if (e.target.innerText == "Hide today's mantra") {
+    const hideMantra = document.querySelector('.changeMantra');
+    const mantraLine = document.querySelector('.mantra-line');
+    hideMantra.remove();
+    mantraLine.remove();
+    setTimeout(() => {
+      greetingMiddle.style.opacity = '1';
+      nameContainer.style.display = 'block';
+      mantraContainer.style.display = 'none';
+      showMantraBtn.textContent = "Show today's mantra";
+    }, 600);
+  }
+}
+
+showMantraBtn.addEventListener('click', showMantra); // Pomodoro App
 
 const pomodoroIcon = document.querySelector('.pomodoro');
 const pomodoroAppContainer = document.querySelector('.pomodoro-app');
@@ -970,8 +1086,7 @@ pomodoroHistoryReset.addEventListener('click', pomodoroApp.resetPomodoroHistory)
 pomodoroThemeBtns.forEach(btn => btn.addEventListener('click', pomodoroApp.pomodoroChangeTheme));
 greetingsEllipsisIcon.addEventListener('click', openGreetingsOptions);
 editNameBtn.addEventListener('click', editName);
-greetingName.addEventListener('dblclick', editName);
-showMantraBtn.addEventListener('click', showMantra); // Intention
+greetingName.addEventListener('dblclick', editName); // Intention
 
 const intentionInput = document.querySelector('.intention-input');
 const intentionAnswer = document.querySelector('.intention-answer');
@@ -1063,13 +1178,13 @@ const inactivityTime = function () {
   function logout() {
     greetingContainer.style.opacity = '0';
     document.querySelector('.intention').style.opacity = '0';
-    document.body.style.cursor = "none";
+    document.body.style.cursor = 'none';
   }
 
   function resetTimer() {
     greetingContainer.style.opacity = '1';
     document.querySelector('.intention').style.opacity = '1';
-    document.body.style.cursor = "default";
+    document.body.style.cursor = 'default';
     clearTimeout(time);
     time = setTimeout(logout, 30000);
   }
@@ -1149,7 +1264,7 @@ function generateUniqueRandom(maxNr) {
 }
 
 function generateQuote() {
-  fetch("https://type.fit/api/quotes").then(function (response) {
+  fetch('https://type.fit/api/quotes').then(function (response) {
     return response.json();
   }).then(function (data) {
     /*         let index = Math.floor(Math.random() * data.length); */
@@ -1196,7 +1311,7 @@ function shareQuote(quote) {
 
 function generateQuoteElements(quote, origin) {
   const quoteInfoDiv = document.createElement('div');
-  quoteInfoDiv.classList.add("archive-quote-info");
+  quoteInfoDiv.classList.add('archive-quote-info');
   const archiveQuote = document.createElement('p');
   archiveQuote.textContent = quote;
   archiveQuote.classList.add('archive-quote');
@@ -1209,7 +1324,7 @@ function generateQuoteElements(quote, origin) {
   archiveOrigin.classList.add('archive-origin');
   quoteInfoDiv.appendChild(archiveOrigin);
   const archiveCtaDiv = document.createElement('div');
-  archiveCtaDiv.classList.add("archive-cta");
+  archiveCtaDiv.classList.add('archive-cta');
   const copyPopup = document.createElement('span');
   copyPopup.classList.add('copyQuote');
   copyPopup.textContent = 'Copy';
@@ -1363,7 +1478,6 @@ new Sortable(archiveQuotesContainer, {
       return arr;
     }
 
-    ;
     array_move(quotes, e.oldIndex, e.newIndex);
     localStorage.setItem('quotes', JSON.stringify(quotes));
   }
@@ -1590,7 +1704,7 @@ function showNextFeature(e) {
   } else if (featuresIndex === 2) {
     fadeElements(featuresContent, featuresFooter);
     featuresContent.addEventListener('animationend', function changeContent() {
-      displayFeatures('Focus', 'Approach each day with intent', `${require("../images/svgs/focus.svg")}`, `${require("../images/svgs/todo.svg")}`, `${require("../images/svgs/links.svg")}`, 'Focus', 'To-do', 'Links');
+      displayFeatures('Focus', 'Approach each day with intent', `${require('../images/svgs/focus.svg')}`, `${require('../images/svgs/todo.svg')}`, `${require('../images/svgs/links.svg')}`, 'Focus', 'To-do', 'Links');
       featuresContent.removeEventListener('animationend', changeContent);
     });
     oldFeaturesIndex = featuresIndex;
@@ -1598,7 +1712,7 @@ function showNextFeature(e) {
   } else if (featuresIndex === 3) {
     fadeElements(featuresContent, featuresFooter);
     featuresContent.addEventListener('animationend', function changeContent() {
-      displayFeatures('Extra Features', 'Enjoy the extra features of Outset', `${require("../images/svgs/calendar.svg")}`, `${require("../images/svgs/clock.svg")}`, `${require("../images/svgs/weather.svg")}`, 'Calendar', 'Timer', 'Weather');
+      displayFeatures('Extra Features', 'Enjoy the extra features of Outset', `${require('../images/svgs/calendar.svg')}`, `${require('../images/svgs/clock.svg')}`, `${require('../images/svgs/weather.svg')}`, 'Calendar', 'Timer', 'Weather');
       featuresContent.removeEventListener('animationend', changeContent);
     });
     oldFeaturesIndex = featuresIndex;
@@ -1630,7 +1744,7 @@ featuresDots.forEach((dot, i) => dot.addEventListener('click', () => {
       featuresContent.addEventListener('animationend', function changeContent() {
         elementsDisplay(featuresContent, featuresWelcome);
         reset_animation(featuresWelcome);
-        displayFeatures('Inspiration', 'Breathe life into your browser', `${require("../images/svgs/picture.svg")}`, `${require("../images/svgs/quote.svg")}`, `${require("../images/svgs/mantra.svg")}`, 'Photos', 'Quotes', 'Mantras');
+        displayFeatures('Inspiration', 'Breathe life into your browser', `${require('../images/svgs/picture.svg')}`, `${require('../images/svgs/quote.svg')}`, `${require('../images/svgs/mantra.svg')}`, 'Photos', 'Quotes', 'Mantras');
         featuresContent.removeEventListener('animationend', changeContent);
       });
       oldFeaturesIndex = featuresIndex;
@@ -1643,14 +1757,14 @@ featuresDots.forEach((dot, i) => dot.addEventListener('click', () => {
       if (featuresWelcome.style.display != 'none') {
         fadeElements(featuresWelcome, featuresFooter);
         featuresWelcome.addEventListener('animationend', function changeContent() {
-          displayFeatures('Inspiration', 'Breathe life into your browser', `${require("../images/svgs/picture.svg")}`, `${require("../images/svgs/quote.svg")}`, `${require("../images/svgs/mantra.svg")}`, 'Photos', 'Quotes', 'Mantras');
+          displayFeatures('Inspiration', 'Breathe life into your browser', `${require('../images/svgs/picture.svg')}`, `${require('../images/svgs/quote.svg')}`, `${require('../images/svgs/mantra.svg')}`, 'Photos', 'Quotes', 'Mantras');
           elementsDisplay(featuresWelcome, featuresContent);
           featuresWelcome.removeEventListener('animationend', changeContent);
         });
       } else {
         fadeElements(featuresContent, featuresFooter);
         featuresContent.addEventListener('animationend', function changeContent() {
-          displayFeatures('Inspiration', 'Breathe life into your browser', `${require("../images/svgs/picture.svg")}`, `${require("../images/svgs/quote.svg")}`, `${require("../images/svgs/mantra.svg")}`, 'Photos', 'Quotes', 'Mantras');
+          displayFeatures('Inspiration', 'Breathe life into your browser', `${require('../images/svgs/picture.svg')}`, `${require('../images/svgs/quote.svg')}`, `${require('../images/svgs/mantra.svg')}`, 'Photos', 'Quotes', 'Mantras');
           featuresContent.removeEventListener('animationend', changeContent);
         });
       }
@@ -1666,13 +1780,13 @@ featuresDots.forEach((dot, i) => dot.addEventListener('click', () => {
         fadeElements(featuresWelcome, featuresFooter);
         featuresWelcome.addEventListener('animationend', function changeContent() {
           elementsDisplay(featuresWelcome, featuresContent);
-          displayFeatures('Focus', 'Approach each day with intent', `${require("../images/svgs/focus.svg")}`, `${require("../images/svgs/todo.svg")}`, `${require("../images/svgs/links.svg")}`, 'Focus', 'To-do', 'Links');
+          displayFeatures('Focus', 'Approach each day with intent', `${require('../images/svgs/focus.svg')}`, `${require('../images/svgs/todo.svg')}`, `${require('../images/svgs/links.svg')}`, 'Focus', 'To-do', 'Links');
           featuresWelcome.removeEventListener('animationend', changeContent);
         });
       } else {
         fadeElements(featuresContent, featuresFooter);
         featuresContent.addEventListener('animationend', function changeContent() {
-          displayFeatures('Focus', 'Approach each day with intent', `${require("../images/svgs/focus.svg")}`, `${require("../images/svgs/todo.svg")}`, `${require("../images/svgs/links.svg")}`, 'Focus', 'To-do', 'Links');
+          displayFeatures('Focus', 'Approach each day with intent', `${require('../images/svgs/focus.svg')}`, `${require('../images/svgs/todo.svg')}`, `${require('../images/svgs/links.svg')}`, 'Focus', 'To-do', 'Links');
           featuresContent.removeEventListener('animationend', changeContent);
         });
       }
@@ -1688,13 +1802,13 @@ featuresDots.forEach((dot, i) => dot.addEventListener('click', () => {
         fadeElements(featuresWelcome, featuresFooter);
         featuresWelcome.addEventListener('animationend', function changeContent() {
           elementsDisplay(featuresWelcome, featuresContent);
-          displayFeatures('Extra Features', 'Enjoy the extra features of Outset', `${require("../images/svgs/calendar.svg")}`, `${require("../images/svgs/clock.svg")}`, `${require("../images/svgs/weather.svg")}`, 'Calendar', 'Timer', 'Weather');
+          displayFeatures('Extra Features', 'Enjoy the extra features of Outset', `${require('../images/svgs/calendar.svg')}`, `${require('../images/svgs/clock.svg')}`, `${require('../images/svgs/weather.svg')}`, 'Calendar', 'Timer', 'Weather');
           featuresWelcome.removeEventListener('animationend', changeContent);
         });
       } else {
         fadeElements(featuresContent, featuresFooter);
         featuresContent.addEventListener('animationend', function changeContent() {
-          displayFeatures('Extra Features', 'Enjoy the extra features of Outset', `${require("../images/svgs/calendar.svg")}`, `${require("../images/svgs/clock.svg")}`, `${require("../images/svgs/weather.svg")}`, 'Calendar', 'Timer', 'Weather');
+          displayFeatures('Extra Features', 'Enjoy the extra features of Outset', `${require('../images/svgs/calendar.svg')}`, `${require('../images/svgs/clock.svg')}`, `${require('../images/svgs/weather.svg')}`, 'Calendar', 'Timer', 'Weather');
           featuresContent.removeEventListener('animationend', changeContent);
         });
       }
@@ -2064,14 +2178,14 @@ const tobeApp = {
 function placeCaretAtEnd(el) {
   el.focus();
 
-  if (typeof window.getSelection != "undefined" && typeof document.createRange != "undefined") {
+  if (typeof window.getSelection != 'undefined' && typeof document.createRange != 'undefined') {
     var range = document.createRange();
     range.selectNodeContents(el);
     range.collapse(false);
     var sel = window.getSelection();
     sel.removeAllRanges();
     sel.addRange(range);
-  } else if (typeof document.body.createTextRange != "undefined") {
+  } else if (typeof document.body.createTextRange != 'undefined') {
     var textRange = document.body.createTextRange();
     textRange.moveToElementText(el);
     textRange.collapse(false);
@@ -2087,7 +2201,6 @@ new Sortable(tobeItemList, {
       return arr;
     }
 
-    ;
     array_move(tobeApp.tobeObject['z' + currentTobeProject.textContent], e.oldIndex, e.newIndex);
     localStorage.setItem('tobes', JSON.stringify(tobeApp.tobeObject));
   }
@@ -2126,7 +2239,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49890" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53079" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

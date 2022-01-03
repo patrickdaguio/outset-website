@@ -13,7 +13,7 @@ body {
   background-repeat: no-repeat;
   background-position: bottom center;
   height: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
   transition: background-image 2s ease-in-out;
 }
 
@@ -669,35 +669,6 @@ body {
   margin-top: 0.1em;
 }
 
-.main-left {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 2em;
-  justify-content: space-between;
-  align-content: center;
-}
-.main-left .time-app {
-  text-align: left;
-}
-.main-left .time-app .time-container .time-container-left {
-  display: none;
-}
-.main-left .time-app .greeting-container .greeting-left {
-  display: none;
-}
-.main-left .time-app .intention {
-  margin: 3.35em 0 !important;
-}
-.main-left .time-app .intention .intention-answer-container .intention-cta {
-  justify-content: flex-start;
-}
-.main-left .time-app .intention .intention-answer-container .intention-cta .intention-answer {
-  margin-left: 0em;
-}
-.main-left .time-app .intention .intention-question-container .intention-input {
-  text-align: left;
-}
-
 .openHistoryContainer {
   transform: translate(137%, -50%) !important;
   opacity: 1 !important;
@@ -1257,7 +1228,7 @@ main .time-app .time-container .time-container-right {
   flex: 1 0 50px;
 }
 main .time-app .time-container .time-container-middle .time {
-  font-size: 11em;
+  font-size: 10em;
   font-weight: 500;
   text-shadow: none;
   margin-bottom: 0em;
@@ -1275,12 +1246,16 @@ main .time-app .greeting-container .greeting-left {
   align-items: center;
   flex: 1 0 50px;
 }
+main .time-app .greeting-container .name-container {
+  transition: 0.6s opacity ease-in-out;
+}
 main .time-app .greeting-container .greeting-middle {
+  transition: 0.6s opacity ease-in-out;
   transition: 0.6s opacity ease-in-out;
 }
 main .time-app .greeting-container .greeting-middle h1,
 main .time-app .greeting-container .greeting-middle span {
-  font-size: 4.1em;
+  font-size: 3.7em;
   font-weight: 500;
   text-shadow: none;
   margin-bottom: 0em;
@@ -1296,7 +1271,7 @@ main .time-app .greeting-container .greeting-middle .greeting-input {
   border: 0;
   border-bottom: 2px solid white;
   color: white;
-  font-size: 4.1em;
+  font-size: 3.7em;
   font-weight: 500;
   text-shadow: none;
   margin-bottom: 0em;
@@ -1305,6 +1280,10 @@ main .time-app .greeting-container .greeting-middle .greeting-input {
 }
 main .time-app .greeting-container .greeting-middle .greeting-input:focus {
   border-color: white;
+}
+main .time-app .greeting-container .mantra-container {
+  display: none;
+  transition: 0.6s opacity ease-in-out;
 }
 main .time-app .greeting-container .greeting-right {
   display: inline-flex;
@@ -1349,6 +1328,7 @@ main .time-app .greeting-container .greeting-ellipsis-wrapper .ellipsis-dropdown
   min-width: max-content;
   top: 41px;
   right: -119px;
+  z-index: 5;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
   opacity: 0;
   transform-origin: 15% 20%;
@@ -1391,19 +1371,20 @@ main .time-app .intention {
   flex-direction: column;
   justify-content: center;
   position: relative;
-  width: 600px;
+  width: 550px;
   margin: auto;
   margin-top: 3.35em;
   transition: 0.6s opacity ease-in-out;
 }
 main .time-app .intention .intention-question,
 main .time-app .intention .intention-answer {
-  font-size: 2.5em;
+  font-size: 2.2em;
   font-weight: 400;
   text-shadow: none;
   margin-bottom: 0em;
 }
 main .time-app .intention .intention-question-container {
+  z-index: 3;
   transition: 0.6s opacity ease-in-out;
 }
 main .time-app .intention .intention-question-container .intention-input {
@@ -1414,7 +1395,7 @@ main .time-app .intention .intention-question-container .intention-input {
   border: 0;
   border-bottom: 2px solid #fff;
   color: #fff;
-  font-size: 2.25em;
+  font-size: 2em;
   line-height: 1.2em;
   font-weight: 500;
   outline: none;
@@ -1595,7 +1576,7 @@ main .time-app .intention .intention-answer-container .intention-cta .intention-
   flex: 0 0 40px;
   border-top: 1px solid rgba(80, 69, 69, 0.8);
   /*       position: absolute;
-  bottom: 0; */
+     bottom: 0; */
 }
 .archive .archive-container .archive-add-container i {
   font-size: 1.7em;
