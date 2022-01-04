@@ -1841,6 +1841,7 @@ const tobeApp = {
   projectIndex: 1,
   height: 0,
   todoItem: function (proj) {
+    console.log(proj);
     tobeItemList.innerHTML = '';
     let todo;
     tobeApp.tobeObject[proj].forEach(tobe => {
@@ -1941,6 +1942,7 @@ const tobeApp = {
   updateProjectCount: function (project) {
     const projectItem = document.querySelectorAll('.tobe-app__projects__list__item');
     const projectCount = document.querySelectorAll('.tobe-app__projects__list__count');
+    console.log(project);
     projectItem.forEach((item, i) => {
       if (project.replace('z', '') == item.childNodes[0].nodeValue) {
         projectCount[i].textContent = tobeApp.tobeObject[project].length;
@@ -2083,8 +2085,6 @@ const tobeApp = {
         tobeApp.projectIndex = i;
       }
     });
-    console.log(tobeApp.projectIndex);
-    console.log(tobeApp.tobeObject);
 
     if (e.target.classList.contains('editProject')) {
       currentTobeProject.contentEditable = 'true';
@@ -2239,7 +2239,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53079" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62185" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

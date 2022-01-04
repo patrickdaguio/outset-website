@@ -625,6 +625,11 @@ body {
   margin-bottom: -0.1em;
   margin-left: 0.2em;
 }
+@media screen and (max-width: 1024px) {
+  .weather-app .temperature .temperature-degree {
+    font-size: 2em;
+  }
+}
 .weather-app .temperature .degree-icon {
   align-self: flex-start;
 }
@@ -633,6 +638,11 @@ body {
   font-weight: 500;
   text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
   margin-bottom: 0.4em;
+}
+@media screen and (max-width: 1024px) {
+  .weather-app .location {
+    font-size: 1.3em;
+  }
 }
 .weather-app .search-box {
   outline: none;
@@ -649,6 +659,11 @@ body {
 .weather-app .search-box::placeholder {
   color: #504545;
 }
+@media screen and (max-width: 1024px) {
+  .weather-app .search-box {
+    font-size: 0.75em;
+  }
+}
 .weather-app .extra-info {
   font-size: 1.5em;
   font-weight: normal;
@@ -656,11 +671,21 @@ body {
   margin-bottom: 0em;
   display: flex;
 }
+@media screen and (max-width: 1024px) {
+  .weather-app .extra-info {
+    font-size: 1.3em;
+  }
+}
 .weather-app .extra-info p {
   margin-top: 0.4em;
 }
 .weather-app .extra-info img {
   margin-right: 0.7em;
+}
+@media screen and (max-width: 1000px) {
+  .weather-app .extra-info img {
+    width: 26px;
+  }
 }
 .weather-app .extra-info .humidity {
   margin: 0.1em 0.7em 0em 0em;
@@ -799,11 +824,21 @@ main .pomodoro-app .pomodoro-time-container .pomodoro-start .pomodoro-time {
   display: flex;
   justify-content: center;
 }
+@media screen and (max-width: 1024px) {
+  main .pomodoro-app .pomodoro-time-container .pomodoro-start .pomodoro-time {
+    font-size: 9em;
+  }
+}
 main .pomodoro-app .pomodoro-time-container .pomodoro-start .pomodoro-message {
   font-size: 4.1em;
   font-weight: 500;
   text-shadow: none;
   margin-bottom: 0em;
+}
+@media screen and (max-width: 1024px) {
+  main .pomodoro-app .pomodoro-time-container .pomodoro-start .pomodoro-message {
+    font-size: 3.5em;
+  }
 }
 main .pomodoro-app .pomodoro-time-container .pomodoro-start .showBtn-container {
   position: absolute;
@@ -1233,6 +1268,11 @@ main .time-app .time-container .time-container-middle .time {
   text-shadow: none;
   margin-bottom: 0em;
 }
+@media screen and (max-width: 1024px) {
+  main .time-app .time-container .time-container-middle .time {
+    font-size: 8em;
+  }
+}
 main .time-app .greeting-container {
   display: flex;
   align-items: center;
@@ -1240,6 +1280,11 @@ main .time-app .greeting-container {
 }
 main .time-app .greeting-container:hover .greeting-ellipsis-wrapper i {
   opacity: 1 !important;
+}
+@media screen and (max-width: 1024px) {
+  main .time-app .greeting-container {
+    margin-top: 1em;
+  }
 }
 main .time-app .greeting-container .greeting-left {
   display: inline-flex;
@@ -1259,6 +1304,18 @@ main .time-app .greeting-container .greeting-middle span {
   font-weight: 500;
   text-shadow: none;
   margin-bottom: 0em;
+}
+@media screen and (max-width: 1440px) {
+  main .time-app .greeting-container .greeting-middle h1,
+main .time-app .greeting-container .greeting-middle span {
+    font-size: 3em;
+  }
+}
+@media screen and (max-width: 1024px) {
+  main .time-app .greeting-container .greeting-middle h1,
+main .time-app .greeting-container .greeting-middle span {
+    font-size: 2.5em;
+  }
 }
 main .time-app .greeting-container .greeting-middle .input-container {
   display: inline;
@@ -1281,9 +1338,24 @@ main .time-app .greeting-container .greeting-middle .greeting-input {
 main .time-app .greeting-container .greeting-middle .greeting-input:focus {
   border-color: white;
 }
+@media screen and (max-width: 1440px) {
+  main .time-app .greeting-container .greeting-middle .greeting-input {
+    font-size: 3em;
+  }
+}
+@media screen and (max-width: 1024px) {
+  main .time-app .greeting-container .greeting-middle .greeting-input {
+    font-size: 2.5em;
+  }
+}
 main .time-app .greeting-container .mantra-container {
   display: none;
   transition: 0.6s opacity ease-in-out;
+}
+@media screen and (max-width: 1024px) {
+  main .time-app .greeting-container .mantra-container {
+    max-width: 650px;
+  }
 }
 main .time-app .greeting-container .greeting-right {
   display: inline-flex;
@@ -1366,6 +1438,11 @@ main .time-app .greeting-container .greeting-ellipsis-wrapper .ellipsis-dropdown
 main .time-app .greeting-container .greeting-ellipsis-wrapper .ellipsis-dropdown .ellipsis-options li:hover {
   background-color: #796b6b;
 }
+@media screen and (max-width: 1024px) {
+  main .time-app .greeting-container .greeting-ellipsis-wrapper .ellipsis-dropdown .ellipsis-options li {
+    font-size: 0.75em;
+  }
+}
 main .time-app .intention {
   display: flex;
   flex-direction: column;
@@ -1376,12 +1453,23 @@ main .time-app .intention {
   margin-top: 3.35em;
   transition: 0.6s opacity ease-in-out;
 }
+@media screen and (max-width: 1024px) {
+  main .time-app .intention {
+    width: 450px;
+  }
+}
 main .time-app .intention .intention-question,
 main .time-app .intention .intention-answer {
   font-size: 2.2em;
   font-weight: 400;
   text-shadow: none;
   margin-bottom: 0em;
+}
+@media screen and (max-width: 1024px) {
+  main .time-app .intention .intention-question,
+main .time-app .intention .intention-answer {
+    font-size: 1.8em;
+  }
 }
 main .time-app .intention .intention-question-container {
   z-index: 3;
@@ -1400,6 +1488,11 @@ main .time-app .intention .intention-question-container .intention-input {
   font-weight: 500;
   outline: none;
   text-align: center;
+}
+@media screen and (max-width: 1024px) {
+  main .time-app .intention .intention-question-container .intention-input {
+    font-size: 1.75em;
+  }
 }
 main .time-app .intention .intention-answer-container {
   display: flex;
@@ -1420,9 +1513,19 @@ main .time-app .intention .intention-answer-container .intention-today {
   margin-bottom: 0em;
   text-transform: uppercase;
 }
+@media screen and (max-width: 1024px) {
+  main .time-app .intention .intention-answer-container .intention-today {
+    font-size: 1.25em;
+  }
+}
 main .time-app .intention .intention-answer-container .intention-answer {
-  margin-left: 1.65em;
+  margin-left: 2em;
   margin-right: 0.3em;
+}
+@media screen and (max-width: 1024px) {
+  main .time-app .intention .intention-answer-container .intention-answer {
+    margin-left: 2.4em;
+  }
 }
 main .time-app .intention .intention-answer-container .intention-cta {
   margin-top: 0.35em;
@@ -1479,6 +1582,12 @@ main .time-app .intention .intention-answer-container .intention-cta .intention-
   display: flex;
   flex-direction: column;
 }
+@media screen and (max-width: 1024px) {
+  .archive .archive-container {
+    height: 400px;
+    width: 480px;
+  }
+}
 .archive .archive-container .archive-top {
   display: flex;
   justify-content: space-between;
@@ -1512,6 +1621,11 @@ main .time-app .intention .intention-answer-container .intention-cta .intention-
   margin: 1em 0em;
   border-bottom: 1px solid rgba(80, 69, 69, 0.8);
   gap: 0.75em;
+}
+@media screen and (max-width: 1024px) {
+  .archive .archive-container .archive-quotes-container .archive-quote-info {
+    grid-template-columns: 3fr 0.8fr 0.5fr;
+  }
 }
 .archive .archive-container .archive-quotes-container .archive-quote-info:last-child {
   border: none;
@@ -1605,6 +1719,11 @@ footer .background-info {
   color: white;
   flex: 0 0 240px;
 }
+@media screen and (max-width: 1024px) {
+  footer .background-info {
+    flex: 0 0 140px;
+  }
+}
 footer .background-info .background-location {
   transform: translateZ(0) translateY(6px);
   transition: 0.3s ease-in-out;
@@ -1689,6 +1808,11 @@ footer .footer-space {
   position: relative;
   color: #575255;
 }
+@media screen and (max-width: 1024px) {
+  footer .footer-space {
+    flex: 0 0 140px;
+  }
+}
 footer .footer-space ul {
   list-style: none;
 }
@@ -1729,6 +1853,11 @@ footer .footer-space .tobe-container .tobe-app {
   border-radius: 0.35em;
   text-align: left;
   overflow: hidden;
+}
+@media screen and (max-width: 1024px) {
+  footer .footer-space .tobe-container .tobe-app {
+    width: 280px;
+  }
 }
 footer .footer-space .tobe-container .tobe-app__ellipsis-wrapper {
   font-size: 0.8em;
@@ -1788,6 +1917,11 @@ footer .footer-space .tobe-container .tobe-app__projects__name {
   margin-right: 0.5em;
   outline: none;
 }
+@media screen and (max-width: 1024px) {
+  footer .footer-space .tobe-container .tobe-app__projects__name {
+    font-size: 1.15em;
+  }
+}
 footer .footer-space .tobe-container .tobe-app__projects i {
   opacity: 1;
   margin-top: 4px;
@@ -1822,6 +1956,11 @@ footer .footer-space .tobe-container .tobe-app__projects__list {
   max-height: 310px;
   overflow-y: auto;
 }
+@media screen and (max-width: 1024px) {
+  footer .footer-space .tobe-container .tobe-app__projects__list {
+    font-size: 0.85em;
+  }
+}
 footer .footer-space .tobe-container .tobe-app__projects__list::-webkit-scrollbar {
   width: 12px;
 }
@@ -1855,6 +1994,11 @@ footer .footer-space .tobe-container .tobe-app__projects__list__count {
   margin-left: 0.5em;
   pointer-events: none;
 }
+@media screen and (max-width: 1024px) {
+  footer .footer-space .tobe-container .tobe-app__projects__list__count {
+    font-size: 0.8em;
+  }
+}
 footer .footer-space .tobe-container .tobe-app__projects__list__add-wrapper {
   display: flex;
   align-items: center;
@@ -1862,9 +2006,20 @@ footer .footer-space .tobe-container .tobe-app__projects__list__add-wrapper {
 footer .footer-space .tobe-container .tobe-app__projects__list__add-wrapper i {
   font-size: 0.7em;
   margin-right: 0.5em;
+  margin-top: 0px;
+}
+@media screen and (max-width: 1024px) {
+  footer .footer-space .tobe-container .tobe-app__projects__list__add-wrapper i {
+    font-size: 0.65em;
+  }
 }
 footer .footer-space .tobe-container .tobe-app__projects__list__add-wrapper span {
   font-size: 0.9em;
+}
+@media screen and (max-width: 1024px) {
+  footer .footer-space .tobe-container .tobe-app__projects__list__add-wrapper span {
+    font-size: 0.83em;
+  }
 }
 footer .footer-space .tobe-container .tobe-app__options {
   display: none;
@@ -1934,6 +2089,11 @@ footer .footer-space .tobe-container .tobe-app__item__name {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+@media screen and (max-width: 1024px) {
+  footer .footer-space .tobe-container .tobe-app__item__name {
+    font-size: 0.85em;
+  }
 }
 footer .footer-space .tobe-container .tobe-app__item__options {
   position: relative;
@@ -2013,6 +2173,11 @@ footer .footer-space .tobe-container .tobe-app__footer__input {
   font-size: 1em;
   font-weight: 500;
   outline: none;
+}
+@media screen and (max-width: 1024px) {
+  footer .footer-space .tobe-container .tobe-app__footer__input {
+    font-size: 0.85em;
+  }
 }
 footer .footer-space .tobe-container .tobe-app__footer .todoProject {
   display: none;

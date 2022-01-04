@@ -641,6 +641,9 @@ body {
 		.temperature-degree {
 			@include textStyle(2.5em, 700, 2px 2px 6px rgba(0, 0, 0, 0.2), -0.1em);
 			margin-left: 0.2em;
+			@include mQ(1024px) {
+				font-size: 2em;
+			}
 		}
 		.degree-icon {
 			align-self: flex-start;
@@ -648,6 +651,9 @@ body {
 	}
 	.location {
 		@include textStyle(1.5em, 500, 2px 2px 6px rgba(0, 0, 0, 0.2), 0.4em);
+		@include mQ(1024px) {
+			font-size: 1.3em;
+		}
 	}
 	.search-box {
 		@include removeOriginal(none, none, auto);
@@ -658,15 +664,24 @@ body {
 		&::placeholder {
 			color: rgba(80, 69, 69, 1);
 		}
+		@include mQ(1024px) {
+			font-size: 0.75em;
+		}
 	}
 	.extra-info {
 		@include textStyle(1.5em, normal, 2px 2px 6px rgba(0, 0, 0, 0.2), 0em);
 		display: flex;
+		@include mQ(1024px) {
+			font-size: 1.3em;
+		}
 		p {
 			margin-top: 0.4em;
 		}
 		img {
 			margin-right: 0.7em;
+			@include mQ(1000px) {
+				width: 26px;
+			}
 		}
 		.humidity {
 			margin: 0.1em 0.7em 0em 0em;
@@ -805,9 +820,15 @@ main {
 					@include textStyle(11em, 500, none, 0em);
 					display: flex;
 					justify-content: center;
+					@include mQ(1024px) {
+						font-size: 9em;
+					}
 				}
 				.pomodoro-message {
 					@include textStyle(4.1em, 500, none, 0em);
+					@include mQ(1024px) {
+						font-size: 3.5em;
+					}
 				}
 				.showBtn-container {
 					position: absolute;
@@ -1254,6 +1275,9 @@ main {
 			.time-container-middle {
 				.time {
 					@include textStyle(10em, 500, none, 0em);
+					@include mQ(1024px) {
+						font-size: 8em;
+					}
 				}
 			}
 		}
@@ -1265,6 +1289,9 @@ main {
 				.greeting-ellipsis-wrapper i {
 					opacity: 1 !important;
 				}
+			}
+			@include mQ(1024px) {
+				margin-top: 1em;
 			}
 			.greeting-left {
 				display: inline-flex;
@@ -1280,6 +1307,13 @@ main {
 				h1,
 				span {
 					@include textStyle(3.7em, 500, none, 0em);
+
+					@include mQ(1440px) {
+						font-size: 3em;
+					}
+					@include mQ(1024px) {
+						font-size: 2.5em;
+					}
 				}
 				.input-container {
 					display: inline;
@@ -1298,12 +1332,21 @@ main {
 					&:focus {
 						border-color: white;
 					}
+					@include mQ(1440px) {
+						font-size: 3em;
+					}
+					@include mQ(1024px) {
+						font-size: 2.5em;
+					}
 				}
 				transition: 0.6s opacity ease-in-out;
 			}
 			.mantra-container {
 				display: none;
 				transition: 0.6s opacity ease-in-out;
+				@include mQ(1024px) {
+					max-width: 650px;
+				}
 			}
 			.greeting-right {
 				display: inline-flex;
@@ -1384,6 +1427,9 @@ main {
 							&:hover {
 								background-color: rgb(121, 107, 107);
 							}
+							@include mQ(1024px) {
+								font-size: 0.75em;
+							}
 						}
 					}
 				}
@@ -1399,10 +1445,16 @@ main {
 			margin: auto;
 			margin-top: 3.35em;
 			transition: 0.6s opacity ease-in-out;
+			@include mQ(1024px) {
+				width: 450px;
+			}
 
 			.intention-question,
 			.intention-answer {
 				@include textStyle(2.2em, 400, none, 0em);
+				@include mQ(1024px) {
+					font-size: 1.8em;
+				}
 			}
 
 			.intention-question-container {
@@ -1421,6 +1473,9 @@ main {
 					font-weight: 500;
 					outline: none;
 					text-align: center;
+					@include mQ(1024px) {
+						font-size: 1.75em;
+					}
 				}
 			}
 
@@ -1438,10 +1493,16 @@ main {
 				.intention-today {
 					@include textStyle(1.5em, 700, none, 0em);
 					text-transform: uppercase;
+					@include mQ(1024px) {
+						font-size: 1.25em;
+					}
 				}
 				.intention-answer {
-					margin-left: 1.65em;
+					margin-left: 2em;
 					margin-right: 0.3em;
+					@include mQ(1024px) {
+						margin-left: 2.4em;
+					}
 				}
 				.intention-cta {
 					margin-top: 0.35em;
@@ -1500,6 +1561,10 @@ main {
 		position: relative;
 		display: flex;
 		flex-direction: column;
+		@include mQ(1024px) {
+			height: 400px;
+			width: 480px;
+		}
 		.archive-top {
 			display: flex;
 			justify-content: space-between;
@@ -1532,6 +1597,9 @@ main {
 				margin: 1em 0em;
 				border-bottom: 1px solid rgba(80, 69, 69, 0.8);
 				gap: 0.75em;
+				@include mQ(1024px) {
+					grid-template-columns: 3fr 0.8fr 0.5fr;
+				}
 				&:last-child {
 					border: none;
 					padding-bottom: 0em;
@@ -1627,6 +1695,9 @@ footer {
 	.background-info {
 		color: white;
 		flex: 0 0 240px;
+		@include mQ(1024px) {
+			flex: 0 0 140px;
+		}
 		.background-location {
 			transform: translateZ(0) translateY(6px);
 			transition: 0.3s ease-in-out;
@@ -1705,6 +1776,9 @@ footer {
 		flex: 0 0 240px;
 		position: relative;
 		color: rgb(87, 82, 85);
+		@include mQ(1024px) {
+			flex: 0 0 140px;
+		}
 		ul {
 			list-style: none;
 		}
@@ -1744,9 +1818,13 @@ footer {
 				border-radius: 0.35em;
 				text-align: left;
 				overflow: hidden;
+				@include mQ(1024px) {
+					width: 280px;
+				}
 
 				&__ellipsis-wrapper {
 					font-size: 0.8em;
+
 					i {
 						position: relative;
 						display: inline-flex;
@@ -1803,6 +1881,9 @@ footer {
 						font-weight: 500;
 						margin-right: 0.5em;
 						outline: none;
+						@include mQ(1024px) {
+							font-size: 1.15em;
+						}
 					}
 					i {
 						opacity: 1;
@@ -1838,6 +1919,9 @@ footer {
 						min-width: 240px;
 						max-height: 310px;
 						overflow-y: auto;
+						@include mQ(1024px) {
+							font-size: 0.85em;
+						}
 						&::-webkit-scrollbar {
 							width: 12px;
 						}
@@ -1867,6 +1951,9 @@ footer {
 							font-size: 0.875em;
 							margin-left: 0.5em;
 							pointer-events: none;
+							@include mQ(1024px) {
+								font-size: 0.8em;
+							}
 						}
 						&__add-wrapper {
 							display: flex;
@@ -1874,9 +1961,16 @@ footer {
 							i {
 								font-size: 0.7em;
 								margin-right: 0.5em;
+								margin-top: 0px;
+								@include mQ(1024px) {
+									font-size: 0.65em;
+								}
 							}
 							span {
 								font-size: 0.9em;
+								@include mQ(1024px) {
+									font-size: 0.83em;
+								}
 							}
 						}
 					}
@@ -1956,6 +2050,9 @@ footer {
 						white-space: nowrap;
 						overflow: hidden;
 						text-overflow: ellipsis;
+						@include mQ(1024px) {
+							font-size: 0.85em;
+						}
 					}
 					&__options {
 						position: relative;
@@ -2035,6 +2132,9 @@ footer {
 						font-size: 1em;
 						font-weight: 500;
 						outline: none;
+						@include mQ(1024px) {
+							font-size: 0.85em;
+						}
 					}
 					.todoProject {
 						display: none;
