@@ -148,6 +148,8 @@ module.exports = "/cloudy rain.2d59ad33.png";
 module.exports = "/cloudy.f668b013.png";
 },{}],"src/images/weather/windy.png":[function(require,module,exports) {
 module.exports = "/windy.e8f5e152.png";
+},{}],"src/images/backgrounds/sunset2.jpg":[function(require,module,exports) {
+module.exports = "/sunset2.e4520467.jpg";
 },{}],"src/images/svgs/focus.svg":[function(require,module,exports) {
 module.exports = "/focus.f05fe073.svg";
 },{}],"src/images/svgs/todo.svg":[function(require,module,exports) {
@@ -207,6 +209,7 @@ window.addEventListener('load', () => {
   checkUserName();
   greetings();
   generateQuote();
+  loadBackground();
   setIntention();
   setMantra();
   getQuote();
@@ -442,7 +445,7 @@ const linksObject = {
   }
 };
 if (localStorage.getItem('urls') === null) linksObject.urls = [];else linksObject.urls = JSON.parse(localStorage.getItem('urls'));
-chromeTab.addEventListener('click', () => window.open('chrome://newtab', '_blank'));
+chromeTab.addEventListener('click', () => window.open('https://www.google.co.uk/', '_blank'));
 linkIcon.addEventListener('click', () => {
   linksObject.resetInputs();
   linksObject.loadUrls();
@@ -1483,17 +1486,47 @@ new Sortable(archiveQuotesContainer, {
   }
 });
 
+function loadBackground() {
+  let bg;
+  if (localStorage.getItem('bg') === null) bg = '';else bg = JSON.parse(localStorage.getItem('bg'));
+  let bgDate = new Date();
+
+  if (bg == '') {
+    document.body.style.backgroundImage = `url(${require('../images/backgrounds/sunset2.jpg')})`;
+  } else if (bg.date !== bgDate.toDateString()) {
+    generateBackground();
+  } else {
+    backgroundUser.textContent = bg.name;
+    backgroundUserLink.href = bg.links;
+    heartBackground.href = bg.href;
+    backgroundLocation.textContent = bg.location;
+    document.body.style.backgroundImage = `url(${bg.img})`;
+  }
+}
+
 async function generateBackground() {
+  let bg;
+  if (localStorage.getItem('bg') === null) bg = '';else bg = JSON.parse(localStorage.getItem('bg'));
+  let bgDate = new Date();
   const response = await fetch(`https://api.unsplash.com/collections/GsNw3bdVLPM/photos/?client_id=${api.keyTwo}&per_page=30`);
   const data = await response.json();
   const bgIndex = await data[generateUniqueRandom(data)];
-  document.body.style.backgroundImage = `url(${bgIndex.urls.full})`;
   const responseTwo = await fetch(`https://api.unsplash.com/photos/${bgIndex.id}/?client_id=${api.keyTwo}`);
   const dataTwo = await responseTwo.json();
   dataTwo.location.title === null ? backgroundLocation.textContent = 'Unknown' : backgroundLocation.textContent = dataTwo.location.title;
   backgroundUser.textContent = dataTwo.user.name;
   backgroundUserLink.href = dataTwo.user.links.html;
   heartBackground.href = dataTwo.links.html;
+  document.body.style.backgroundImage = `url(${bgIndex.urls.full})`;
+  bg = {
+    name: dataTwo.user.name,
+    location: dataTwo.location.title === null ? 'Unknown' : dataTwo.location.title,
+    links: dataTwo.user.links.html,
+    href: dataTwo.links.html,
+    img: bgIndex.urls.full,
+    date: bgDate.toDateString()
+  };
+  localStorage.setItem('bg', JSON.stringify(bg));
 }
 
 function showBackgroundDetails() {
@@ -2211,7 +2244,7 @@ tobeInput.addEventListener('keypress', tobeApp.addTobeItem);
 tobeProjectsList.addEventListener('click', tobeApp.changeTobeProject);
 tobeProjectInput.addEventListener('keyup', tobeApp.addNewProject);
 tobeProjectOptionsWrapper.addEventListener('click', tobeApp.projectCta);
-},{"./config":"src/js/config.js","../images/pomodoro.mp3":"src/images/pomodoro.mp3","../images/weather/storming.png":"src/images/weather/storming.png","../images/weather/sunny.png":"src/images/weather/sunny.png","../images/weather/snowing.png":"src/images/weather/snowing.png","../images/weather/raining.png":"src/images/weather/raining.png","../images/weather/cloudy sun.png":"src/images/weather/cloudy sun.png","../images/weather/cloudy rain.png":"src/images/weather/cloudy rain.png","../images/weather/cloudy.png":"src/images/weather/cloudy.png","../images/weather/windy.png":"src/images/weather/windy.png","../images/svgs/focus.svg":"src/images/svgs/focus.svg","../images/svgs/todo.svg":"src/images/svgs/todo.svg","../images/svgs/links.svg":"src/images/svgs/links.svg","../images/svgs/calendar.svg":"src/images/svgs/calendar.svg","../images/svgs/clock.svg":"src/images/svgs/clock.svg","../images/svgs/weather.svg":"src/images/svgs/weather.svg","../images/svgs/picture.svg":"src/images/svgs/picture.svg","../images/svgs/quote.svg":"src/images/svgs/quote.svg","../images/svgs/mantra.svg":"src/images/svgs/mantra.svg"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./config":"src/js/config.js","../images/pomodoro.mp3":"src/images/pomodoro.mp3","../images/weather/storming.png":"src/images/weather/storming.png","../images/weather/sunny.png":"src/images/weather/sunny.png","../images/weather/snowing.png":"src/images/weather/snowing.png","../images/weather/raining.png":"src/images/weather/raining.png","../images/weather/cloudy sun.png":"src/images/weather/cloudy sun.png","../images/weather/cloudy rain.png":"src/images/weather/cloudy rain.png","../images/weather/cloudy.png":"src/images/weather/cloudy.png","../images/weather/windy.png":"src/images/weather/windy.png","../images/backgrounds/sunset2.jpg":"src/images/backgrounds/sunset2.jpg","../images/svgs/focus.svg":"src/images/svgs/focus.svg","../images/svgs/todo.svg":"src/images/svgs/todo.svg","../images/svgs/links.svg":"src/images/svgs/links.svg","../images/svgs/calendar.svg":"src/images/svgs/calendar.svg","../images/svgs/clock.svg":"src/images/svgs/clock.svg","../images/svgs/weather.svg":"src/images/svgs/weather.svg","../images/svgs/picture.svg":"src/images/svgs/picture.svg","../images/svgs/quote.svg":"src/images/svgs/quote.svg","../images/svgs/mantra.svg":"src/images/svgs/mantra.svg"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -2239,7 +2272,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62185" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55581" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

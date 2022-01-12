@@ -42,6 +42,7 @@ window.addEventListener('load', () => {
 	checkUserName();
 	greetings();
 	generateQuote();
+	loadBackground();
 	setIntention();
 	setMantra();
 	getQuote();
@@ -303,7 +304,7 @@ if (localStorage.getItem('urls') === null) linksObject.urls = [];
 else linksObject.urls = JSON.parse(localStorage.getItem('urls'));
 
 chromeTab.addEventListener('click', () =>
-	window.open('chrome://newtab', '_blank')
+	window.open('https://www.google.co.uk/', '_blank')
 );
 linkIcon.addEventListener('click', () => {
 	linksObject.resetInputs();
@@ -1548,13 +1549,38 @@ new Sortable(archiveQuotesContainer, {
 	}
 });
 
+function loadBackground() {
+	let bg;
+	if (localStorage.getItem('bg') === null) bg = '';
+	else bg = JSON.parse(localStorage.getItem('bg'));
+
+	let bgDate = new Date();
+
+	if (bg == '') {
+		document.body.style.backgroundImage = `url(${require('../images/backgrounds/sunset2.jpg')})`;
+	} else if (bg.date !== bgDate.toDateString()) {
+		generateBackground();
+	} else {
+		backgroundUser.textContent = bg.name;
+		backgroundUserLink.href = bg.links;
+		heartBackground.href = bg.href;
+		backgroundLocation.textContent = bg.location;
+		document.body.style.backgroundImage = `url(${bg.img})`;
+	}
+}
+
 async function generateBackground() {
+	let bg;
+	if (localStorage.getItem('bg') === null) bg = '';
+	else bg = JSON.parse(localStorage.getItem('bg'));
+
+	let bgDate = new Date();
+
 	const response = await fetch(
 		`https://api.unsplash.com/collections/GsNw3bdVLPM/photos/?client_id=${api.keyTwo}&per_page=30`
 	);
 	const data = await response.json();
 	const bgIndex = await data[generateUniqueRandom(data)];
-	document.body.style.backgroundImage = `url(${bgIndex.urls.full})`;
 	const responseTwo = await fetch(
 		`https://api.unsplash.com/photos/${bgIndex.id}/?client_id=${api.keyTwo}`
 	);
@@ -1565,6 +1591,17 @@ async function generateBackground() {
 	backgroundUser.textContent = dataTwo.user.name;
 	backgroundUserLink.href = dataTwo.user.links.html;
 	heartBackground.href = dataTwo.links.html;
+	document.body.style.backgroundImage = `url(${bgIndex.urls.full})`;
+	bg = {
+		name: dataTwo.user.name,
+		location:
+			dataTwo.location.title === null ? 'Unknown' : dataTwo.location.title,
+		links: dataTwo.user.links.html,
+		href: dataTwo.links.html,
+		img: bgIndex.urls.full,
+		date: bgDate.toDateString()
+	};
+	localStorage.setItem('bg', JSON.stringify(bg));
 }
 
 function showBackgroundDetails() {
