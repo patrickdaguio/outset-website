@@ -69,26 +69,34 @@ function displayResults(weather) {
 	wind.textContent = `${weather.wind.speed.toFixed(1)}mph`;
 	if (weather.weather[0].main === 'Thunderstorm') {
 		temperatureIcon.src = `${require('../images/weather/storming.png')}`;
+		temperatureIcon.title = 'Thunderstorm';
 	} else if (weather.weather[0].main === 'Clear') {
 		temperatureIcon.src = `${require('../images/weather/sunny.png')}`;
+		temperatureIcon.title = 'Clear';
 	} else if (weather.weather[0].main === 'Snow') {
 		temperatureIcon.src = `${require('../images/weather/snowing.png')}`;
+		temperatureIcon.title = 'Snow';
 	} else if (weather.weather[0].main === 'Rain') {
 		temperatureIcon.src = `${require('../images/weather/raining.png')}`;
+		temperatureIcon.title = 'Rain';
 	} else if (
 		weather.weather[0].description === 'few clouds' ||
 		weather.weather[0].description === 'scattered clouds'
 	) {
 		temperatureIcon.src = `${require('../images/weather/cloudy sun.png')}`;
+		temperatureIcon.title = 'Scattered clouds';
 	} else if (weather.weather[0].main === 'Drizzle') {
 		temperatureIcon.src = `${require('../images/weather/cloudy rain.png')}`;
+		temperatureIcon.title = 'Drizzle';
 	} else if (
 		weather.weather[0].description === 'broken clouds' ||
 		weather.weather[0].description === 'overcast clouds'
 	) {
 		temperatureIcon.src = `${require('../images/weather/cloudy.png')}`;
+		temperatureIcon.title = 'Cloudy';
 	} else if (weather.wind.speed > 30) {
 		temperatureIcon.src = `${require('../images/weather/windy.png')}`;
+		temperatureIcon.title = 'Windy';
 	}
 	searchBox.value = '';
 }
