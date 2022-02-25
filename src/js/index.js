@@ -1,17 +1,16 @@
 import config from './config';
 import sound from '../images/pomodoro.mp3';
 
-// Weather App
+/* Weather Component */
 
-// API
+// API Keys
 const api = {
-	keyOne: config.MY_KEY_1,
-	keyTwo: config.MY_KEY_2,
+	keyOne: config.MY_KEY_1, // OpenWeatherAPI
+	keyTwo: config.MY_KEY_2, // UnsplashAPI
 	base: 'https://api.openweathermap.org/data/2.5/'
 };
 
-// HTML TAgs
-
+// Weather Component Tags
 const searchBox = document.querySelector('.search-box');
 const temperatureIcon = document.querySelector('.temperature-icon');
 const temperatureDegree = document.querySelector('.temperature-degree');
@@ -21,6 +20,16 @@ const wind = document.querySelector('.wind');
 
 searchBox.addEventListener('keypress', setQuery);
 
+/* When app loads:
+- Fetch user's current location and display weather data on location
+- Checks localStorage if user is new/old. Show introduction page if user is new and dont if user is old 
+- Display current time and greet user personally depending on time of day 
+- Display a randomly generated quote from QuotesAPI
+- Loads randomly generated background from UnplashAPI (resets automatically once a day)
+- Loads user's intention for the day from localStorage (if already set)
+- Loads user's mantra for the day from localStorage (if already set)
+- Loads user's archived quotes list from localStorage
+*/
 window.addEventListener('load', () => {
 	let lon;
 	let lat;
@@ -48,6 +57,7 @@ window.addEventListener('load', () => {
 	getQuote();
 });
 
+// On 'enter' send user's query to OpenWeather API
 function setQuery(e) {
 	if (e.keyCode === 13) {
 		getResults(searchBox.value);
@@ -62,6 +72,7 @@ function getResults(query) {
 		.then(displayResults);
 }
 
+// Displays specific weather results depending on the fetched weather information
 function displayResults(weather) {
 	temperatureDegree.textContent = Math.round(weather.main.temp);
 	geolocation.textContent = `${weather.name}, ${weather.sys.country}`;
@@ -101,9 +112,9 @@ function displayResults(weather) {
 	searchBox.value = '';
 }
 
-// Links App
+/* Bookmark Links Component */
 
-// Design
+// Bookmark Links Component Tags (Design)
 const chromeTab = document.querySelector('.chrome-tab');
 const linkIcon = document.querySelector('.links-icon');
 const nippleWrapper = document.querySelector('.nipple-wrapper');
@@ -113,8 +124,7 @@ const linksListContainer = document.querySelector('.links-list-container');
 const linksOuterWrapper = document.querySelector('.links-outer-wrapper');
 const linksApp = document.querySelector('.links');
 
-// Functionality
-
+// Bookmark Links Component Tags (Functionality)
 const linkName = document.querySelector('.add-url-name');
 const urlsList = document.querySelector('.urls-list');
 const userUrlLink = document.querySelector('.add-url-link');
@@ -123,6 +133,10 @@ const createUrlBtn = document.querySelector('.create-url-btn');
 const saveUrlBtn = document.querySelector('.update-url-btn');
 const linksList = document.querySelector('.links-list');
 
+/* Transforms user's url input to start with http or https
+- Prevents errors
+- Fetches correct Google icon  
+*/
 function linkify(url) {
 	let urlRegex = /^(http|https):\/\//gi;
 	let removedSpace = url.replace(/\s+/g, '');
@@ -132,20 +146,24 @@ function linkify(url) {
 	return removedSpace;
 }
 
+// Object container for Bookmark Links Component
 const linksObject = {
 	urls: '',
 	editUrlIndex: '',
+	// Resets input fields
 	resetInputs: function () {
 		linkName.value = '';
 		userUrlLink.value = '';
 		urlsList.textContent = '';
 	},
+	// Creates extra input field for url links and change component's height accordingly
 	addExtraTab: function (e) {
 		if (addTabWrapper.contains(e.target)) {
 			userUrlLink.value = '';
 			userUrlLink.style.display = 'block';
 			userUrlLink.focus();
 			linksOuterWrapper.style.height = addLinksContainer.offsetHeight + 'px';
+			// Deletes extra url tab added and change component's height accordingly
 		} else if (e.target.classList.contains('url-delete')) {
 			e.target.parentElement.remove();
 			linksOuterWrapper.style.height = addLinksContainer.offsetHeight + 'px';
@@ -155,6 +173,7 @@ const linksObject = {
 			}
 		}
 	},
+	// Creates HTML for inputted link
 	addUrlLink: function (e) {
 		let extraUrl = `<li class="url">
             <a class="url-link" href="${linkify(
@@ -164,6 +183,7 @@ const linksObject = {
 		}</span></a>
             <i class="fas fa-times url-delete"></i>
         </li>`;
+		// Checks if input fields are not empty. Create and add new tab and change components height.
 		if (
 			(e.keyCode === 13 && e.target.value !== '') ||
 			(addTabWrapper.contains(e.target) && userUrlLink.value !== '')
@@ -174,9 +194,13 @@ const linksObject = {
 			linksOuterWrapper.style.height = addLinksContainer.offsetHeight + 'px';
 		}
 	},
+
+	// Saves user URL inputs to localStorage
 	saveUrlLink: function (index) {
+		// Warns user if any input is empty before submitting links to bookmark
 		if (linkName.value === '') {
 			linkName.classList.add('warning');
+			// Sets focus to fields that are empty
 			linkName.focus();
 			linkName.addEventListener('animationend', function () {
 				linkName.classList.remove('warning');
@@ -199,9 +223,12 @@ const linksObject = {
 			urls.forEach(url => validLinks.push(url.getAttribute('href')));
 			urlText.forEach(text => userLinks.push(text.textContent));
 			if (userUrlLink.value !== '') {
+				// Validates user links and saves all links/tabs to array
 				validLinks.push(linkify(userUrlLink.value));
+				// Keeps users text input
 				userLinks.push(userUrlLink.value);
 			}
+			// Checks if user is creating new bookmark or editing one
 			if (typeof index === 'number') {
 				linksObject.urls[index] = {
 					name:
@@ -220,17 +247,22 @@ const linksObject = {
 					img: `https://s2.googleusercontent.com/s2/favicons?domain_url=${validLinks[0]}`
 				});
 			}
+			// Saves bookmarked links
 			localStorage.setItem('urls', JSON.stringify(linksObject.urls));
+			// Resets input fields
 			linksObject.resetInputs();
+			// Revert back to main component and load saved bookmarked links
 			linksObject.loadUrls();
 			linksMenuWrapper.classList.remove('second-tab');
 			linksOuterWrapper.style.height = linksListContainer.offsetHeight + 'px';
 			userUrlLink.style.display = 'block';
 		}
 	},
+	// Loads user URL inputs to localStorage
 	loadUrls: function () {
 		linksList.innerHTML = '';
 		let loadedUrl;
+		// Maps through localStorage url array and create HTML for each bookmark
 		linksObject.urls.forEach((url, i) => {
 			loadedUrl = `               
             <li class="link">
@@ -252,11 +284,14 @@ const linksObject = {
                     </div>
                 </div>
             </li>`;
+			// Input each bookmark to main component
 			linksList.insertAdjacentHTML('beforeend', loadedUrl);
 			const multipleLinks = document.querySelectorAll('.link-url');
+			// Opens all links to separate tabs (user has to allow pop-up)
 			multipleLinks[i].onclick = () =>
 				url.links.reverse().forEach(link => window.open(link));
 		});
+		// Display edit options to selected bookmark link
 		const ellipsisWrapper = document.querySelectorAll('.ellipsis-wrapper');
 		let curr, prev;
 		curr = prev = 0;
@@ -274,24 +309,31 @@ const linksObject = {
 			})
 		);
 		const dropdownList = document.querySelectorAll('.dropdown-list');
+		// Copies url links array
 		const nodes = Array.prototype.slice.call(linksList.children);
+		// Checks which edit option clicked on selected bookmark
 		dropdownList.forEach(list =>
 			list.addEventListener('click', e => {
 				let listItem =
 					e.target.parentElement.parentElement.parentElement.parentElement;
 				if (e.target.className === 'delete-link') {
+					// Deletes bookmark link/s
 					linksObject.urls.splice(nodes.indexOf(listItem), 1);
 					nodes.splice(nodes.indexOf(listItem), 1);
+					// Removes from UI
 					listItem.remove();
+					// Saves new array to localStorage
 					localStorage.setItem('urls', JSON.stringify(linksObject.urls));
 					linksOuterWrapper.style.height =
 						linksListContainer.offsetHeight + 'px';
 				} else if (e.target.className === 'edit-link') {
 					let linkIndex = linksObject.urls[nodes.indexOf(listItem)];
+					// Open edit tab for selected bookmark
 					linksMenuWrapper.classList.add('second-tab');
 					createUrlBtn.style.display = 'none';
 					saveUrlBtn.style.display = 'block';
 					linkName.value = linkIndex.name;
+					// List down title and link/s user inputted for selected bookmark
 					linkIndex.links.forEach((link, i) => {
 						let savedUrl = `<li class="url">
                         <a class="url-link" href="${link}" target="_blank"><span class="url-text">${linkIndex.user[i]}</span></a>
@@ -301,6 +343,7 @@ const linksObject = {
 					});
 					linksOuterWrapper.style.height =
 						addLinksContainer.offsetHeight + 'px';
+					// Tracks which bookmark user selected so any changes can be saved to specific bookmark
 					linksObject.editUrlIndex = nodes.indexOf(listItem);
 				}
 			})
@@ -308,12 +351,16 @@ const linksObject = {
 	}
 };
 
+// Fetches saved bookmarked links from localStorage
 if (localStorage.getItem('urls') === null) linksObject.urls = [];
 else linksObject.urls = JSON.parse(localStorage.getItem('urls'));
 
+// Open new Google chrome tab and redirects to Google main page
 chromeTab.addEventListener('click', () =>
 	window.open('https://www.google.co.uk/', '_blank')
 );
+
+// Open Bookmark link component. Loads saved bookmark and reset to plain
 linkIcon.addEventListener('click', () => {
 	linksObject.resetInputs();
 	linksObject.loadUrls();
@@ -322,6 +369,7 @@ linkIcon.addEventListener('click', () => {
 	userUrlLink.style.display = 'block';
 	linksOuterWrapper.style.height = linksListContainer.offsetHeight + 'px';
 });
+// Checks if user wants to add a new bookmark or user wants to go back to main section from edit page
 linksMenuWrapper.addEventListener('click', e => {
 	if (
 		e.target.classList.contains('link-input') ||
@@ -341,6 +389,7 @@ linksMenuWrapper.addEventListener('click', e => {
 	}
 });
 
+// Event listeners for Bookmark Link Component
 saveUrlBtn.addEventListener('click', function () {
 	linksObject.saveUrlLink(linksObject.editUrlIndex);
 });
@@ -348,12 +397,15 @@ addTabWrapper.addEventListener('click', linksObject.addUrlLink);
 createUrlBtn.addEventListener('click', linksObject.saveUrlLink);
 addLinksContainer.addEventListener('click', linksObject.addExtraTab);
 userUrlLink.addEventListener('keypress', linksObject.addUrlLink);
+// Changes user focus to next required input field
 linkName.addEventListener('keypress', e => {
 	if (e.keyCode === 13 && e.target.value !== '') {
 		userUrlLink.focus();
 	}
 });
 
+// Event listener for whole website
+// Closes component if user clicks outside of it and resets actions
 document.addEventListener('click', e => {
 	if (
 		!linksApp.contains(e.target) &&
@@ -479,10 +531,9 @@ document.addEventListener('click', e => {
 	}
 });
 
-// Greeting App
+/* Greetings Component */
 
-// HTML Tags
-
+// Greetings Component HTML Tags
 const timeAppContainer = document.querySelector('.time-app');
 const time = document.querySelector('.time');
 const greetingContainer = document.querySelector('.greeting-container');
@@ -502,14 +553,16 @@ function greetings() {
 
 	let date = new Date();
 
-	// Time
+	// Formats time
 	let hours = addZero(date.getHours());
 	let minutes = addZero(date.getMinutes());
 	let currentTime = `${hours}:${minutes}`;
 
+	// Updates time each second
 	time.textContent = currentTime;
 	setTimeout(greetings, 1000);
 
+	// Greets user depending on time of day
 	if (hours >= 12 && hours < 18) {
 		greeting.textContent = `Good afternoon, `;
 		greetingName.textContent = userName[0];
@@ -526,6 +579,7 @@ function addZero(num) {
 	return num < 10 ? `0${num}` : num;
 }
 
+// Opens options for greetings component
 function openGreetingsOptions() {
 	greetingsOption.classList.toggle('share-open');
 	if (greetingsOption.classList.contains('share-open'))
@@ -533,6 +587,7 @@ function openGreetingsOptions() {
 	else greetingsEllipsisIcon.style.opacity = '0';
 }
 
+// Allows the user to edit name inputted from introduction page
 function editName() {
 	let userName;
 	if (localStorage.getItem('username') === null) userName = '';
@@ -540,6 +595,7 @@ function editName() {
 
 	if (mantraContainer.style.display == 'block') {
 		greetingMiddle.style.opacity = '0';
+		// Smooth transition
 		setTimeout(() => {
 			greetingMiddle.style.opacity = '1';
 			mantraContainer.style.display = 'none';
@@ -557,6 +613,7 @@ function editName() {
 		mantraLine.remove();
 	}
 
+	// Creates input where user's name would be and sets focus on it
 	const nameInput = document.createElement('input');
 	nameInput.classList.add('greeting-input');
 	nameInput.value = userName[0];
@@ -571,6 +628,7 @@ function editName() {
 	greetingsOption.classList.remove('share-open');
 	greetingName.style.display = 'none';
 
+	// Sets new user name to localStorage
 	nameInput.addEventListener('keypress', e => {
 		if (e.keyCode === 13) {
 			userName[0] = nameInput.value;
@@ -586,12 +644,14 @@ function editName() {
 	});
 }
 
+// Resize width of edit user name input field depending on length of input
 function resizeInput() {
 	this.style.width = this.value.length + 'ch';
 }
 
-// My-Mantra API
+/* My-Mantra Component */
 
+// My-Mantra Component HTML Tags
 const nameContainer = document.querySelector('.name-container');
 const mantraContainer = document.querySelector('.mantra-container');
 const greetingMiddle = document.querySelector('.greeting-middle');
@@ -602,11 +662,13 @@ function addChangeMantraBtn() {
 	if (localStorage.getItem('mantra') === null) mantra = [];
 	else mantra = JSON.parse(localStorage.getItem('mantra'));
 
+	// Hides greeting component and shows today's mantra whenever user enters website
 	nameContainer.style.display = 'none';
 	mantraContainer.style.display = 'block';
 	mantraContainer.textContent = mantra[0];
 	showMantraBtn.textContent = "Hide today's mantra";
 
+	// Creates new HTML elements for mantra to change/hide mantra
 	const changeMantra = document.createElement('li');
 	const mantraLine = document.createElement('li');
 	changeMantra.classList.add('changeMantra');
@@ -615,6 +677,7 @@ function addChangeMantraBtn() {
 	ellipsisOptions.insertBefore(changeMantra, editNameBtn);
 	ellipsisOptions.insertBefore(mantraLine, editNameBtn);
 
+	// Fetches new mantra from My-Mantra API if user wants to change current mantra
 	changeMantra.addEventListener('click', () => {
 		greetingsOption.classList.remove('share-open');
 		greetingMiddle.style.opacity = '0';
@@ -630,16 +693,19 @@ function addChangeMantraBtn() {
 					showMantraBtn.textContent = "Hide today's mantra";
 				}, 600);
 				mantra[0] = data[index].mantra;
+				// Sets newly fetched mantra to localStorage
 				localStorage.setItem('mantra', JSON.stringify(mantra));
 			});
 	});
 }
 
+// Fetches today's mantra
 function setMantra() {
 	let mantra;
 	if (localStorage.getItem('mantra') === null) mantra = [];
 	else mantra = JSON.parse(localStorage.getItem('mantra'));
 
+	// Resets the mantra each day
 	let mantraDate = new Date();
 	if (mantra[1] !== mantraDate.toDateString()) {
 		mantra = [];
@@ -649,6 +715,7 @@ function setMantra() {
 	}
 }
 
+// Hides Greeting component and shows Mantra component
 function showMantra(e) {
 	greetingMiddle.style.opacity = '0';
 	greetingsOption.classList.remove('share-open');
@@ -657,8 +724,10 @@ function showMantra(e) {
 	if (localStorage.getItem('mantra') === null) mantra = [];
 	else mantra = JSON.parse(localStorage.getItem('mantra'));
 
+	// States the time and day the user fetched the mantra
 	let mantraDate = new Date();
 
+	// Fetches new mantra from My-Mantra API
 	if (e.target.innerText == "Show today's mantra" && mantra.length <= 0) {
 		fetch('https://my-mantra-api.herokuapp.com/mantras')
 			.then(function (response) {
@@ -673,6 +742,7 @@ function showMantra(e) {
 					mantraContainer.style.display = 'block';
 					showMantraBtn.textContent = "Hide today's mantra";
 				}, 600);
+				// Adds mantra and time mantra was fetched to localStorage
 				mantra[0] = data[index].mantra;
 				mantra[1] = mantraDate.toDateString();
 				localStorage.setItem('mantra', JSON.stringify(mantra));
@@ -703,8 +773,9 @@ function showMantra(e) {
 
 showMantraBtn.addEventListener('click', showMantra);
 
-// Pomodoro App
+/* Pomodoro Component */
 
+// Pomodoro Component HTML Tags
 const pomodoroIcon = document.querySelector('.pomodoro');
 const pomodoroAppContainer = document.querySelector('.pomodoro-app');
 const closePomodoroBtn = document.querySelector('.closePomodoro');
@@ -749,6 +820,7 @@ const pomodoroThemeBtns = document.querySelectorAll('.pomodoroThemeIcons');
 
 const pomodoroAudioHello = new Audio(sound);
 
+// Pomodoro Component Object
 const pomodoroApp = {
 	minutes: pomodoroTimeInput.value,
 	seconds: 60,
@@ -756,11 +828,13 @@ const pomodoroApp = {
 	cycleCount: 0,
 	paused: false,
 	pomodoroDate: new Date(),
+	// Fetches previous pomodoro timer from localStorage
 	historyScores:
 		localStorage.getItem('historyScores') === null
 			? []
 			: JSON.parse(localStorage.getItem('historyScores')),
 
+	// Seconds counter
 	secondsTimer: function () {
 		pomodoroApp.seconds = pomodoroApp.seconds - 1;
 
@@ -777,6 +851,7 @@ const pomodoroApp = {
 				document.title = `00:00 - Focus`;
 			else document.title = `Break - 00:00`;
 		} else {
+			// Checks if user just finished a break or work
 			if (pomodoroMsg.textContent == 'Time to focus.') {
 				document.title = `${pomodoroMins.innerText}:${pomodoroSecs.innerText} - Focus`;
 			} else {
@@ -788,11 +863,13 @@ const pomodoroApp = {
 			pomodoroApp.minutes = pomodoroApp.minutes - 1;
 			pomodoroApp.seconds = 60;
 			if (pomodoroApp.minutes < 0) {
+				// Plays clock audio when pomodoro timer hits 0
 				pomodoroAudioHello.play();
 				pomodoroStartContainer.style.opacity = '0';
 				setTimeout(() => {
 					pomodoroStartContainer.style.opacity = '1';
 					if (pomodoroMsg.textContent == 'Time to focus.') {
+						// Checks if user had pomodoro session today
 						const sameDay = pomodoroApp.historyScores.findIndex(
 							score =>
 								score.date ===
@@ -800,10 +877,12 @@ const pomodoroApp = {
 									pomodoroApp.pomodoroDate.getMonth() + 1
 								}/${pomodoroApp.pomodoroDate.getFullYear()}`
 						);
+						// Increments completed pomodoro session to today
 						if (sameDay >= 0) {
 							pomodoroApp.historyScores[sameDay].minutes += parseInt(
 								pomodoroTimeInput.value
 							);
+							// Adds new date and pomodoro time
 						} else {
 							pomodoroApp.historyScores.push({
 								date: `${pomodoroApp.pomodoroDate.getDate()}/${
@@ -816,6 +895,7 @@ const pomodoroApp = {
 							'historyScores',
 							JSON.stringify(pomodoroApp.historyScores)
 						);
+						// Checks if user is elligible for a long break
 						if (pomodoroApp.pomodoroCount === 3) {
 							clearInterval(pomodoroApp.secondsInterval);
 							pomodoroApp.minutes = parseInt(pomodoroLongBreak.value) - 1;
@@ -831,6 +911,7 @@ const pomodoroApp = {
 								pomodoroApp.secondsTimer,
 								1000
 							);
+							// Checks if user is ready for a short break
 						} else {
 							clearInterval(pomodoroApp.secondsInterval);
 							pomodoroApp.minutes = parseInt(pomodoroShortBreak.value) - 1;
@@ -840,6 +921,7 @@ const pomodoroApp = {
 							else pomodoroMins.innerText = pomodoroApp.minutes;
 							pomodoroMsg.textContent = 'Time for a short break.';
 							pomodoroResetBtn.textContent = 'End';
+							// Checks if user selected repeat mode and if so, increment counters to track user's pomodoro session
 							if (repeatModeBtn.checked) {
 								pomodoroApp.pomodoroCount++;
 								pomodoroApp.cycleCount++;
@@ -850,6 +932,7 @@ const pomodoroApp = {
 								1000
 							);
 						}
+						// Checks if user is finished from his break and goes back to main menu of pomodoro component
 					} else if (pomodoroMsg.textContent == 'Time for a short break.') {
 						if (!repeatModeBtn.checked) {
 							clearInterval(pomodoroApp.secondsInterval);
@@ -864,6 +947,7 @@ const pomodoroApp = {
 								pomodoroSettingsContainer.style.opacity = '1';
 							}, 100);
 							document.title = 'Outset';
+							// Checks if user selected repeat mode and keeps user in cycle from work and break
 						} else if (repeatModeBtn.checked) {
 							clearInterval(pomodoroApp.secondsInterval);
 							pomodoroApp.minutes = parseInt(pomodoroTimeInput.value) - 1;
@@ -898,6 +982,7 @@ const pomodoroApp = {
 		}
 	},
 
+	// Displays pomodoro component
 	openPomodoroApp: function () {
 		pomodoroAppContainer.style.display = 'block';
 		timeAppContainer.style.opacity = '0';
@@ -907,6 +992,7 @@ const pomodoroApp = {
 		}, 1000);
 	},
 
+	// Closes pomodoro component
 	closePomodoroApp: function () {
 		pomodoroHistoryContainer.classList.remove('openHistoryContainer');
 		pomodoroAppContainer.style.opacity = '0';
@@ -921,7 +1007,9 @@ const pomodoroApp = {
 		}, 1000);
 	},
 
+	// Start pomodoro timer
 	startPomodoro: function () {
+		// Checks user inputted correct field values
 		if (
 			pomodoroTimeInput.value > 0 &&
 			pomodoroShortBreak.value > 0 &&
@@ -933,12 +1021,15 @@ const pomodoroApp = {
 			pomodoroPauseBtn.textContent = 'Pause';
 			pomodoroResetBtn.textContent = 'Reset';
 
+			// Shows pomodoro cycle text if depending on option in repeat mode
 			if (!repeatModeBtn.checked) pomodoroCycleMsg.style.display = 'none';
 			else pomodoroCycleMsg.style.display = 'block';
 
+			// Shows/hides pause button on timer depending if deep mode is on or off
 			if (deepModeBtn.checked) pomodoroPauseBtn.style.display = 'none';
 			else pomodoroPauseBtn.style.display = 'block';
 
+			// Animation transitions
 			pomodoroSettingsContainer.style.opacity = '0';
 			pomodoroTimeContainer.style.display = 'flex';
 			pomodoroStartContainer.style.display = 'block';
@@ -966,6 +1057,7 @@ const pomodoroApp = {
 		}
 	},
 
+	// Show pomodoro timer options
 	showPomodoroBtns: function () {
 		if (showPomodoroCta.classList.contains('fa-arrow-up')) {
 			showPomodoroCta.classList.replace('fa-arrow-up', 'fa-arrow-down');
@@ -976,6 +1068,7 @@ const pomodoroApp = {
 		}
 	},
 
+	// Pause pomodoro timer
 	pausePomodoroTimer: function (e) {
 		if (e.target.textContent == 'Pause' && pomodoroApp.seconds !== 60) {
 			pomodoroApp.paused = true;
@@ -990,6 +1083,7 @@ const pomodoroApp = {
 		}
 	},
 
+	// Ends pomodoro timer
 	resetPomodoroTimer: function (e) {
 		if (pomodoroResetBtn.textContent === 'End') {
 			clearInterval(pomodoroApp.secondsInterval);
@@ -1011,11 +1105,13 @@ const pomodoroApp = {
 		}
 	},
 
+	// Shows warning if user decides to end pomodoro without completing it
 	closeWarning: function () {
 		pomodoroWarning.style.opacity = '0';
 		pomodoroWarning.style.visibility = 'hidden';
 	},
 
+	// Animates out of pomodoro component into main website
 	exitPomodoro: function () {
 		clearInterval(pomodoroApp.secondsInterval);
 		pomodoroApp.pomodoroCount = 0;
@@ -1034,6 +1130,7 @@ const pomodoroApp = {
 		}, 1000);
 	},
 
+	// Shows users pomodoro session history
 	showPomdoroHistory: function () {
 		pomodoroHistoryContainer.classList.toggle('openHistoryContainer');
 		historyDatesList.innerHTML = '';
@@ -1056,6 +1153,7 @@ const pomodoroApp = {
 		);
 	},
 
+	// Resets pomodoro history and saves to localStorage
 	resetPomodoroHistory: function () {
 		historyDatesList.innerHTML = '';
 		historyMinsList.innerHTML = '';
@@ -1066,6 +1164,7 @@ const pomodoroApp = {
 		);
 	},
 
+	// Light/dark mode theme switcher
 	pomodoroChangeTheme: function (e) {
 		if (e.target.classList.contains('fa-sun')) {
 			pomodoroTimeContainer.setAttribute('id', '');
@@ -1079,6 +1178,7 @@ const pomodoroApp = {
 	}
 };
 
+// Event listeners for pomodoro component
 pomodoroIcon.addEventListener('click', pomodoroApp.openPomodoroApp);
 closePomodoroBtn.addEventListener('click', pomodoroApp.closePomodoroApp);
 startPomodoroBtn.addEventListener('click', pomodoroApp.startPomodoro);
@@ -1099,8 +1199,9 @@ greetingsEllipsisIcon.addEventListener('click', openGreetingsOptions);
 editNameBtn.addEventListener('click', editName);
 greetingName.addEventListener('dblclick', editName);
 
-// Intention
+/* Intention Component */
 
+// Intention Component HTML Tags
 const intentionInput = document.querySelector('.intention-input');
 const intentionAnswer = document.querySelector('.intention-answer');
 const intentionCta = document.querySelector('.intention-cta');
@@ -1112,15 +1213,18 @@ const intentionAnswerContainer = document.querySelector(
 	'.intention-answer-container'
 );
 
+// Intention Component Event listeners
 intentionInput.addEventListener('keypress', changeIntention);
 intentionCta.addEventListener('mouseover', intentionAnswerIcons);
 intentionCta.addEventListener('mouseleave', removeIntentionIcons);
 
+// Fetches user's set intention from localStorage and sets it
 function setIntention() {
 	let intention;
 	if (localStorage.getItem('intention') === null) intention = [];
 	else intention = JSON.parse(localStorage.getItem('intention'));
 
+	// Reset intention each day
 	let dateNow = new Date();
 
 	if (intention[1] !== dateNow.toDateString()) {
@@ -1139,6 +1243,7 @@ function setIntention() {
 	}
 }
 
+// Change user's intention
 function changeIntention(e) {
 	let intention;
 	if (localStorage.getItem('intention') === null) intention = [];
@@ -1148,6 +1253,7 @@ function changeIntention(e) {
 
 	if (e.keyCode === 13 && e.target.value !== '') {
 		intentionQuestionContainer.style.opacity = '0';
+		// Saves new intention and day
 		intention[0] = e.target.value;
 		intention[1] = inputDate.toDateString();
 		localStorage.setItem('intention', JSON.stringify(intention));
@@ -1160,6 +1266,7 @@ function changeIntention(e) {
 	}
 }
 
+// Opens Intention component's edit options
 function intentionAnswerIcons() {
 	let intention;
 	if (localStorage.getItem('intention') === null) intention = [];
@@ -1175,9 +1282,11 @@ function intentionAnswerIcons() {
 				intentionQuestionContainer.style.opacity = '1';
 				intentionQuestionContainer.style.visibility = 'visible';
 			}, 600);
+			// Deletes user intentions
 			if (e.target.classList.contains('fa-times')) {
 				intentionInput.value = '';
 				intention = [];
+				// Create new input field with value of current intention to edit it
 			} else if (e.target.classList.contains('fa-pen')) {
 				intentionInput.value = intention[0];
 			}
@@ -1186,10 +1295,13 @@ function intentionAnswerIcons() {
 	});
 }
 
+// Hides Intention component edit options when mouse leaves intention component
 function removeIntentionIcons() {
 	intentionIcons.forEach(icon => (icon.style.visibility = 'hidden'));
 }
 
+// Checks if user is inactive on website for more than 30 seconds
+// Resets timer if user moves mouse
 const inactivityTime = function () {
 	let time;
 	window.onload = resetTimer;
@@ -1197,6 +1309,7 @@ const inactivityTime = function () {
 	document.onmousemove = resetTimer;
 	document.onkeydown = resetTimer;
 
+	// Hides greeting component and user cursor
 	function logout() {
 		greetingContainer.style.opacity = '0';
 		document.querySelector('.intention').style.opacity = '0';
@@ -1216,8 +1329,7 @@ window.onload = function () {
 	inactivityTime();
 };
 
-// Footer
-
+// Footer HTML tags
 const backgroundLocation = document.querySelector('.background-location');
 const changeBackground = document.querySelector('.changeBackground');
 const heartBackground = document.querySelector('.background-photo');
@@ -1234,7 +1346,6 @@ const shareBtn = document.querySelector('.shareBtn');
 const shareBox = document.querySelector('.share-box');
 
 // Social Icons
-
 const facebookBtn = document.querySelector('.social-facebook');
 const twitterBtn = document.querySelector('.social-twitter');
 const linkedBtn = document.querySelector('.social-linked');
@@ -1251,6 +1362,7 @@ const archiveQuotesContainer = document.querySelector(
 const addQuoteBtn = document.querySelector('.addQuoteBtn');
 const archiveSearch = document.querySelector('.archive-search-box');
 
+// Footer Event Listeners
 changeBackground.addEventListener('click', generateBackground);
 changeQuote.addEventListener('click', generateQuote);
 backgroundInfo.addEventListener('mouseenter', showBackgroundDetails);
@@ -1264,14 +1376,16 @@ saveQuoteBtn.addEventListener('click', archiveQuote);
 addQuoteBtn.addEventListener('click', addQuote);
 archiveSearch.addEventListener('keyup', searchArhive);
 
+// Trigger reflow
 function reset_animation(element) {
 	element.style.animation = 'none';
-	element.offsetHeight; /* trigger reflow */
+	element.offsetHeight;
 	element.style.animation = null;
 }
 
 let uniqueNumbersArray = [];
 
+// Generates unique random number
 function generateUniqueRandom(maxNr) {
 	//Generate random number
 	let random = (Math.random() * maxNr.length).toFixed();
@@ -1289,16 +1403,17 @@ function generateUniqueRandom(maxNr) {
 	}
 }
 
+// Generates new randomly quote from Quotes API
 function generateQuote() {
 	fetch('https://type.fit/api/quotes')
 		.then(function (response) {
 			return response.json();
 		})
 		.then(function (data) {
-			/*         let index = Math.floor(Math.random() * data.length); */
 			let index = generateUniqueRandom(data);
 			reset_animation(inspirationalQuote);
 			inspirationalQuote.textContent = `${data[index].text}`;
+			// Sets quote and author to share
 			shareQuote(`${data[index].text} - ${data[index].author}`);
 			if (data[index].author === null) {
 				reset_animation(quoteOrigin);
@@ -1316,6 +1431,7 @@ function openQuoteBox() {
 	shareBox.classList.toggle('share-open');
 }
 
+// Share functionality for socials
 function shareQuote(quote) {
 	let postTitle = encodeURI(quote);
 	let hostedUrl = `https://outset-website.vercel.app/`;
@@ -1341,6 +1457,7 @@ function shareQuote(quote) {
 		'href',
 		`https://api.whatsapp.com/send?text=${postTitle}`
 	);
+	// Copies quote to clipboard
 	quoteBtn.addEventListener('click', async function copyQuote() {
 		try {
 			await navigator.clipboard.writeText(quote);
@@ -1351,6 +1468,7 @@ function shareQuote(quote) {
 	});
 }
 
+// Adds saved quotes to archive
 function generateQuoteElements(quote, origin) {
 	const quoteInfoDiv = document.createElement('div');
 	quoteInfoDiv.classList.add('archive-quote-info');
@@ -1404,11 +1522,13 @@ function generateQuoteElements(quote, origin) {
 	copyQuoteBtn.forEach(btn => btn.addEventListener('click', copyArchiveQuote));
 }
 
+// Open quotes archive container
 function openArchiveBox() {
 	archiveContainer.style.opacity = '1';
 	archiveContainer.style.display = 'flex';
 }
 
+// Fetches saved quotes and generate list in archive container
 function getQuote() {
 	let quotes;
 	if (localStorage.getItem('quotes') === null) quotes = [];
@@ -1417,6 +1537,7 @@ function getQuote() {
 	quotes.forEach(quote => generateQuoteElements(quote.quote, quote.origin));
 }
 
+// Search quote component's archive container for quotes depending on value in search field
 function searchArhive(e) {
 	const arhiveInfo = document.querySelectorAll('.archive-quote-info');
 	let text = e.target.value.toLowerCase();
@@ -1434,6 +1555,7 @@ function searchArhive(e) {
 	});
 }
 
+// Check if user has already saved a quote, display full heart if user has
 function checkQuote(inspiredQuote) {
 	let quotes;
 	if (localStorage.getItem('quotes') === null) quotes = [];
@@ -1446,6 +1568,7 @@ function checkQuote(inspiredQuote) {
 	);
 }
 
+// Adds user own quote inside archive container
 function addQuote() {
 	let quotes;
 	if (localStorage.getItem('quotes') === null) quotes = [];
@@ -1468,6 +1591,7 @@ function addQuote() {
 	localStorage.setItem('quotes', JSON.stringify(quotes));
 }
 
+// Delete selected archived quote
 function deleteQuote(e) {
 	let quotes;
 	if (localStorage.getItem('quotes') === null) quotes = [];
@@ -1485,6 +1609,7 @@ function deleteQuote(e) {
 	});
 }
 
+// Copies selected archive quote to clipboard
 async function copyArchiveQuote(e) {
 	let quote =
 		e.target.parentElement.parentElement.parentElement.firstElementChild
@@ -1509,11 +1634,13 @@ function closeArchiveBox() {
 	}, 300);
 }
 
+// Saves currently displayed quote on main page to archive
 function archiveQuote() {
 	let quotes;
 	if (localStorage.getItem('quotes') === null) quotes = [];
 	else quotes = JSON.parse(localStorage.getItem('quotes'));
 
+	// If user has the quote already saved, it will delete it from archive box
 	if (saveQuoteBtn.classList.contains('fas')) {
 		const quoteInfoDiv = document.querySelectorAll('.archive-quote-info');
 		saveQuoteBtn.classList.replace('fas', 'far');
@@ -1538,6 +1665,7 @@ function archiveQuote() {
 	localStorage.setItem('quotes', JSON.stringify(quotes));
 }
 
+// Gives user control to sort archive container
 new Sortable(archiveQuotesContainer, {
 	handle: '.fa-arrows-alt',
 	animation: 150,
@@ -1557,6 +1685,7 @@ new Sortable(archiveQuotesContainer, {
 	}
 });
 
+// Fetches saved background from localStorage
 function loadBackground() {
 	let bg;
 	if (localStorage.getItem('bg') === null) bg = '';
@@ -1564,8 +1693,10 @@ function loadBackground() {
 
 	let bgDate = new Date();
 
+	// Default background
 	if (bg == '') {
 		document.body.style.backgroundImage = `url(${require('../images/backgrounds/sunset2.jpg')})`;
+		// Generates new background if its a new day
 	} else if (bg.date !== bgDate.toDateString()) {
 		generateBackground();
 	} else {
@@ -1577,6 +1708,7 @@ function loadBackground() {
 	}
 }
 
+// Fetches new background from Unsplash API and saves to localStorage
 async function generateBackground() {
 	let bg;
 	if (localStorage.getItem('bg') === null) bg = '';
@@ -1612,11 +1744,13 @@ async function generateBackground() {
 	localStorage.setItem('bg', JSON.stringify(bg));
 }
 
+// Show options for background
 function showBackgroundDetails() {
 	backgroundDetails.classList.toggle('visibility');
 	backgroundLocation.classList.toggle('background-show');
 }
 
+// Show options for quote
 function showQuoteDetails() {
 	inspirationalQuote.classList.toggle('background-show');
 	quoteBtn.querySelector('span').textContent = 'Copy to clipboard';
@@ -1625,7 +1759,6 @@ function showQuoteDetails() {
 }
 
 // Personal Name Functionality
-
 const introduction = document.querySelector('.introduction');
 const introductionContainer = document.querySelector(
 	'.intro-question-container'
